@@ -163,6 +163,7 @@ const Landing = () => {
               features={[
                 "5 bio pages",
                 "Unlimited links",
+                "All Themes",
                 "Custom domains",
                 "90-day analytics",
                 "Remove Bio branding"
@@ -189,8 +190,10 @@ const Landing = () => {
               features={[
                 "20 bio pages",
                 "Unlimited links",
+                "All Themes",
                 "Custom domains",
                 "12-month analytics",
+                "Remove Bio branding",
                 "Priority Support"
               ]}
               onSelect={() => {
