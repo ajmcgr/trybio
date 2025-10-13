@@ -29,6 +29,7 @@ interface ProfileData {
 const Editor = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [isSaving, setIsSaving] = useState(false);
   
   const [profile, setProfile] = useState<ProfileData>({
     name: "",
@@ -147,10 +148,11 @@ const Editor = () => {
   useEffect(() => {
     const saveData = async () => {
       try {
+        setIsSaving(true);
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        await supabase
+        const { error } = await supabase
           .from('profiles')
           .upsert({
             user_id: user.id,
@@ -167,8 +169,23 @@ const Editor = () => {
             background_color: backgroundColor,
             updated_at: new Date().toISOString(),
           });
+
+        if (error) throw error;
+
+        toast({
+          title: "Saved",
+          description: "Your changes have been saved automatically.",
+          duration: 2000,
+        });
       } catch (error) {
         console.error('Auto-save error:', error);
+        toast({
+          title: "Error saving",
+          description: "Could not save your changes. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsSaving(false);
       }
     };
 
@@ -268,6 +285,9 @@ const Editor = () => {
             </Link>
           </div>
           <div className="flex items-center gap-3">
+            {isSaving && (
+              <span className="text-sm text-muted-foreground">Saving...</span>
+            )}
             <Button variant="ghost" size="sm" onClick={handlePreview}>
               <Eye className="h-4 w-4 mr-2" />
               Preview
