@@ -41,7 +41,7 @@ const Dashboard = () => {
 
         // Load analytics if profile exists
         if (data) {
-          await loadAnalytics(data.id);
+          await loadAnalytics(data.user_id);
         }
       } catch (error) {
         console.error('Error loading profile:', error);

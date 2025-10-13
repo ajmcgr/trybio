@@ -54,7 +54,7 @@ const Profile = () => {
           }
 
           if (data) {
-            setProfileId(data.id);
+            setProfileId(data.user_id);
             setProfile({
               name: data.name || '',
               username: data.username || '',
@@ -73,7 +73,7 @@ const Profile = () => {
             await supabase
               .from('profile_views')
               .insert({
-                profile_id: data.id,
+                profile_id: data.user_id,
                 user_agent: navigator.userAgent,
                 referrer: document.referrer
               });
@@ -108,7 +108,7 @@ const Profile = () => {
 
   return (
     <div 
-      className="min-h-screen flex items-start justify-center p-6 pt-12"
+      className="min-h-screen flex items-start justify-center p-6"
       style={{ backgroundColor }}
     >
       <div className="w-full max-w-lg">
