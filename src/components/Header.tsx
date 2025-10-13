@@ -77,7 +77,7 @@ const Header = () => {
               </Link>
               <Link to="/auth?mode=signup">
                 <Button size="sm" className="gap-2 rounded-[6px]">
-                  Create your free bio <ArrowRight className="h-4 w-4" />
+                  Sign Up <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
             </>
