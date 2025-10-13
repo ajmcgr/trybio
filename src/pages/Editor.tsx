@@ -101,6 +101,46 @@ const Editor = () => {
     }
   };
 
+  // Load existing profile data
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+
+        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+          console.error('Error loading profile:', error);
+          return;
+        }
+
+        if (data) {
+          setProfile({
+            name: data.name || '',
+            username: data.username || '',
+            bio: data.bio || '',
+            avatarUrl: data.avatar_url || '',
+            font: data.font || 'font-sans',
+          });
+          setLinks(data.links || []);
+          setWallpaperUrl(data.wallpaper_url || '');
+          setTextColor(data.text_color || '#000000');
+          setButtonColor(data.button_color || '#000000');
+          setBackgroundColor(data.background_color || '#ffffff');
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+      }
+    };
+
+    loadProfile();
+  }, []);
+
   // Auto-save with debouncing
   useEffect(() => {
     const saveData = async () => {
