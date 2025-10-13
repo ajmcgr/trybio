@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Plus, BarChart3, Link as LinkIcon, Settings } from "lucide-react";
+import { Plus, BarChart3, Link as LinkIcon, Settings, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
 
@@ -13,14 +13,22 @@ const Dashboard = () => {
             <img src={logo} alt="trybio.ai" className="h-8" />
           </Link>
           <div className="flex items-center gap-4">
+            <Link to="/upgrade">
+              <Button variant="ghost" size="sm">
+                <Zap className="h-4 w-4 mr-2" />
+                Upgrade
+              </Button>
+            </Link>
             <Button variant="ghost" size="sm">
               <Settings className="h-4 w-4 mr-2" />
               Settings
             </Button>
-            <Button size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              New Link
-            </Button>
+            <Link to="/editor">
+              <Button size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                New Link
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
