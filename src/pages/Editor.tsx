@@ -43,6 +43,7 @@ const Editor = () => {
   const [wallpaperUrl, setWallpaperUrl] = useState("");
   const [textColor, setTextColor] = useState("#000000");
   const [buttonColor, setButtonColor] = useState("#000000");
+  const [buttonTextColor, setButtonTextColor] = useState("#ffffff");
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
   
   const [isAddingLink, setIsAddingLink] = useState(false);
@@ -131,6 +132,7 @@ const Editor = () => {
           setWallpaperUrl(data.wallpaper_url || '');
           setTextColor(data.text_color || '#000000');
           setButtonColor(data.button_color || '#000000');
+          setButtonTextColor(data.button_text_color || '#ffffff');
           setBackgroundColor(data.background_color || '#ffffff');
         }
       } catch (error) {
@@ -161,6 +163,7 @@ const Editor = () => {
             wallpaper_url: wallpaperUrl,
             text_color: textColor,
             button_color: buttonColor,
+            button_text_color: buttonTextColor,
             background_color: backgroundColor,
             updated_at: new Date().toISOString(),
           });
@@ -171,7 +174,7 @@ const Editor = () => {
 
     const timeoutId = setTimeout(saveData, 1000);
     return () => clearTimeout(timeoutId);
-  }, [profile, links, wallpaperUrl, textColor, buttonColor, backgroundColor]);
+  }, [profile, links, wallpaperUrl, textColor, buttonColor, buttonTextColor, backgroundColor]);
 
   const handlePreview = () => {
     localStorage.setItem('previewData', JSON.stringify({
@@ -180,6 +183,7 @@ const Editor = () => {
       wallpaperUrl,
       textColor,
       buttonColor,
+      buttonTextColor,
       backgroundColor,
     }));
     window.open('/profile?preview=true', '_blank');
@@ -210,6 +214,7 @@ const Editor = () => {
           wallpaper_url: wallpaperUrl,
           text_color: textColor,
           button_color: buttonColor,
+          button_text_color: buttonTextColor,
           background_color: backgroundColor,
           updated_at: new Date().toISOString(),
         });
@@ -230,15 +235,24 @@ const Editor = () => {
   };
 
   const themeColors = [
-    { bg: "hsl(0, 70%, 60%)", text: "#fff" },
-    { bg: "hsl(45, 70%, 60%)", text: "#000" },
-    { bg: "hsl(90, 70%, 60%)", text: "#000" },
-    { bg: "hsl(135, 70%, 60%)", text: "#fff" },
-    { bg: "hsl(180, 70%, 60%)", text: "#000" },
-    { bg: "hsl(225, 70%, 60%)", text: "#fff" },
-    { bg: "hsl(270, 70%, 60%)", text: "#fff" },
-    { bg: "hsl(315, 70%, 60%)", text: "#fff" },
+    { bg: "#e74c3c", text: "#ffffff", buttonBg: "#c0392b", buttonText: "#ffffff" },
+    { bg: "#f39c12", text: "#ffffff", buttonBg: "#d68910", buttonText: "#ffffff" },
+    { bg: "#2ecc71", text: "#ffffff", buttonBg: "#27ae60", buttonText: "#ffffff" },
+    { bg: "#3498db", text: "#ffffff", buttonBg: "#2980b9", buttonText: "#ffffff" },
+    { bg: "#9b59b6", text: "#ffffff", buttonBg: "#8e44ad", buttonText: "#ffffff" },
+    { bg: "#1abc9c", text: "#ffffff", buttonBg: "#16a085", buttonText: "#ffffff" },
+    { bg: "#34495e", text: "#ffffff", buttonBg: "#2c3e50", buttonText: "#ffffff" },
+    { bg: "#e91e63", text: "#ffffff", buttonBg: "#c2185b", buttonText: "#ffffff" },
   ];
+
+  const applyTheme = (index: number) => {
+    const theme = themeColors[index];
+    setBackgroundColor(theme.bg);
+    setTextColor(theme.text);
+    setButtonColor(theme.buttonBg);
+    setButtonTextColor(theme.buttonText);
+    setSelectedTheme(index);
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -273,7 +287,7 @@ const Editor = () => {
             <div className="bg-card border border-border rounded-2xl p-6">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <Settings className="h-5 w-5" />
-                Profile Settings
+                Bio Settings
               </h2>
               <div className="space-y-4">
                 <div>
@@ -380,9 +394,14 @@ const Editor = () => {
                         onChange={handleWallpaperUpload}
                       />
                     </label>
+                    {wallpaperUrl && (
+                      <Button variant="ghost" size="sm" onClick={() => setWallpaperUrl("")}>
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    )}
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="textColor">Text Color</Label>
                     <div className="flex items-center gap-2 mt-2">
@@ -391,6 +410,18 @@ const Editor = () => {
                         type="color"
                         value={textColor}
                         onChange={(e) => setTextColor(e.target.value)}
+                        className="h-10 w-full rounded cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="backgroundColor">Background Color</Label>
+                    <div className="flex items-center gap-2 mt-2">
+                      <input
+                        id="backgroundColor"
+                        type="color"
+                        value={backgroundColor}
+                        onChange={(e) => setBackgroundColor(e.target.value)}
                         className="h-10 w-full rounded cursor-pointer"
                       />
                     </div>
@@ -408,13 +439,13 @@ const Editor = () => {
                     </div>
                   </div>
                   <div>
-                    <Label htmlFor="backgroundColor">Background Color</Label>
+                    <Label htmlFor="buttonTextColor">Button Text Color</Label>
                     <div className="flex items-center gap-2 mt-2">
                       <input
-                        id="backgroundColor"
+                        id="buttonTextColor"
                         type="color"
-                        value={backgroundColor}
-                        onChange={(e) => setBackgroundColor(e.target.value)}
+                        value={buttonTextColor}
+                        onChange={(e) => setButtonTextColor(e.target.value)}
                         className="h-10 w-full rounded cursor-pointer"
                       />
                     </div>
@@ -437,7 +468,7 @@ const Editor = () => {
                       selectedTheme === i ? "border-primary" : "border-border hover:border-primary/50"
                     }`}
                     style={{ background: theme.bg }}
-                    onClick={() => setSelectedTheme(i)}
+                    onClick={() => applyTheme(i)}
                   />
                 ))}
               </div>
@@ -543,12 +574,12 @@ const Editor = () => {
                   </AvatarFallback>
                 </Avatar>
                 {profile.name && (
-                  <h2 className="font-bold text-xl mb-1" style={{ color: textColor }}>
+                  <h2 className={`font-bold text-xl mb-1 ${profile.font}`} style={{ color: textColor }}>
                     {profile.name}
                   </h2>
                 )}
                 {profile.username && (
-                  <h3 className="font-medium text-base mb-2" style={{ color: textColor, opacity: 0.9 }}>
+                  <h3 className={`font-medium text-base mb-2 ${profile.font}`} style={{ color: textColor, opacity: 0.9 }}>
                     @{profile.username}
                   </h3>
                 )}
@@ -563,7 +594,7 @@ const Editor = () => {
                     className="w-full py-3 px-4 rounded-xl font-medium transition-colors"
                     style={{ 
                       backgroundColor: buttonColor,
-                      color: '#fff'
+                      color: buttonTextColor
                     }}
                   >
                     {link.title}

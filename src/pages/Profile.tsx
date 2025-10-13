@@ -21,6 +21,7 @@ const Profile = () => {
   const [wallpaperUrl, setWallpaperUrl] = useState("");
   const [textColor, setTextColor] = useState("#000000");
   const [buttonColor, setButtonColor] = useState("#000000");
+  const [buttonTextColor, setButtonTextColor] = useState("#ffffff");
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
 
   useEffect(() => {
@@ -35,6 +36,7 @@ const Profile = () => {
           setWallpaperUrl(data.wallpaperUrl);
           setTextColor(data.textColor);
           setButtonColor(data.buttonColor);
+          setButtonTextColor(data.buttonTextColor || '#ffffff');
           setBackgroundColor(data.backgroundColor);
         }
       } else {
@@ -66,6 +68,7 @@ const Profile = () => {
             setWallpaperUrl(data.wallpaper_url || '');
             setTextColor(data.text_color || '#000000');
             setButtonColor(data.button_color || '#000000');
+            setButtonTextColor(data.button_text_color || '#ffffff');
             setBackgroundColor(data.background_color || '#ffffff');
           }
         } catch (error) {
@@ -103,12 +106,12 @@ const Profile = () => {
                 </AvatarFallback>
               </Avatar>
               {profile.name && (
-                <h1 className="text-2xl font-bold mb-2" style={{ color: textColor }}>
+                <h1 className={`text-2xl font-bold mb-2 ${profile.font}`} style={{ color: textColor }}>
                   {profile.name}
                 </h1>
               )}
               {profile.username && (
-                <h2 className="text-lg font-medium mb-3" style={{ color: textColor, opacity: 0.9 }}>
+                <h2 className={`text-lg font-medium mb-3 ${profile.font}`} style={{ color: textColor, opacity: 0.9 }}>
                   @{profile.username}
                 </h2>
               )}
@@ -128,7 +131,7 @@ const Profile = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full py-4 px-6 rounded-2xl font-medium hover:opacity-90 transition-opacity group"
-                  style={{ backgroundColor: buttonColor, color: '#fff' }}
+                  style={{ backgroundColor: buttonColor, color: buttonTextColor }}
                 >
                   <div className="flex items-center justify-between">
                     <span>{link.title}</span>
