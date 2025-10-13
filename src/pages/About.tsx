@@ -52,20 +52,20 @@ const About = () => {
               Thanks for reading, and for giving Bio a try. You can always contact me directly if you have any questions at <a href="mailto:alex@trybio.ai" className="text-primary hover:underline">alex@trybio.ai</a>. I look forward to hearing from you.
             </p>
 
-            <div className="flex flex-col items-center gap-4 mt-12 mb-8">
+            <div className="flex flex-col items-start gap-4 mt-12 mb-8">
               <img 
                 src={alexAvatar} 
                 alt="Alex MacGregor" 
-                className="w-32 h-32 rounded-lg object-cover"
+                className="w-32 h-32 object-cover"
               />
-              <div className="text-center">
+              <div className="text-left">
                 <p className="font-semibold text-lg">— Alex MacGregor</p>
                 <p className="text-muted-foreground">Founder, Bio</p>
                 <a 
                   href="https://www.linkedin.com/in/alexmacgregor2/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline inline-block mt-2"
+                  className="text-blue-600 hover:underline inline-block mt-2"
                 >
                   Connect with me on LinkedIn
                 </a>
