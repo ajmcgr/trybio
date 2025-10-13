@@ -22,7 +22,7 @@ const About = () => {
               </p>
 
               <p className="mb-6">
-                Link in bio platforms were revolutionary once, but somewhere along the way they traded focus for feature bloat. Pricing climbed, dashboards grew dense, and the contact lists still missed too many key reporters. I found myself wrestling with Boolean strings from the 2010s while the industry around us moved to natural-language prompts and AI-assisted workflows.
+                Link in bio platforms were revolutionary once, but somewhere along the way they traded focus for feature bloat.
               </p>
 
               <p className="mb-6">
