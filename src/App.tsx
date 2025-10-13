@@ -12,6 +12,11 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import HashtagGenerator from "./pages/tools/HashtagGenerator";
+import ContentPlanner from "./pages/tools/ContentPlanner";
+import InfluencerRateCalculator from "./pages/tools/InfluencerRateCalculator";
+import BioTextGenerator from "./pages/tools/BioTextGenerator";
+import CaptionGenerator from "./pages/tools/CaptionGenerator";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +34,11 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/tools/hashtag-generator" element={<HashtagGenerator />} />
+          <Route path="/tools/content-planner" element={<ContentPlanner />} />
+          <Route path="/tools/influencer-rate-calculator" element={<InfluencerRateCalculator />} />
+          <Route path="/tools/bio-text-generator" element={<BioTextGenerator />} />
+          <Route path="/tools/caption-generator" element={<CaptionGenerator />} />
           <Route path="/:username" element={<Profile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
