@@ -78,7 +78,7 @@ const Profile = () => {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center p-6"
+      className="min-h-screen flex items-start justify-center p-6 pt-12"
       style={{ backgroundColor }}
     >
       <div className="w-full max-w-lg">
