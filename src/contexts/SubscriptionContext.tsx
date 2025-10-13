@@ -17,15 +17,15 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(u
 
 const SUBSCRIPTION_TIERS = {
   pro: {
-    priceId: 'price_1QlFtj2MfjHEmnezIcTNe8pb',
-    productId: 'prod_RZaVFxOANKRX6T',
-    name: 'Pro',
+    priceId: 'price_1SHjFOLdEYJMHmhgROJ2Hdxz',
+    productId: 'prod_TEBcCoBIS46kPd',
+    name: 'Pro Plan',
     price: 19,
   },
   business: {
-    priceId: 'price_1QlFv62MfjHEmnezn4Tm3wc8',
-    productId: 'prod_RZaX7fL3n1h06K',
-    name: 'Business',
+    priceId: 'price_1SHjFmLdEYJMHmhgrCPgUS2W',
+    productId: 'prod_TEBdtSpr5mGB0P',
+    name: 'Business Plan',
     price: 49,
   },
 };
