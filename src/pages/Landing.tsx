@@ -25,7 +25,7 @@ const Landing = () => {
             Create a stunning link-in-bio page that converts. AI-powered setup, beautiful themes, and powerful analytics—all in one place.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
-            <Link to="/auth">
+            <Link to="/auth?mode=signup">
               <Button size="lg" className="gap-2 text-lg px-8 h-14">
                 Create your page free <ArrowRight className="h-5 w-5" />
               </Button>
@@ -169,7 +169,7 @@ const Landing = () => {
           <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl p-12 border border-primary/20">
             <h2 className="text-4xl md:text-5xl font-display font-medium mb-6">Ready to grow your audience?</h2>
             <p className="text-xl text-muted-foreground mb-8">Join thousands of creators using trybio.ai to turn attention into action.</p>
-            <Link to="/auth">
+            <Link to="/auth?mode=signup">
               <Button size="lg" className="gap-2 text-lg px-8 h-14">
                 Create your page free <ArrowRight className="h-5 w-5" />
               </Button>

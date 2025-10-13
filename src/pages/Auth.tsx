@@ -2,13 +2,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [searchParams] = useSearchParams();
+  const [isLogin, setIsLogin] = useState(searchParams.get('mode') !== 'signup');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -76,13 +78,11 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-6">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-background flex flex-col">
+      <Header />
+      <div className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <Sparkles className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl">trybio.ai</span>
-          </Link>
           <h1 className="text-3xl font-bold mb-2">
             {isLogin ? "Welcome back" : "Create your account"}
           </h1>
@@ -184,7 +184,9 @@ const Auth = () => {
           {" "}and{" "}
           <a href="#" className="underline hover:text-foreground">Privacy Policy</a>
         </p>
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };
