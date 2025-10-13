@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container mx-auto max-w-4xl">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h4 className="font-semibold mb-4">About</h4>
+            <h4 className="font-sans font-semibold mb-4">About</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/about" className="hover:text-foreground transition-colors">About</Link></li>
               <li><a href="https://blog.works.xyz/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Blog</a></li>
@@ -14,7 +14,7 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-4">Support</h4>
+            <h4 className="font-sans font-semibold mb-4">Support</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="mailto:alex@trybio.ai" className="hover:text-foreground transition-colors">Support</a></li>
               <li><Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
@@ -22,7 +22,7 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-4">Free Tools</h4>
+            <h4 className="font-sans font-semibold mb-4">Free Tools</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/tools/hashtag-generator" className="hover:text-foreground transition-colors">Hashtag Generator</Link></li>
               <li><Link to="/tools/content-planner" className="hover:text-foreground transition-colors">Content Planner</Link></li>
@@ -32,7 +32,7 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-4">Connect</h4>
+            <h4 className="font-sans font-semibold mb-4">Connect</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="https://discord.gg/jYyQHNS2" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Discord</a></li>
               <li><a href="http://x.com/trybioai" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">X</a></li>
