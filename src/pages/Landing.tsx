@@ -50,7 +50,7 @@ const Landing = () => {
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start items-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
                 <Link to="/auth?mode=signup">
                   <Button size="lg" className="gap-2 text-lg px-8 h-14">
-                    Create your page free <ArrowRight className="h-5 w-5" />
+                    Create your free bio <ArrowRight className="h-5 w-5" />
                   </Button>
                 </Link>
                 <div className="max-w-md">
@@ -215,6 +215,42 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section id="faq" className="py-24 px-6 bg-secondary/50">
+        <div className="container mx-auto max-w-3xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-display font-medium mb-4">Frequently Asked Questions</h2>
+            <p className="text-xl text-muted-foreground">Everything you need to know about trybio.ai</p>
+          </div>
+          <div className="space-y-4">
+            <FAQItem
+              question="How do I get started?"
+              answer="Simply sign up for a free account, and you'll be guided through creating your first bio page. Our AI will help you set up your page in under 60 seconds by importing your social profiles and suggesting relevant links."
+            />
+            <FAQItem
+              question="Can I use my own domain?"
+              answer="Yes! Pro and Business plans allow you to connect custom domains. You'll get full SSL support and can use either a root domain (yourdomain.com) or a subdomain (bio.yourdomain.com)."
+            />
+            <FAQItem
+              question="What analytics do I get?"
+              answer="You'll get detailed insights including page views, link clicks, click-through rates, geographic data, device types, and referral sources. Free accounts get 7 days of analytics, Pro gets 90 days, and Business gets 12 months."
+            />
+            <FAQItem
+              question="Can I create multiple bio pages?"
+              answer="Yes! Free accounts get 1 bio page, Pro accounts get 5 pages, and Business accounts get 20 pages. This is perfect if you manage multiple brands or want separate pages for different purposes."
+            />
+            <FAQItem
+              question="How does the AI setup work?"
+              answer="Our AI analyzes your social profiles and automatically generates a personalized bio, suggests relevant links, and recommends themes that match your brand. You can always customize everything afterwards."
+            />
+            <FAQItem
+              question="Can I cancel anytime?"
+              answer="Absolutely! You can cancel your subscription at any time from your account settings. You'll continue to have access until the end of your billing period, and you can always reactivate later."
+            />
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-24 px-6">
         <div className="container mx-auto max-w-3xl text-center">
@@ -223,7 +259,7 @@ const Landing = () => {
             <p className="text-xl text-muted-foreground mb-8">Join thousands of creators using trybio.ai to turn attention into action.</p>
             <Link to="/auth?mode=signup">
               <Button size="lg" className="gap-2 text-lg px-8 h-14">
-                Create your page free <ArrowRight className="h-5 w-5" />
+                Create your free bio <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
           </div>
@@ -311,6 +347,13 @@ const PricingCard = ({ name, price, description, features, highlighted, onSelect
         </li>
       ))}
     </ul>
+  </div>
+);
+
+const FAQItem = ({ question, answer }: { question: string; answer: string }) => (
+  <div className="bg-card border border-border rounded-xl p-6">
+    <h3 className="font-semibold text-lg mb-3">{question}</h3>
+    <p className="text-muted-foreground">{answer}</p>
   </div>
 );
 
