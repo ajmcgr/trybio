@@ -128,13 +128,13 @@ const Profile = () => {
 
   return (
     <div 
-      className="min-h-screen flex items-start justify-center md:p-6"
+      className="min-h-screen flex flex-col items-start justify-start md:justify-center md:p-6"
       style={{ backgroundColor }}
     >
-      <div className="w-full md:max-w-lg">
+      <div className="w-full md:max-w-lg flex-shrink-0">
         {/* Profile Card */}
         <div 
-          className={`md:rounded-3xl p-8 shadow-2xl min-h-screen md:min-h-0 ${profile.font}`}
+          className={`md:rounded-3xl p-8 md:shadow-2xl ${profile.font}`}
           style={{ 
             backgroundImage: wallpaperUrl ? `url(${wallpaperUrl})` : 'none',
             backgroundSize: 'cover',

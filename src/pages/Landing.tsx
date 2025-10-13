@@ -61,14 +61,12 @@ const Landing = () => {
       </section>
 
       {/* Preview Section */}
-      <section className="py-20 px-6 bg-secondary/50">
-        <div className="container mx-auto max-w-2xl">
-          <img 
-            src={alexBioPreview} 
-            alt="Bio page preview - Alex MacGregor's profile" 
-            className="w-full max-w-md mx-auto rounded-2xl shadow-2xl"
-          />
-        </div>
+      <section className="bg-secondary/50">
+        <img 
+          src={alexBioPreview} 
+          alt="Bio page preview - Alex MacGregor's profile" 
+          className="w-full h-auto"
+        />
       </section>
 
       {/* Features Section */}
