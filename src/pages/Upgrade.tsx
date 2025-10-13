@@ -33,7 +33,7 @@ const Upgrade = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="container mx-auto px-6 h-16 flex items-center justify-between max-w-4xl">
           <Link to="/" className="flex items-center">
             <img src={logo} alt="trybio.ai" className="h-8" />
           </Link>
