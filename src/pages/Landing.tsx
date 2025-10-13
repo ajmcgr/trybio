@@ -30,7 +30,7 @@ const Landing = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-24 pb-20 px-6">
         <div className="container mx-auto max-w-7xl">
           <div className="flex flex-col lg:flex-row gap-0 items-center">
             {/* Left side - Hero Content (65%) */}
