@@ -13,10 +13,10 @@ const Header = () => {
         <div className="flex items-center gap-3">
           <a href="/#pricing" className="text-sm text-foreground">Pricing</a>
           <Link to="/auth">
-            <Button variant="ghost" size="sm" className="hover:bg-transparent">Login</Button>
+            <Button variant="ghost" size="sm" className="hover:bg-transparent hover:text-foreground">Login</Button>
           </Link>
           <Link to="/auth?mode=signup">
-            <Button size="sm" className="gap-2">
+            <Button size="sm" className="gap-2 rounded-md">
               Get Started <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>
