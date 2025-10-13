@@ -27,16 +27,16 @@ const Landing = () => {
           <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: "0.1s" }}>
             Create a stunning link-in-bio page that converts. AI-powered setup, beautiful themes, and powerful analytics—all in one place.
           </p>
-          <div className="flex flex-col gap-4 justify-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
             <Link to="/auth?mode=signup">
               <Button size="lg" className="gap-2 text-lg px-8 h-14">
                 Create your page free <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
-          </div>
-          <div className="mt-8">
-            <script src="https://widget.senja.io/widget/58e8f3b2-43d4-43fd-a3b3-201481da7ccd/platform.js" type="text/javascript" async></script>
-            <div className="senja-embed" data-id="58e8f3b2-43d4-43fd-a3b3-201481da7ccd" data-mode="shadow" data-lazyload="false" style={{ display: 'block', width: '100%' }}></div>
+            <div className="flex-1 max-w-md">
+              <script src="https://widget.senja.io/widget/58e8f3b2-43d4-43fd-a3b3-201481da7ccd/platform.js" type="text/javascript" async></script>
+              <div className="senja-embed" data-id="58e8f3b2-43d4-43fd-a3b3-201481da7ccd" data-mode="shadow" data-lazyload="false" style={{ display: 'block', width: '100%' }}></div>
+            </div>
           </div>
           <p className="text-sm text-muted-foreground mt-6">
             No credit card required • Free forever plan
