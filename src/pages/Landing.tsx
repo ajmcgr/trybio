@@ -3,8 +3,11 @@ import { ArrowRight, Zap, Palette, BarChart3, Lock, Globe, Sparkles } from "luci
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useSubscription, SUBSCRIPTION_TIERS } from "@/contexts/SubscriptionContext";
 
 const Landing = () => {
+  const { user, subscribed, productId, createCheckout, openCustomerPortal } = useSubscription();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -131,10 +134,16 @@ const Landing = () => {
                 "7-day analytics",
                 "Tips enabled (5% fee)"
               ]}
+              onSelect={() => {
+                if (!user) {
+                  window.location.href = '/auth?mode=signup';
+                }
+              }}
+              buttonText="Get Started"
             />
             <PricingCard
               name="Pro"
-              price="$9"
+              price="$19"
               description="For creators and businesses"
               features={[
                 "5 bio pages",
@@ -145,10 +154,23 @@ const Landing = () => {
                 "No tips fee"
               ]}
               highlighted
+              onSelect={() => {
+                if (subscribed && productId === SUBSCRIPTION_TIERS.pro.productId) {
+                  openCustomerPortal();
+                } else {
+                  createCheckout(SUBSCRIPTION_TIERS.pro.priceId);
+                }
+              }}
+              buttonText={
+                subscribed && productId === SUBSCRIPTION_TIERS.pro.productId
+                  ? "Manage"
+                  : "Upgrade"
+              }
+              isCurrentPlan={subscribed && productId === SUBSCRIPTION_TIERS.pro.productId}
             />
             <PricingCard
               name="Business"
-              price="$29"
+              price="$49"
               description="For teams and agencies"
               features={[
                 "25 bio pages",
@@ -158,6 +180,19 @@ const Landing = () => {
                 "API access",
                 "SSO"
               ]}
+              onSelect={() => {
+                if (subscribed && productId === SUBSCRIPTION_TIERS.business.productId) {
+                  openCustomerPortal();
+                } else {
+                  createCheckout(SUBSCRIPTION_TIERS.business.priceId);
+                }
+              }}
+              buttonText={
+                subscribed && productId === SUBSCRIPTION_TIERS.business.productId
+                  ? "Manage"
+                  : "Upgrade"
+              }
+              isCurrentPlan={subscribed && productId === SUBSCRIPTION_TIERS.business.productId}
             />
           </div>
         </div>
@@ -193,15 +228,26 @@ const FeatureCard = ({ icon, title, description }: { icon: React.ReactNode; titl
   </div>
 );
 
-const PricingCard = ({ name, price, description, features, highlighted }: {
+const PricingCard = ({ name, price, description, features, highlighted, onSelect, buttonText, isCurrentPlan }: {
   name: string;
   price: string;
   description: string;
   features: string[];
   highlighted?: boolean;
+  onSelect: () => void;
+  buttonText: string;
+  isCurrentPlan?: boolean;
 }) => (
-  <div className={`bg-card border rounded-2xl p-8 ${highlighted ? 'border-primary shadow-xl scale-105' : 'border-border'}`}>
-    {highlighted && (
+  <div className={`bg-card border rounded-2xl p-8 relative ${
+    highlighted ? 'border-primary shadow-xl scale-105' : 
+    isCurrentPlan ? 'border-primary' : 'border-border'
+  }`}>
+    {isCurrentPlan && (
+      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-full">
+        Your Plan
+      </div>
+    )}
+    {highlighted && !isCurrentPlan && (
       <div className="inline-block px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-full mb-4">
         Most Popular
       </div>
@@ -212,8 +258,12 @@ const PricingCard = ({ name, price, description, features, highlighted }: {
       {price !== "$0" && <span className="text-muted-foreground">/month</span>}
     </div>
     <p className="text-muted-foreground mb-6">{description}</p>
-    <Button className="w-full mb-6" variant={highlighted ? "default" : "outline"}>
-      Get Started
+    <Button 
+      className="w-full mb-6" 
+      variant={highlighted && !isCurrentPlan ? "default" : "outline"}
+      onClick={onSelect}
+    >
+      {buttonText}
     </Button>
     <ul className="space-y-3">
       {features.map((feature, i) => (
