@@ -32,7 +32,7 @@ const Landing = () => {
       {/* Hero Section */}
       <section className="pt-24 pb-20 px-6">
         <div className="container mx-auto max-w-7xl">
-          <div className="flex flex-col lg:flex-row gap-0 items-center">
+          <div className="flex flex-col lg:flex-row gap-0 items-center justify-center">
             {/* Left side - Hero Content (65%) */}
             <div className="lg:w-[65%] text-center lg:text-left px-6">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-sm mb-8 animate-fade-in">
@@ -63,7 +63,7 @@ const Landing = () => {
             </div>
             
             {/* Right side - Bio Preview (30%) */}
-            <div className="lg:w-[30%] w-full">
+            <div className="lg:w-[30%] w-full flex justify-center">
               <img 
                 src={alexBioPreview} 
                 alt="Bio page preview - Alex MacGregor's profile" 
