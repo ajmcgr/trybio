@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -89,8 +89,39 @@ const Editor = () => {
     }
   };
 
+  // Auto-save with debouncing
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        await supabase
+          .from('profiles')
+          .upsert({
+            user_id: user.id,
+            name: profile.name,
+            username: profile.username,
+            bio: profile.bio,
+            avatar_url: profile.avatarUrl,
+            font: profile.font,
+            links: links,
+            wallpaper_url: wallpaperUrl,
+            text_color: textColor,
+            button_color: buttonColor,
+            background_color: backgroundColor,
+            updated_at: new Date().toISOString(),
+          });
+      } catch (error) {
+        console.error('Auto-save error:', error);
+      }
+    };
+
+    const timeoutId = setTimeout(saveData, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [profile, links, wallpaperUrl, textColor, buttonColor, backgroundColor]);
+
   const handlePreview = () => {
-    // Store current state in localStorage for preview
     localStorage.setItem('previewData', JSON.stringify({
       profile,
       links,
@@ -114,7 +145,6 @@ const Editor = () => {
         return;
       }
 
-      // Save profile data to Supabase
       const { error } = await supabase
         .from('profiles')
         .upsert({
@@ -129,6 +159,7 @@ const Editor = () => {
           text_color: textColor,
           button_color: buttonColor,
           background_color: backgroundColor,
+          updated_at: new Date().toISOString(),
         });
 
       if (error) throw error;
