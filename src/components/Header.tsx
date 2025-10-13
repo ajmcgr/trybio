@@ -43,7 +43,7 @@ const Header = () => {
 
   return (
     <header className="w-full bg-background/80 backdrop-blur-lg">
-      <div className="container mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
+      <div className="container mx-auto max-w-5xl px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center">
           <img src={logo} alt="trybio.ai" className="h-8" />
         </Link>
