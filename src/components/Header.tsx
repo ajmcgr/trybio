@@ -5,7 +5,7 @@ import logo from "@/assets/logo.png";
 
 const Header = () => {
   return (
-    <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg">
+    <header className="w-full bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto max-w-4xl px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center">
           <img src={logo} alt="trybio.ai" className="h-8" />
