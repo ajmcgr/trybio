@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useParams } from "react-router-dom";
 import { Link as LinkIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { supabase } from "@/lib/supabase";
 
 const Profile = () => {
   const [searchParams] = useSearchParams();
+  const { username } = useParams();
   const isPreview = searchParams.get('preview') === 'true';
   
   const [profile, setProfile] = useState({
@@ -37,16 +38,13 @@ const Profile = () => {
           setButtonTextColor(data.buttonTextColor || '#ffffff');
           setBackgroundColor(data.backgroundColor);
         }
-      } else {
-        // Load from Supabase for published profile
+      } else if (username) {
+        // Load from Supabase by username for public profile
         try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (!user) return;
-
           const { data, error } = await supabase
             .from('profiles')
             .select('*')
-            .eq('user_id', user.id)
+            .eq('username', username)
             .single();
 
           if (error) {
@@ -76,7 +74,7 @@ const Profile = () => {
     };
 
     loadProfile();
-  }, [isPreview]);
+  }, [isPreview, username]);
 
   return (
     <div 
