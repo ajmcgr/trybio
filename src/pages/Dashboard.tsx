@@ -1,6 +1,9 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, BarChart3, Link as LinkIcon, Settings, Zap, LogOut } from "lucide-react";
+import { Plus, BarChart3, Link as LinkIcon, Settings, Zap, LogOut, ExternalLink, Eye } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import logo from "@/assets/logo.png";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
@@ -8,6 +11,35 @@ import { useToast } from "@/hooks/use-toast";
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          navigate('/auth');
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (error) throw error;
+        setProfile(data);
+      } catch (error) {
+        console.error('Error loading profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, [navigate]);
 
   const handleLogout = async () => {
     try {
@@ -65,6 +97,75 @@ const Dashboard = () => {
       </header>
 
       <div className="container mx-auto px-6 py-8 max-w-4xl">
+        {/* Profile Preview Card */}
+        <Card className="mb-8">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Your Bio</CardTitle>
+                <CardDescription>Preview of your public profile</CardDescription>
+              </div>
+              <div className="flex gap-2">
+                <Link to="/profile?preview=true" target="_blank">
+                  <Button variant="outline" size="sm">
+                    <Eye className="h-4 w-4 mr-2" />
+                    Preview
+                  </Button>
+                </Link>
+                <Link to="/editor">
+                  <Button size="sm">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Edit Bio
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <div className="text-center py-8 text-muted-foreground">Loading...</div>
+            ) : profile ? (
+              <div className="flex items-start gap-4">
+                <Avatar className="h-16 w-16">
+                  <AvatarImage src={profile.avatar_url} />
+                  <AvatarFallback className="bg-muted text-lg">
+                    {profile.name ? profile.name.slice(0, 2).toUpperCase() : "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg">{profile.name || "No name set"}</h3>
+                  {profile.username && (
+                    <p className="text-sm text-muted-foreground mb-2">@{profile.username}</p>
+                  )}
+                  <p className="text-sm">{profile.bio || "No bio set"}</p>
+                  {profile.links && profile.links.length > 0 && (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {profile.links.length} link{profile.links.length !== 1 ? 's' : ''} added
+                    </p>
+                  )}
+                </div>
+                {profile.username && (
+                  <Link to={`/${profile.username}`} target="_blank">
+                    <Button variant="ghost" size="sm">
+                      <ExternalLink className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground mb-4">No bio created yet</p>
+                <Link to="/editor">
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Your Bio
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Stats */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <StatCard
