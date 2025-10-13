@@ -9,7 +9,7 @@ const About = () => {
       
       <main className="pt-24 pb-20 px-6">
         <div className="container mx-auto max-w-3xl">
-          <div className="bg-card border border-border rounded-2xl p-8 md:p-12 shadow-lg">
+          <div className="bg-card border border-border rounded-2xl p-8 md:p-12">
             <h1 className="text-5xl md:text-6xl font-display font-medium mb-6 text-center">Our story</h1>
             
             <p className="text-xl text-center text-muted-foreground mb-16 max-w-2xl mx-auto">
