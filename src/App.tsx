@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import About from "./pages/About";
+import Upgrade from "./pages/Upgrade";
 import NotFound from "./pages/NotFound";
 import HashtagGenerator from "./pages/tools/HashtagGenerator";
 import ContentPlanner from "./pages/tools/ContentPlanner";
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/editor" element={<Editor />} />
+          <Route path="/upgrade" element={<Upgrade />} />
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />

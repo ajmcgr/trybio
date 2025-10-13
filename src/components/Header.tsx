@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, LogOut } from "lucide-react";
+import { ArrowRight, LogOut, Zap } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import { supabase } from "@/lib/supabase";
@@ -51,6 +51,12 @@ const Header = () => {
           <a href="/#pricing" className="text-sm text-foreground">Pricing</a>
           {user ? (
             <>
+              <Link to="/upgrade">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <Zap className="h-4 w-4" />
+                  Upgrade
+                </Button>
+              </Link>
               <Link to="/dashboard">
                 <Button variant="ghost" size="sm">Dashboard</Button>
               </Link>
