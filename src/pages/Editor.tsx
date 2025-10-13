@@ -3,11 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import logo from "@/assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface LinkItem {
   id: string;
@@ -16,21 +19,27 @@ interface LinkItem {
 }
 
 interface ProfileData {
+  name: string;
   username: string;
   bio: string;
   avatarUrl: string;
+  font: string;
 }
 
 const Editor = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
   const [profile, setProfile] = useState<ProfileData>({
+    name: "",
     username: "",
     bio: "",
     avatarUrl: "",
+    font: "font-sans",
   });
   
   const [links, setLinks] = useState<LinkItem[]>([]);
   const [selectedTheme, setSelectedTheme] = useState(0);
-  const [headerText, setHeaderText] = useState("");
   const [wallpaperUrl, setWallpaperUrl] = useState("");
   const [textColor, setTextColor] = useState("#000000");
   const [buttonColor, setButtonColor] = useState("#000000");
@@ -38,6 +47,13 @@ const Editor = () => {
   
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [newLink, setNewLink] = useState({ title: "", url: "" });
+
+  const fontOptions = [
+    { value: "font-sans", label: "Sans Serif (Inter)" },
+    { value: "font-display", label: "Display (Reckless)" },
+    { value: "font-mono", label: "Monospace" },
+    { value: "font-serif", label: "Serif" },
+  ];
 
   const handleAddLink = () => {
     if (newLink.title && newLink.url) {
@@ -73,6 +89,63 @@ const Editor = () => {
     }
   };
 
+  const handlePreview = () => {
+    // Store current state in localStorage for preview
+    localStorage.setItem('previewData', JSON.stringify({
+      profile,
+      links,
+      wallpaperUrl,
+      textColor,
+      buttonColor,
+      backgroundColor,
+    }));
+    window.open('/profile?preview=true', '_blank');
+  };
+
+  const handlePublish = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "You must be logged in to publish",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Save profile data to Supabase
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          user_id: user.id,
+          name: profile.name,
+          username: profile.username,
+          bio: profile.bio,
+          avatar_url: profile.avatarUrl,
+          font: profile.font,
+          links: links,
+          wallpaper_url: wallpaperUrl,
+          text_color: textColor,
+          button_color: buttonColor,
+          background_color: backgroundColor,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Published!",
+        description: "Your profile has been published successfully.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   const themeColors = [
     { bg: "hsl(0, 70%, 60%)", text: "#fff" },
     { bg: "hsl(45, 70%, 60%)", text: "#000" },
@@ -93,11 +166,11 @@ const Editor = () => {
             <img src={logo} alt="trybio.ai" className="h-8" />
           </Link>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" onClick={handlePreview}>
               <Eye className="h-4 w-4 mr-2" />
               Preview
             </Button>
-            <Button size="sm">
+            <Button size="sm" onClick={handlePublish}>
               Publish
             </Button>
           </div>
@@ -115,6 +188,15 @@ const Editor = () => {
                 Profile Settings
               </h2>
               <div className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Name</Label>
+                  <Input 
+                    id="name" 
+                    placeholder="Your Name" 
+                    value={profile.name}
+                    onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                  />
+                </div>
                 <div>
                   <Label htmlFor="username">Username</Label>
                   <Input 
@@ -135,6 +217,21 @@ const Editor = () => {
                     value={profile.bio}
                     onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                   />
+                </div>
+                <div>
+                  <Label htmlFor="font">Font</Label>
+                  <Select value={profile.font} onValueChange={(value) => setProfile({ ...profile, font: value })}>
+                    <SelectTrigger id="font">
+                      <SelectValue placeholder="Select a font" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {fontOptions.map((font) => (
+                        <SelectItem key={font.value} value={font.value}>
+                          {font.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <Label>Profile Picture</Label>
@@ -172,15 +269,6 @@ const Editor = () => {
                 Design Elements
               </h2>
               <div className="space-y-4">
-                <div>
-                  <Label htmlFor="header">Header Text</Label>
-                  <Input
-                    id="header"
-                    placeholder="Welcome to my page"
-                    value={headerText}
-                    onChange={(e) => setHeaderText(e.target.value)}
-                  />
-                </div>
                 <div>
                   <Label>Wallpaper/Background Image</Label>
                   <div className="flex items-center gap-4 mt-2">
@@ -352,28 +440,30 @@ const Editor = () => {
             style={{ height: '600px', backgroundColor: backgroundColor }}
           >
             <div 
-              className="h-full overflow-y-auto p-6 space-y-4"
+              className={`h-full overflow-y-auto p-6 space-y-4 ${profile.font}`}
               style={{ 
                 backgroundImage: wallpaperUrl ? `url(${wallpaperUrl})` : 'none',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
             >
-              {headerText && (
-                <div className="text-center mb-4">
-                  <h2 className="text-lg font-bold" style={{ color: textColor }}>{headerText}</h2>
-                </div>
-              )}
               <div className="text-center mb-6">
                 <Avatar className="h-20 w-20 mx-auto mb-3">
                   <AvatarImage src={profile.avatarUrl} />
                   <AvatarFallback className="bg-muted">
-                    {profile.username ? profile.username.slice(0, 2).toUpperCase() : "U"}
+                    {profile.name ? profile.name.slice(0, 2).toUpperCase() : "U"}
                   </AvatarFallback>
                 </Avatar>
-                <h3 className="font-bold text-lg mb-1" style={{ color: textColor }}>
-                  {profile.username || "Your Name"}
-                </h3>
+                {profile.name && (
+                  <h2 className="font-bold text-xl mb-1" style={{ color: textColor }}>
+                    {profile.name}
+                  </h2>
+                )}
+                {profile.username && (
+                  <h3 className="font-medium text-base mb-2" style={{ color: textColor, opacity: 0.9 }}>
+                    @{profile.username}
+                  </h3>
+                )}
                 <p className="text-sm" style={{ color: textColor, opacity: 0.8 }}>
                   {profile.bio || "Your bio goes here"}
                 </p>
