@@ -1,12 +1,28 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Zap, Palette, BarChart3, Lock, Globe, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useSubscription, SUBSCRIPTION_TIERS } from "@/contexts/SubscriptionContext";
 
 const Landing = () => {
   const { user, subscribed, productId, createCheckout, openCustomerPortal } = useSubscription();
+
+  useEffect(() => {
+    // Load Senja widget script
+    const script = document.createElement('script');
+    script.src = 'https://widget.senja.io/widget/58e8f3b2-43d4-43fd-a3b3-201481da7ccd/platform.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup script on unmount
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -34,8 +50,7 @@ const Landing = () => {
               </Button>
             </Link>
             <div className="flex-1 max-w-md">
-              <script src="https://widget.senja.io/widget/58e8f3b2-43d4-43fd-a3b3-201481da7ccd/platform.js" type="text/javascript" async></script>
-              <div className="senja-embed" data-id="58e8f3b2-43d4-43fd-a3b3-201481da7ccd" data-mode="shadow" data-lazyload="false" style={{ display: 'block', width: '100%' }}></div>
+              <div className="senja-embed" data-id="58e8f3b2-43d4-43fd-a3b3-201481da7ccd" data-mode="shadow" data-lazyload="false"></div>
             </div>
           </div>
           <p className="text-sm text-muted-foreground mt-6">
