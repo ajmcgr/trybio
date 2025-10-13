@@ -39,10 +39,12 @@ const Dashboard = () => {
                 Upgrade
               </Button>
             </Link>
-            <Button variant="ghost" size="sm">
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </Button>
+            <Link to="/settings">
+              <Button variant="ghost" size="sm">
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </Button>
+            </Link>
             <Link to="/editor">
               <Button size="sm">
                 <Plus className="h-4 w-4 mr-2" />
