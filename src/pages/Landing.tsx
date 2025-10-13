@@ -167,7 +167,8 @@ const Landing = () => {
                 "Custom domains",
                 "90-day analytics",
                 "A/B testing",
-                "No tips fee"
+                "No tips fee",
+                "Remove Bio branding"
               ]}
               highlighted
               onSelect={() => {
@@ -194,7 +195,8 @@ const Landing = () => {
                 "12-month analytics",
                 "Priority support",
                 "API access",
-                "SSO"
+                "SSO",
+                "Remove Bio branding"
               ]}
               onSelect={() => {
                 if (subscribed && productId === SUBSCRIPTION_TIERS.business.productId) {
