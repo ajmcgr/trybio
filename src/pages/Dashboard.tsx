@@ -13,6 +13,13 @@ const Dashboard = () => {
   const { toast } = useToast();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    totalViews: 0,
+    totalClicks: 0,
+    viewsChange: 0,
+    clicksChange: 0,
+  });
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -31,6 +38,11 @@ const Dashboard = () => {
 
         if (error) throw error;
         setProfile(data);
+
+        // Load analytics if profile exists
+        if (data) {
+          await loadAnalytics(data.id);
+        }
       } catch (error) {
         console.error('Error loading profile:', error);
       } finally {
@@ -40,6 +52,85 @@ const Dashboard = () => {
 
     loadProfile();
   }, [navigate]);
+
+  const loadAnalytics = async (profileId: string) => {
+    try {
+      // Get current date and date one week ago
+      const now = new Date();
+      const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+
+      // Get total views
+      const { count: totalViews } = await supabase
+        .from('profile_views')
+        .select('*', { count: 'exact', head: true })
+        .eq('profile_id', profileId);
+
+      // Get views from last week
+      const { count: lastWeekViews } = await supabase
+        .from('profile_views')
+        .select('*', { count: 'exact', head: true })
+        .eq('profile_id', profileId)
+        .gte('viewed_at', oneWeekAgo.toISOString());
+
+      // Get views from previous week
+      const { count: previousWeekViews } = await supabase
+        .from('profile_views')
+        .select('*', { count: 'exact', head: true })
+        .eq('profile_id', profileId)
+        .gte('viewed_at', twoWeeksAgo.toISOString())
+        .lt('viewed_at', oneWeekAgo.toISOString());
+
+      // Get total clicks
+      const { count: totalClicks } = await supabase
+        .from('link_clicks')
+        .select('*', { count: 'exact', head: true })
+        .eq('profile_id', profileId);
+
+      // Get clicks from last week
+      const { count: lastWeekClicks } = await supabase
+        .from('link_clicks')
+        .select('*', { count: 'exact', head: true })
+        .eq('profile_id', profileId)
+        .gte('clicked_at', oneWeekAgo.toISOString());
+
+      // Get clicks from previous week
+      const { count: previousWeekClicks } = await supabase
+        .from('link_clicks')
+        .select('*', { count: 'exact', head: true })
+        .eq('profile_id', profileId)
+        .gte('clicked_at', twoWeeksAgo.toISOString())
+        .lt('clicked_at', oneWeekAgo.toISOString());
+
+      // Calculate percentage changes
+      const viewsChange = previousWeekViews && previousWeekViews > 0
+        ? Math.round(((lastWeekViews || 0) - previousWeekViews) / previousWeekViews * 100)
+        : 0;
+      
+      const clicksChange = previousWeekClicks && previousWeekClicks > 0
+        ? Math.round(((lastWeekClicks || 0) - previousWeekClicks) / previousWeekClicks * 100)
+        : 0;
+
+      setStats({
+        totalViews: totalViews || 0,
+        totalClicks: totalClicks || 0,
+        viewsChange,
+        clicksChange,
+      });
+
+      // Get recent activity (last 10 clicks)
+      const { data: clicks } = await supabase
+        .from('link_clicks')
+        .select('*')
+        .eq('profile_id', profileId)
+        .order('clicked_at', { ascending: false })
+        .limit(10);
+
+      setRecentActivity(clicks || []);
+    } catch (error) {
+      console.error('Error loading analytics:', error);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -170,21 +261,24 @@ const Dashboard = () => {
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <StatCard
             title="Total Views"
-            value="0"
-            change="+0%"
+            value={stats.totalViews.toString()}
+            change={`${stats.viewsChange > 0 ? '+' : ''}${stats.viewsChange}%`}
             icon={<BarChart3 className="h-5 w-5" />}
+            positive={stats.viewsChange >= 0}
           />
           <StatCard
             title="Total Clicks"
-            value="0"
-            change="+0%"
+            value={stats.totalClicks.toString()}
+            change={`${stats.clicksChange > 0 ? '+' : ''}${stats.clicksChange}%`}
             icon={<LinkIcon className="h-5 w-5" />}
+            positive={stats.clicksChange >= 0}
           />
           <StatCard
             title="Conversion Rate"
-            value="0%"
+            value={stats.totalViews > 0 ? `${Math.round((stats.totalClicks / stats.totalViews) * 100)}%` : '0%'}
             change="+0%"
             icon={<BarChart3 className="h-5 w-5" />}
+            positive={true}
           />
         </div>
 
@@ -214,20 +308,41 @@ const Dashboard = () => {
         {/* Recent Activity */}
         <div className="bg-card border border-border rounded-2xl p-8">
           <h2 className="text-2xl font-display font-medium mb-6">Recent Activity</h2>
-          <div className="flex items-center justify-center py-12">
-            <p className="text-muted-foreground">No activity yet. Create your first link to get started!</p>
-          </div>
+          {recentActivity.length > 0 ? (
+            <div className="space-y-3">
+              {recentActivity.map((activity) => (
+                <div key={activity.id} className="flex items-center justify-between py-3 border-b border-border last:border-0">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                      <LinkIcon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="font-medium">{activity.link_title}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(activity.clicked_at).toLocaleDateString()} at {new Date(activity.clicked_at).toLocaleTimeString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center py-12">
+              <p className="text-muted-foreground">No activity yet. Share your bio link to get started!</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-const StatCard = ({ title, value, change, icon }: {
+const StatCard = ({ title, value, change, icon, positive = true }: {
   title: string;
   value: string;
   change: string;
   icon: React.ReactNode;
+  positive?: boolean;
 }) => (
   <div className="bg-card border border-border rounded-2xl p-6">
     <div className="flex items-center justify-between mb-4">
@@ -237,7 +352,9 @@ const StatCard = ({ title, value, change, icon }: {
       </div>
     </div>
     <div className="text-3xl font-bold mb-1">{value}</div>
-    <div className="text-sm text-green-600">{change} from last week</div>
+    <div className={`text-sm ${positive ? 'text-green-600' : 'text-red-600'}`}>
+      {change} from last week
+    </div>
   </div>
 );
 

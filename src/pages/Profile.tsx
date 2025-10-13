@@ -16,6 +16,7 @@ const Profile = () => {
     avatarUrl: "",
     font: "font-sans",
   });
+  const [profileId, setProfileId] = useState<string | null>(null);
   const [links, setLinks] = useState<any[]>([]);
   const [wallpaperUrl, setWallpaperUrl] = useState("");
   const [textColor, setTextColor] = useState("#000000");
@@ -53,6 +54,7 @@ const Profile = () => {
           }
 
           if (data) {
+            setProfileId(data.id);
             setProfile({
               name: data.name || '',
               username: data.username || '',
@@ -66,6 +68,15 @@ const Profile = () => {
             setButtonColor(data.button_color || '#000000');
             setButtonTextColor(data.button_text_color || '#ffffff');
             setBackgroundColor(data.background_color || '#ffffff');
+
+            // Track profile view (only for public profiles, not previews)
+            await supabase
+              .from('profile_views')
+              .insert({
+                profile_id: data.id,
+                user_agent: navigator.userAgent,
+                referrer: document.referrer
+              });
           }
         } catch (error) {
           console.error('Error loading profile:', error);
@@ -75,6 +86,25 @@ const Profile = () => {
 
     loadProfile();
   }, [isPreview, username]);
+
+  const handleLinkClick = async (link: any) => {
+    // Track link click (only for public profiles, not previews)
+    if (!isPreview && profileId) {
+      try {
+        await supabase
+          .from('link_clicks')
+          .insert({
+            profile_id: profileId,
+            link_title: link.title,
+            link_url: link.url,
+            user_agent: navigator.userAgent,
+            referrer: document.referrer
+          });
+      } catch (error) {
+        console.error('Error tracking click:', error);
+      }
+    }
+  };
 
   return (
     <div 
@@ -124,6 +154,7 @@ const Profile = () => {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => handleLinkClick(link)}
                 className="block w-full py-4 px-6 rounded-2xl font-medium hover:opacity-90 transition-opacity group"
                 style={{ backgroundColor: buttonColor, color: buttonTextColor }}
               >
