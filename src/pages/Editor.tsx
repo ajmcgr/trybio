@@ -1,18 +1,97 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import logo from "@/assets/logo.png";
+import { Link } from "react-router-dom";
+
+interface LinkItem {
+  id: string;
+  title: string;
+  url: string;
+}
+
+interface ProfileData {
+  username: string;
+  bio: string;
+  avatarUrl: string;
+}
 
 const Editor = () => {
+  const [profile, setProfile] = useState<ProfileData>({
+    username: "",
+    bio: "",
+    avatarUrl: "",
+  });
+  
+  const [links, setLinks] = useState<LinkItem[]>([]);
+  const [selectedTheme, setSelectedTheme] = useState(0);
+  const [headerText, setHeaderText] = useState("");
+  const [wallpaperUrl, setWallpaperUrl] = useState("");
+  const [textColor, setTextColor] = useState("#000000");
+  const [buttonColor, setButtonColor] = useState("#000000");
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  
+  const [isAddingLink, setIsAddingLink] = useState(false);
+  const [newLink, setNewLink] = useState({ title: "", url: "" });
+
+  const handleAddLink = () => {
+    if (newLink.title && newLink.url) {
+      setLinks([...links, { id: Date.now().toString(), ...newLink }]);
+      setNewLink({ title: "", url: "" });
+      setIsAddingLink(false);
+    }
+  };
+
+  const handleDeleteLink = (id: string) => {
+    setLinks(links.filter(link => link.id !== id));
+  };
+
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfile({ ...profile, avatarUrl: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleWallpaperUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setWallpaperUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const themeColors = [
+    { bg: "hsl(0, 70%, 60%)", text: "#fff" },
+    { bg: "hsl(45, 70%, 60%)", text: "#000" },
+    { bg: "hsl(90, 70%, 60%)", text: "#000" },
+    { bg: "hsl(135, 70%, 60%)", text: "#fff" },
+    { bg: "hsl(180, 70%, 60%)", text: "#000" },
+    { bg: "hsl(225, 70%, 60%)", text: "#fff" },
+    { bg: "hsl(270, 70%, 60%)", text: "#fff" },
+    { bg: "hsl(315, 70%, 60%)", text: "#fff" },
+  ];
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl">trybio.ai</span>
-          </div>
+          <Link to="/dashboard" className="flex items-center">
+            <img src={logo} alt="trybio.ai" className="h-8" />
+          </Link>
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm">
               <Eye className="h-4 w-4 mr-2" />
@@ -38,19 +117,131 @@ const Editor = () => {
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="username">Username</Label>
-                  <Input id="username" placeholder="yourname" />
+                  <Input 
+                    id="username" 
+                    placeholder="yourname" 
+                    value={profile.username}
+                    onChange={(e) => setProfile({ ...profile, username: e.target.value })}
+                  />
                   <p className="text-sm text-muted-foreground mt-1">
-                    trybio.ai/yourname
+                    trybio.ai/{profile.username || "yourname"}
                   </p>
                 </div>
                 <div>
                   <Label htmlFor="bio">Bio</Label>
-                  <Input id="bio" placeholder="What you do in one line" />
+                  <Textarea 
+                    id="bio" 
+                    placeholder="What you do in one line"
+                    value={profile.bio}
+                    onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                  />
                 </div>
                 <div>
                   <Label>Profile Picture</Label>
-                  <div className="h-24 w-24 rounded-full bg-muted flex items-center justify-center">
-                    <Plus className="h-8 w-8 text-muted-foreground" />
+                  <div className="flex items-center gap-4 mt-2">
+                    <Avatar className="h-24 w-24">
+                      <AvatarImage src={profile.avatarUrl} />
+                      <AvatarFallback className="bg-muted">
+                        <Plus className="h-8 w-8 text-muted-foreground" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <label htmlFor="avatar-upload">
+                      <Button variant="outline" size="sm" asChild>
+                        <span className="cursor-pointer">
+                          <Upload className="h-4 w-4 mr-2" />
+                          Upload Image
+                        </span>
+                      </Button>
+                      <input
+                        id="avatar-upload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleAvatarUpload}
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Design Elements Section */}
+            <div className="bg-card border border-border rounded-2xl p-6">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <Palette className="h-5 w-5" />
+                Design Elements
+              </h2>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="header">Header Text</Label>
+                  <Input
+                    id="header"
+                    placeholder="Welcome to my page"
+                    value={headerText}
+                    onChange={(e) => setHeaderText(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Wallpaper/Background Image</Label>
+                  <div className="flex items-center gap-4 mt-2">
+                    {wallpaperUrl && (
+                      <div className="h-20 w-20 rounded-lg overflow-hidden border border-border">
+                        <img src={wallpaperUrl} alt="Wallpaper" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <label htmlFor="wallpaper-upload">
+                      <Button variant="outline" size="sm" asChild>
+                        <span className="cursor-pointer">
+                          <ImageIcon className="h-4 w-4 mr-2" />
+                          {wallpaperUrl ? "Change" : "Upload"} Wallpaper
+                        </span>
+                      </Button>
+                      <input
+                        id="wallpaper-upload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleWallpaperUpload}
+                      />
+                    </label>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="textColor">Text Color</Label>
+                    <div className="flex items-center gap-2 mt-2">
+                      <input
+                        id="textColor"
+                        type="color"
+                        value={textColor}
+                        onChange={(e) => setTextColor(e.target.value)}
+                        className="h-10 w-full rounded cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="buttonColor">Button Color</Label>
+                    <div className="flex items-center gap-2 mt-2">
+                      <input
+                        id="buttonColor"
+                        type="color"
+                        value={buttonColor}
+                        onChange={(e) => setButtonColor(e.target.value)}
+                        className="h-10 w-full rounded cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="backgroundColor">Background Color</Label>
+                    <div className="flex items-center gap-2 mt-2">
+                      <input
+                        id="backgroundColor"
+                        type="color"
+                        value={backgroundColor}
+                        onChange={(e) => setBackgroundColor(e.target.value)}
+                        className="h-10 w-full rounded cursor-pointer"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -60,14 +251,17 @@ const Editor = () => {
             <div className="bg-card border border-border rounded-2xl p-6">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <Palette className="h-5 w-5" />
-                Theme
+                Theme Presets
               </h2>
               <div className="grid grid-cols-4 gap-3">
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                {themeColors.map((theme, i) => (
                   <button
                     key={i}
-                    className="aspect-square rounded-xl border-2 border-border hover:border-primary transition-colors"
-                    style={{ background: `hsl(${i * 45}, 70%, 60%)` }}
+                    className={`aspect-square rounded-xl border-2 transition-colors ${
+                      selectedTheme === i ? "border-primary" : "border-border hover:border-primary/50"
+                    }`}
+                    style={{ background: theme.bg }}
+                    onClick={() => setSelectedTheme(i)}
                   />
                 ))}
               </div>
@@ -80,28 +274,71 @@ const Editor = () => {
                   <LinkIcon className="h-5 w-5" />
                   Links
                 </h2>
-                <Button size="sm">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Link
-                </Button>
-              </div>
-              <div className="space-y-3">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="border border-border rounded-xl p-4 hover:bg-muted/50 transition-colors cursor-move">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <LinkIcon className="h-5 w-5 text-primary" />
+                <Dialog open={isAddingLink} onOpenChange={setIsAddingLink}>
+                  <DialogTrigger asChild>
+                    <Button size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Link
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add New Link</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 mt-4">
+                      <div>
+                        <Label htmlFor="link-title">Title</Label>
+                        <Input
+                          id="link-title"
+                          placeholder="My Website"
+                          value={newLink.title}
+                          onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
+                        />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium">Link Title {i}</p>
-                        <p className="text-sm text-muted-foreground">https://example.com</p>
+                      <div>
+                        <Label htmlFor="link-url">URL</Label>
+                        <Input
+                          id="link-url"
+                          placeholder="https://example.com"
+                          value={newLink.url}
+                          onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+                        />
                       </div>
-                      <Button variant="ghost" size="sm">
-                        Edit
+                      <Button onClick={handleAddLink} className="w-full">
+                        Add Link
                       </Button>
                     </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <div className="space-y-3">
+                {links.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    No links yet. Click "Add Link" to get started!
                   </div>
-                ))}
+                ) : (
+                  links.map((link) => (
+                    <div key={link.id} className="border border-border rounded-xl p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <GripVertical className="h-5 w-5 text-muted-foreground cursor-move" />
+                        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <LinkIcon className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium">{link.title}</p>
+                          <p className="text-sm text-muted-foreground">{link.url}</p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteLink(link.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -110,20 +347,48 @@ const Editor = () => {
         {/* Right Panel - Preview */}
         <div className="w-96 bg-secondary/30 p-6 flex flex-col items-center">
           <div className="text-sm text-muted-foreground mb-4">Live Preview</div>
-          <div className="w-full max-w-sm bg-background rounded-[3rem] border-8 border-card shadow-2xl overflow-hidden" style={{ height: '600px' }}>
-            <div className="h-full overflow-y-auto p-6 space-y-4">
+          <div 
+            className="w-full max-w-sm rounded-[3rem] border-8 border-card shadow-2xl overflow-hidden" 
+            style={{ height: '600px', backgroundColor: backgroundColor }}
+          >
+            <div 
+              className="h-full overflow-y-auto p-6 space-y-4"
+              style={{ 
+                backgroundImage: wallpaperUrl ? `url(${wallpaperUrl})` : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            >
+              {headerText && (
+                <div className="text-center mb-4">
+                  <h2 className="text-lg font-bold" style={{ color: textColor }}>{headerText}</h2>
+                </div>
+              )}
               <div className="text-center mb-6">
-                <div className="h-20 w-20 rounded-full bg-muted mx-auto mb-3"></div>
-                <h3 className="font-bold text-lg mb-1">Your Name</h3>
-                <p className="text-sm text-muted-foreground">Your bio goes here</p>
+                <Avatar className="h-20 w-20 mx-auto mb-3">
+                  <AvatarImage src={profile.avatarUrl} />
+                  <AvatarFallback className="bg-muted">
+                    {profile.username ? profile.username.slice(0, 2).toUpperCase() : "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <h3 className="font-bold text-lg mb-1" style={{ color: textColor }}>
+                  {profile.username || "Your Name"}
+                </h3>
+                <p className="text-sm" style={{ color: textColor, opacity: 0.8 }}>
+                  {profile.bio || "Your bio goes here"}
+                </p>
               </div>
               <div className="space-y-3">
-                {[1, 2, 3].map((i) => (
+                {links.map((link) => (
                   <button
-                    key={i}
-                    className="w-full py-3 px-4 bg-card border border-border rounded-xl font-medium hover:bg-muted transition-colors"
+                    key={link.id}
+                    className="w-full py-3 px-4 rounded-xl font-medium transition-colors"
+                    style={{ 
+                      backgroundColor: buttonColor,
+                      color: '#fff'
+                    }}
                   >
-                    Link Title {i}
+                    {link.title}
                   </button>
                 ))}
               </div>

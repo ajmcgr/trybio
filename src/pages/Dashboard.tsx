@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Plus, BarChart3, Link as LinkIcon, Settings, Sparkles } from "lucide-react";
+import { Plus, BarChart3, Link as LinkIcon, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
+import logo from "@/assets/logo.png";
 
 const Dashboard = () => {
   return (
@@ -8,10 +9,9 @@ const Dashboard = () => {
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl">trybio.ai</span>
-          </div>
+          <Link to="/" className="flex items-center">
+            <img src={logo} alt="trybio.ai" className="h-8" />
+          </Link>
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm">
               <Settings className="h-4 w-4 mr-2" />
@@ -30,21 +30,21 @@ const Dashboard = () => {
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <StatCard
             title="Total Views"
-            value="2,451"
-            change="+12.5%"
+            value="0"
+            change="+0%"
             icon={<BarChart3 className="h-5 w-5" />}
           />
           <StatCard
             title="Total Clicks"
-            value="1,024"
-            change="+8.2%"
+            value="0"
+            change="+0%"
             icon={<LinkIcon className="h-5 w-5" />}
           />
           <StatCard
             title="Conversion Rate"
-            value="41.8%"
-            change="+2.4%"
-            icon={<Sparkles className="h-5 w-5" />}
+            value="0%"
+            change="+0%"
+            icon={<BarChart3 className="h-5 w-5" />}
           />
         </div>
 
@@ -76,23 +76,8 @@ const Dashboard = () => {
         {/* Recent Activity */}
         <div className="bg-card border border-border rounded-2xl p-8">
           <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center justify-between py-3 border-b border-border last:border-0">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <LinkIcon className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Link clicked</p>
-                    <p className="text-sm text-muted-foreground">2 hours ago</p>
-                  </div>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  +1 click
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center justify-center py-12">
+            <p className="text-muted-foreground">No activity yet. Create your first link to get started!</p>
           </div>
         </div>
       </div>
