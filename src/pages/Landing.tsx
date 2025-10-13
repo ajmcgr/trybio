@@ -147,8 +147,7 @@ const Landing = () => {
                 "1 bio page",
                 "10 links",
                 "Basic themes",
-                "7-day analytics",
-                "Tips enabled (5% fee)"
+                "7-day analytics"
               ]}
               onSelect={() => {
                 if (!user) {
