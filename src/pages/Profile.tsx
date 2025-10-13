@@ -3,6 +3,7 @@ import { useSearchParams, useParams } from "react-router-dom";
 import { Link as LinkIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { supabase } from "@/lib/supabase";
+import { SUBSCRIPTION_TIERS } from "@/contexts/SubscriptionContext";
 
 const Profile = () => {
   const [searchParams] = useSearchParams();
@@ -23,6 +24,7 @@ const Profile = () => {
   const [buttonColor, setButtonColor] = useState("#000000");
   const [buttonTextColor, setButtonTextColor] = useState("#ffffff");
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  const [isPaidUser, setIsPaidUser] = useState(false);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -68,6 +70,24 @@ const Profile = () => {
             setButtonColor(data.button_color || '#000000');
             setButtonTextColor(data.button_text_color || '#ffffff');
             setBackgroundColor(data.background_color || '#ffffff');
+
+            // Check if user has a paid subscription
+            try {
+              const { data: subData } = await supabase.functions.invoke('check-subscription', {
+                headers: {
+                  Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+                },
+              });
+
+              const hasPaidPlan = subData?.subscribed && 
+                (subData?.product_id === SUBSCRIPTION_TIERS.pro.productId || 
+                 subData?.product_id === SUBSCRIPTION_TIERS.business.productId);
+              
+              setIsPaidUser(hasPaidPlan || false);
+            } catch (error) {
+              console.error('Error checking subscription:', error);
+              setIsPaidUser(false);
+            }
 
             // Track profile view (only for public profiles, not previews)
             await supabase
@@ -167,15 +187,17 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="text-center mt-6">
-          <a
-            href="/"
-            className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
-          >
-            Create your own with <span className="font-semibold">trybio.ai</span>
-          </a>
-        </div>
+        {/* Footer - only show for free users */}
+        {!isPaidUser && (
+          <div className="text-center mt-6">
+            <a
+              href="/"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
+            >
+              Create your own with <span className="font-semibold">trybio.ai</span>
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
