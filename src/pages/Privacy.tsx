@@ -1,16 +1,12 @@
 import { Link } from "react-router-dom";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import logo from "@/assets/logo.png";
 
 const Privacy = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg">
-        <div className="container mx-auto px-6 h-16 flex items-center">
-          <Link to="/" className="flex items-center">
-            <img src={logo} alt="trybio.ai" className="h-8" />
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background flex flex-col">
+      <Header />
 
       <main className="pt-24 pb-16 px-6">
         <div className="container mx-auto max-w-4xl">
@@ -53,14 +49,7 @@ const Privacy = () => {
           </div>
         </div>
       </main>
-
-      <footer className="border-t border-border py-12 px-6">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center text-sm text-muted-foreground">
-            Copyright © 2025 Works App, Inc. Built with ♥️ by <a href="https://works.xyz/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Works</a>.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

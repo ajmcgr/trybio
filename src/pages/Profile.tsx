@@ -1,9 +1,13 @@
 import { Link as LinkIcon, MapPin } from "lucide-react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const Profile = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-background flex items-center justify-center p-6">
-      <div className="w-full max-w-lg">
+    <div className="min-h-screen bg-background flex flex-col">
+      <Header />
+      <div className="flex-1 bg-gradient-to-br from-background via-secondary/30 to-background flex items-center justify-center p-6">
+        <div className="w-full max-w-lg">
         {/* Profile Card */}
         <div className="bg-card/80 backdrop-blur-xl border border-border rounded-3xl p-8 shadow-2xl">
           {/* Avatar & Info */}
@@ -63,7 +67,9 @@ const Profile = () => {
             Create your own with <span className="font-semibold">trybio.ai</span>
           </a>
         </div>
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };
