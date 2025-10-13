@@ -547,7 +547,7 @@ const Editor = () => {
                     @{profile.username}
                   </h3>
                 )}
-                <p className="text-sm" style={{ color: textColor, opacity: 0.8 }}>
+                <p className={`text-sm ${profile.font}`} style={{ color: textColor, opacity: 0.8 }}>
                   {profile.bio || "Your bio goes here"}
                 </p>
               </div>

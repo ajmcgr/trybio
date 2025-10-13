@@ -113,7 +113,7 @@ const Profile = () => {
                 </h2>
               )}
               {profile.bio && (
-                <p className="text-sm" style={{ color: textColor, opacity: 0.8 }}>
+                <p className={`text-sm ${profile.font}`} style={{ color: textColor, opacity: 0.8 }}>
                   {profile.bio}
                 </p>
               )}
