@@ -178,12 +178,6 @@ const Auth = () => {
           </div>
         </div>
 
-        <p className="text-center text-xs text-muted-foreground mt-6">
-          By continuing, you agree to our{" "}
-          <a href="#" className="underline hover:text-foreground">Terms</a>
-          {" "}and{" "}
-          <a href="#" className="underline hover:text-foreground">Privacy Policy</a>
-        </p>
         </div>
       </div>
       <Footer />
