@@ -62,13 +62,13 @@ const Landing = () => {
 
       {/* Preview Section */}
       <section className="py-20 px-6 bg-secondary/50">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto max-w-2xl">
           <div className="bg-card border border-border rounded-3xl p-8 shadow-2xl">
-            <div className="aspect-[16/9] rounded-2xl overflow-hidden flex items-center justify-center">
+            <div className="flex items-center justify-center">
               <img 
                 src={alexBioPreview} 
                 alt="Bio page preview - Alex MacGregor's profile" 
-                className="w-full h-full object-contain"
+                className="w-full max-w-md rounded-2xl"
               />
             </div>
           </div>
