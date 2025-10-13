@@ -33,8 +33,8 @@ const Landing = () => {
       <section className="pt-32 pb-20 px-6">
         <div className="container mx-auto max-w-7xl">
           <div className="flex flex-col lg:flex-row gap-0 items-center">
-            {/* Left side - Hero Content (60%) */}
-            <div className="lg:w-3/5 text-center lg:text-left px-6">
+            {/* Left side - Hero Content (65%) */}
+            <div className="lg:w-[65%] text-center lg:text-left px-6">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-sm mb-8 animate-fade-in">
                 <Sparkles className="h-4 w-4 text-primary" />
                 <span>AI-powered bio pages in 60 seconds</span>
@@ -62,8 +62,8 @@ const Landing = () => {
               </p>
             </div>
             
-            {/* Right side - Bio Preview (40%) */}
-            <div className="lg:w-2/5 w-full">
+            {/* Right side - Bio Preview (35%) */}
+            <div className="lg:w-[35%] w-full">
               <img 
                 src={alexBioPreview} 
                 alt="Bio page preview - Alex MacGregor's profile" 
