@@ -22,11 +22,7 @@ const About = () => {
               </p>
 
               <p className="mb-6">
-                I'm Alex MacGregor, a PR strategist who has spent the last decade relying on enterprise suites like Meltwater, Cision, and Muck Rack to get coverage for tech brands across Asia-Pacific.
-              </p>
-
-              <p className="mb-6">
-                Those platforms were revolutionary once, but somewhere along the way they traded focus for feature bloat. Pricing climbed, dashboards grew dense, and the contact lists still missed too many key reporters. I found myself wrestling with Boolean strings from the 2010s while the industry around us moved to natural-language prompts and AI-assisted workflows.
+                Link in bio platforms were revolutionary once, but somewhere along the way they traded focus for feature bloat. Pricing climbed, dashboards grew dense, and the contact lists still missed too many key reporters. I found myself wrestling with Boolean strings from the 2010s while the industry around us moved to natural-language prompts and AI-assisted workflows.
               </p>
 
               <p className="mb-6">
