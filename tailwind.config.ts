@@ -66,6 +66,18 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         display: ['Reckless', 'serif'],
+        playfair: ['Playfair Display', 'serif'],
+        poppins: ['Poppins', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
+        raleway: ['Raleway', 'sans-serif'],
+        lora: ['Lora', 'serif'],
+        openSans: ['Open Sans', 'sans-serif'],
+        roboto: ['Roboto', 'sans-serif'],
+        merriweather: ['Merriweather', 'serif'],
+        bebas: ['Bebas Neue', 'cursive'],
+        lobster: ['Lobster', 'cursive'],
+        pacifico: ['Pacifico', 'cursive'],
+        dancing: ['Dancing Script', 'cursive'],
       },
       keyframes: {
         "fade-in": {

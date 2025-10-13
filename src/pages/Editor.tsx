@@ -49,10 +49,22 @@ const Editor = () => {
   const [newLink, setNewLink] = useState({ title: "", url: "" });
 
   const fontOptions = [
-    { value: "font-sans", label: "Sans Serif (Inter)" },
-    { value: "font-display", label: "Display (Reckless)" },
-    { value: "font-mono", label: "Monospace" },
-    { value: "font-serif", label: "Serif" },
+    { value: "font-sans", label: "Inter (Sans Serif)" },
+    { value: "font-display", label: "Reckless (Display)" },
+    { value: "font-playfair", label: "Playfair Display (Elegant)" },
+    { value: "font-poppins", label: "Poppins (Modern)" },
+    { value: "font-montserrat", label: "Montserrat (Clean)" },
+    { value: "font-raleway", label: "Raleway (Sophisticated)" },
+    { value: "font-lora", label: "Lora (Classic)" },
+    { value: "font-openSans", label: "Open Sans (Friendly)" },
+    { value: "font-roboto", label: "Roboto (Professional)" },
+    { value: "font-merriweather", label: "Merriweather (Traditional)" },
+    { value: "font-bebas", label: "Bebas Neue (Bold)" },
+    { value: "font-lobster", label: "Lobster (Playful)" },
+    { value: "font-pacifico", label: "Pacifico (Fun)" },
+    { value: "font-dancing", label: "Dancing Script (Handwritten)" },
+    { value: "font-mono", label: "Monospace (Code)" },
+    { value: "font-serif", label: "Serif (Classic)" },
   ];
 
   const handleAddLink = () => {
