@@ -5,7 +5,7 @@ import logo from "@/assets/logo.png";
 
 const Header = () => {
   return (
-    <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg">
+    <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg border-b border-border">
       <div className="container mx-auto max-w-4xl px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center">
           <img src={logo} alt="trybio.ai" className="h-8" />
@@ -17,9 +17,9 @@ const Header = () => {
         </nav>
         <div className="flex items-center gap-3">
           <Link to="/auth">
-            <Button variant="ghost" size="sm">Sign In</Button>
+            <Button variant="ghost" size="sm" className="hover:bg-transparent">Sign In</Button>
           </Link>
-          <Link to="/auth">
+          <Link to="/auth?mode=signup">
             <Button size="sm" className="gap-2">
               Get Started <ArrowRight className="h-4 w-4" />
             </Button>
