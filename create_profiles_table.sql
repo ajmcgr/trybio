@@ -22,9 +22,10 @@ create table public.profiles (
 alter table public.profiles enable row level security;
 
 -- Create policies
-create policy "Users can view their own profile"
+-- Allow anyone to view profiles (public access)
+create policy "Public profiles are viewable by everyone"
   on public.profiles for select
-  using (auth.uid() = user_id);
+  using (true);
 
 create policy "Users can insert their own profile"
   on public.profiles for insert
