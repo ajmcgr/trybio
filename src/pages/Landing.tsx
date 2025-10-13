@@ -61,12 +61,51 @@ const Landing = () => {
       </section>
 
       {/* Preview Section */}
-      <section className="bg-secondary/50">
-        <img 
-          src={alexBioPreview} 
-          alt="Bio page preview - Alex MacGregor's profile" 
-          className="w-full h-auto"
-        />
+      <section className="bg-secondary/50 py-12">
+        <div className="container mx-auto px-6 relative">
+          <div className="relative max-w-2xl mx-auto">
+            <img 
+              src={alexBioPreview} 
+              alt="Bio page preview - Alex MacGregor's profile" 
+              className="w-full h-auto"
+            />
+            {/* Annotation */}
+            <div className="absolute -right-4 top-1/4 hidden lg:block">
+              <div className="relative">
+                {/* Arrow */}
+                <svg 
+                  className="w-24 h-24 text-primary -rotate-12" 
+                  viewBox="0 0 100 100" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path 
+                    d="M10 50 Q 30 20, 50 50 T 90 50" 
+                    stroke="currentColor" 
+                    strokeWidth="3" 
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                  <path 
+                    d="M85 45 L95 50 L85 55" 
+                    stroke="currentColor" 
+                    strokeWidth="3" 
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                  />
+                </svg>
+                {/* Text */}
+                <p 
+                  className="absolute -top-8 left-20 text-primary font-bold text-lg whitespace-nowrap transform -rotate-6"
+                  style={{ fontFamily: 'Comic Sans MS, cursive' }}
+                >
+                  Example link in bio page
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Features Section */}
