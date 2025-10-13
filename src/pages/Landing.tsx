@@ -67,41 +67,6 @@ const Landing = () => {
           alt="Bio page preview - Alex MacGregor's profile" 
           className="w-full h-auto"
         />
-        {/* Annotation Overlay */}
-        <div className="absolute right-12 top-1/3 hidden lg:block">
-          <div className="relative">
-            {/* Arrow */}
-            <svg 
-              className="w-40 h-40 text-primary -rotate-12" 
-              viewBox="0 0 100 100" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path 
-                d="M10 50 Q 30 20, 50 50 T 90 50" 
-                stroke="currentColor" 
-                strokeWidth="4" 
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path 
-                d="M85 45 L95 50 L85 55" 
-                stroke="currentColor" 
-                strokeWidth="4" 
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-            </svg>
-            {/* Text */}
-            <p 
-              className="absolute -top-12 left-32 text-primary font-bold text-2xl whitespace-nowrap transform -rotate-6"
-              style={{ fontFamily: 'Comic Sans MS, cursive' }}
-            >
-              Example link in bio page
-            </p>
-          </div>
-        </div>
       </section>
 
       {/* Features Section */}
