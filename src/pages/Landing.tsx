@@ -62,8 +62,8 @@ const Landing = () => {
               </p>
             </div>
             
-            {/* Right side - Bio Preview (35%) */}
-            <div className="lg:w-[35%] w-full">
+            {/* Right side - Bio Preview (30%) */}
+            <div className="lg:w-[30%] w-full">
               <img 
                 src={alexBioPreview} 
                 alt="Bio page preview - Alex MacGregor's profile" 
