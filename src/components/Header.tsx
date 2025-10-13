@@ -11,7 +11,7 @@ const Header = () => {
           <img src={logo} alt="trybio.ai" className="h-8" />
         </Link>
         <div className="flex items-center gap-3">
-          <a href="/#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
+          <a href="/#pricing" className="text-sm text-foreground">Pricing</a>
           <Link to="/auth">
             <Button variant="ghost" size="sm" className="hover:bg-transparent">Login</Button>
           </Link>
