@@ -8,7 +8,7 @@ const Landing = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg">
-        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="container mx-auto max-w-4xl px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center">
             <img src={logo} alt="trybio.ai" className="h-8" />
           </Link>
@@ -32,7 +32,7 @@ const Landing = () => {
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6">
-        <div className="container mx-auto max-w-5xl text-center">
+        <div className="container mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-sm mb-8 animate-fade-in">
             <Sparkles className="h-4 w-4 text-primary" />
             <span>AI-powered bio pages in 60 seconds</span>
@@ -63,7 +63,7 @@ const Landing = () => {
 
       {/* Preview Section */}
       <section className="py-20 px-6 bg-secondary/50">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto max-w-4xl">
           <div className="bg-card border border-border rounded-3xl p-8 shadow-2xl">
             <div className="aspect-[16/9] bg-muted rounded-2xl flex items-center justify-center">
               <p className="text-muted-foreground">Live preview demo</p>
@@ -74,7 +74,7 @@ const Landing = () => {
 
       {/* Features Section */}
       <section id="features" className="py-24 px-6">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-medium mb-4">Everything you need to grow</h2>
             <p className="text-xl text-muted-foreground">Powerful features that help you convert visitors into customers</p>
@@ -116,7 +116,7 @@ const Landing = () => {
 
       {/* Themes Section */}
       <section id="themes" className="py-24 px-6 bg-secondary/50">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-medium mb-4">Themes that stand out</h2>
             <p className="text-xl text-muted-foreground">Premium designs that make you look professional instantly</p>
@@ -135,7 +135,7 @@ const Landing = () => {
 
       {/* Pricing Section */}
       <section id="pricing" className="py-24 px-6">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-medium mb-4">Simple, transparent pricing</h2>
             <p className="text-xl text-muted-foreground">Start free, upgrade when you're ready to grow</p>
@@ -186,7 +186,7 @@ const Landing = () => {
 
       {/* CTA Section */}
       <section className="py-24 px-6">
-        <div className="container mx-auto max-w-4xl text-center">
+        <div className="container mx-auto max-w-3xl text-center">
           <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl p-12 border border-primary/20">
             <h2 className="text-4xl md:text-5xl font-display font-medium mb-6">Ready to grow your audience?</h2>
             <p className="text-xl text-muted-foreground mb-8">Join thousands of creators using trybio.ai to turn attention into action.</p>
@@ -201,7 +201,7 @@ const Landing = () => {
 
       {/* Footer */}
       <footer className="border-t border-border py-12 px-6">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto max-w-4xl">
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
               <h4 className="font-semibold mb-4">About</h4>
