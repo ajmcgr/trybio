@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useSubscription, SUBSCRIPTION_TIERS } from "@/contexts/SubscriptionContext";
+import alexBioPreview from "@/assets/alex-bio-preview.png";
 
 const Landing = () => {
   const { user, subscribed, productId, createCheckout, openCustomerPortal } = useSubscription();
@@ -63,8 +64,12 @@ const Landing = () => {
       <section className="py-20 px-6 bg-secondary/50">
         <div className="container mx-auto max-w-4xl">
           <div className="bg-card border border-border rounded-3xl p-8 shadow-2xl">
-            <div className="aspect-[16/9] bg-muted rounded-2xl flex items-center justify-center">
-              <p className="text-muted-foreground">Live preview demo</p>
+            <div className="aspect-[16/9] rounded-2xl overflow-hidden flex items-center justify-center">
+              <img 
+                src={alexBioPreview} 
+                alt="Bio page preview - Alex MacGregor's profile" 
+                className="w-full h-full object-contain"
+              />
             </div>
           </div>
         </div>
@@ -119,14 +124,11 @@ const Landing = () => {
             <h2 className="text-4xl md:text-5xl font-display font-medium mb-4">Themes that stand out</h2>
             <p className="text-xl text-muted-foreground">Premium designs that make you look professional instantly</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-card border border-border rounded-2xl p-6 hover:shadow-xl transition-shadow">
-                <div className="aspect-[9/16] bg-muted rounded-xl mb-4"></div>
-                <h3 className="font-semibold mb-2">Theme {i}</h3>
-                <p className="text-sm text-muted-foreground">Beautiful and minimal</p>
-              </div>
-            ))}
+          <div className="grid md:grid-cols-4 gap-6">
+            <ThemeCard name="Sunset" bgColor="#e74c3c" />
+            <ThemeCard name="Ocean" bgColor="#3498db" />
+            <ThemeCard name="Forest" bgColor="#2ecc71" />
+            <ThemeCard name="Purple" bgColor="#9b59b6" />
           </div>
         </div>
       </section>
@@ -241,6 +243,25 @@ const FeatureCard = ({ icon, title, description }: { icon: React.ReactNode; titl
     </div>
     <h3 className="font-semibold text-lg mb-2">{title}</h3>
     <p className="text-muted-foreground">{description}</p>
+  </div>
+);
+
+const ThemeCard = ({ name, bgColor }: { name: string; bgColor: string }) => (
+  <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-xl transition-shadow">
+    <div 
+      className="aspect-[9/16] rounded-xl mb-4 flex items-center justify-center text-white font-semibold" 
+      style={{ backgroundColor: bgColor }}
+    >
+      <div className="text-center">
+        <div className="w-16 h-16 rounded-full bg-white/20 mx-auto mb-3"></div>
+        <div className="space-y-2">
+          <div className="h-2 w-20 bg-white/30 rounded mx-auto"></div>
+          <div className="h-2 w-16 bg-white/30 rounded mx-auto"></div>
+        </div>
+      </div>
+    </div>
+    <h3 className="font-semibold mb-2">{name}</h3>
+    <p className="text-sm text-muted-foreground">Beautiful and minimal</p>
   </div>
 );
 
