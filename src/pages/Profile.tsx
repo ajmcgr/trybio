@@ -128,10 +128,10 @@ const Profile = () => {
 
   return (
     <div 
-      className="min-h-screen flex flex-col items-start justify-start md:justify-center md:p-6"
+      className="min-h-screen flex flex-col items-center justify-start md:justify-center md:p-6"
       style={{ backgroundColor }}
     >
-      <div className="w-full md:max-w-lg flex-shrink-0">
+      <div className="w-full md:max-w-lg flex-shrink-0 md:mx-auto">
         {/* Profile Card */}
         <div 
           className={`md:rounded-3xl p-8 md:shadow-2xl ${profile.font}`}
