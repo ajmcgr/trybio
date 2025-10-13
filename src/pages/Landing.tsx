@@ -43,7 +43,7 @@ const Landing = () => {
           <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: "0.1s" }}>
             Create a stunning link-in-bio page that converts. AI-powered setup, beautiful themes, and powerful analytics—all in one place.
           </p>
-          <div className="flex flex-col sm:flex-row gap-2 justify-center items-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
+          <div className="flex flex-col sm:flex-row gap-0 justify-center items-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
             <Link to="/auth?mode=signup">
               <Button size="lg" className="gap-2 text-lg px-8 h-14">
                 Create your page free <ArrowRight className="h-5 w-5" />
