@@ -49,7 +49,7 @@ const About = () => {
             </p>
 
             <p className="mb-8">
-              Thanks for reading, and for giving Bio a try. You can always contact me directly if you have any questions at <a href="mailto:alex@trybio.ai" className="text-primary hover:underline">alex@trybio.ai</a>. I look forward to hearing from you.
+              Thanks for reading, and for giving Bio a try. You can always contact me directly if you have any questions at <a href="mailto:alex@trybio.ai" className="text-blue-600 hover:underline">alex@trybio.ai</a>. I look forward to hearing from you.
             </p>
 
             <div className="flex flex-col items-start gap-4 mt-12 mb-8">
