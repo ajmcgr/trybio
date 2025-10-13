@@ -48,7 +48,7 @@ const Header = () => {
           <img src={logo} alt="trybio.ai" className="h-8" />
         </Link>
         <div className="flex items-center gap-3">
-          <a href="/#pricing" className="text-sm text-foreground">Pricing</a>
+          <a href="/#pricing" className="text-sm text-foreground pointer-events-auto">Pricing</a>
           {user ? (
             <>
               <Link to="/upgrade">
@@ -73,7 +73,7 @@ const Header = () => {
           ) : (
             <>
               <Link to="/auth">
-                <Button variant="ghost" size="sm" className="text-sm text-foreground hover:bg-transparent">Login</Button>
+                <Button variant="ghost" size="sm" className="text-sm text-foreground hover:bg-transparent hover:text-foreground">Login</Button>
               </Link>
               <Link to="/auth?mode=signup">
                 <Button size="sm" className="gap-2 rounded-[6px]">
