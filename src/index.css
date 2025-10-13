@@ -7,6 +7,30 @@ All colors MUST be HSL.
 */
 
 @layer base {
+  @font-face {
+    font-family: 'Reckless';
+    src: url('/fonts/Reckless-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Reckless';
+    src: url('/fonts/Reckless-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Reckless';
+    src: url('/fonts/Reckless-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 220 13% 13%;
@@ -17,7 +41,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 220 13% 13%;
 
-    --primary: 250 95% 63%;
+    --primary: 105 61% 59%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 13% 97%;
@@ -26,7 +50,7 @@ All colors MUST be HSL.
     --muted: 220 13% 97%;
     --muted-foreground: 220 9% 46%;
 
-    --accent: 250 95% 63%;
+    --accent: 105 61% 59%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -34,7 +58,7 @@ All colors MUST be HSL.
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 250 95% 63%;
+    --ring: 105 61% 59%;
 
     --radius: 1.25rem;
 
@@ -65,7 +89,7 @@ All colors MUST be HSL.
     --popover: 220 13% 11%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 250 95% 63%;
+    --primary: 105 61% 59%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 13% 15%;
@@ -74,7 +98,7 @@ All colors MUST be HSL.
     --muted: 220 13% 15%;
     --muted-foreground: 220 9% 60%;
 
-    --accent: 250 95% 63%;
+    --accent: 105 61% 59%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -82,7 +106,7 @@ All colors MUST be HSL.
 
     --border: 220 13% 20%;
     --input: 220 13% 20%;
-    --ring: 250 95% 63%;
+    --ring: 105 61% 59%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

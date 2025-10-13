@@ -65,6 +65,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Reckless', 'serif'],
       },
       keyframes: {
         "fade-in": {

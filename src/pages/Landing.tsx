@@ -1,17 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Zap, Palette, BarChart3, Lock, Globe, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import logo from "@/assets/logo.png";
 
 const Landing = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+      <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl">trybio.ai</span>
-          </div>
+          <Link to="/" className="flex items-center">
+            <img src={logo} alt="trybio.ai" className="h-8" />
+          </Link>
           <nav className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a>
             <a href="#themes" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Themes</a>
@@ -37,7 +37,7 @@ const Landing = () => {
             <Sparkles className="h-4 w-4 text-primary" />
             <span>AI-powered bio pages in 60 seconds</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-slide-up">
+          <h1 className="text-5xl md:text-7xl font-display font-medium mb-6 leading-tight animate-slide-up">
             The fastest way to turn
             <span className="text-primary"> attention </span>
             into action
@@ -76,7 +76,7 @@ const Landing = () => {
       <section id="features" className="py-24 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Everything you need to grow</h2>
+            <h2 className="text-4xl md:text-5xl font-display font-medium mb-4">Everything you need to grow</h2>
             <p className="text-xl text-muted-foreground">Powerful features that help you convert visitors into customers</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -118,7 +118,7 @@ const Landing = () => {
       <section id="themes" className="py-24 px-6 bg-secondary/50">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Themes that stand out</h2>
+            <h2 className="text-4xl md:text-5xl font-display font-medium mb-4">Themes that stand out</h2>
             <p className="text-xl text-muted-foreground">Premium designs that make you look professional instantly</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
@@ -137,7 +137,7 @@ const Landing = () => {
       <section id="pricing" className="py-24 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Simple, transparent pricing</h2>
+            <h2 className="text-4xl md:text-5xl font-display font-medium mb-4">Simple, transparent pricing</h2>
             <p className="text-xl text-muted-foreground">Start free, upgrade when you're ready to grow</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -188,7 +188,7 @@ const Landing = () => {
       <section className="py-24 px-6">
         <div className="container mx-auto max-w-4xl text-center">
           <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl p-12 border border-primary/20">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to grow your audience?</h2>
+            <h2 className="text-4xl md:text-5xl font-display font-medium mb-6">Ready to grow your audience?</h2>
             <p className="text-xl text-muted-foreground mb-8">Join thousands of creators using trybio.ai to turn attention into action.</p>
             <Link to="/auth">
               <Button size="lg" className="gap-2 text-lg px-8 h-14">
@@ -202,40 +202,26 @@ const Landing = () => {
       {/* Footer */}
       <footer className="border-t border-border py-12 px-6">
         <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="h-5 w-5 text-primary" />
-                <span className="font-bold">trybio.ai</span>
-              </div>
-              <p className="text-sm text-muted-foreground">The fastest way to turn attention into action.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Product</h4>
+              <h4 className="font-semibold mb-4">About</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Features</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Themes</a></li>
+                <li><Link to="/about" className="hover:text-foreground transition-colors">About</Link></li>
+                <li><a href="https://blog.works.xyz/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Blog</a></li>
+                <li><a href="https://discord.gg/zH5GjPDT" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Community</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Company</h4>
+              <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Contact</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Privacy</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Terms</a></li>
+                <li><a href="mailto:alex@trybio.ai" className="hover:text-foreground transition-colors">Support - alex@trybio.ai</a></li>
+                <li><Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
           <div className="pt-8 border-t border-border text-center text-sm text-muted-foreground">
-            © 2025 trybio.ai. All rights reserved.
+            Copyright © 2025 Works App, Inc. Built with ♥️ by <a href="https://works.xyz/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Works</a>.
           </div>
         </div>
       </footer>
