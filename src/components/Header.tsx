@@ -73,7 +73,7 @@ const Header = () => {
           ) : (
             <>
               <Link to="/auth">
-                <Button variant="ghost" size="sm" className="hover:bg-transparent hover:text-foreground">Login</Button>
+                <Button variant="ghost" size="sm" className="text-sm text-foreground hover:bg-transparent">Login</Button>
               </Link>
               <Link to="/auth?mode=signup">
                 <Button size="sm" className="gap-2 rounded-[6px]">
