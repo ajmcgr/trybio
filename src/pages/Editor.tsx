@@ -245,9 +245,14 @@ const Editor = () => {
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/dashboard" className="flex items-center">
-            <img src={logo} alt="trybio.ai" className="h-8" />
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/dashboard" className="flex items-center">
+              <img src={logo} alt="trybio.ai" className="h-8" />
+            </Link>
+            <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Return to Dashboard
+            </Link>
+          </div>
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={handlePreview}>
               <Eye className="h-4 w-4 mr-2" />

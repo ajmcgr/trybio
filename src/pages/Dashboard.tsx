@@ -95,12 +95,10 @@ const Dashboard = () => {
                 <span>Create New Link</span>
               </Button>
             </Link>
-            <Link to="/editor">
-              <Button variant="outline" className="w-full h-24 flex-col gap-2">
-                <BarChart3 className="h-6 w-6" />
-                <span>View Analytics</span>
-              </Button>
-            </Link>
+            <Button variant="outline" className="w-full h-24 flex-col gap-2" disabled>
+              <BarChart3 className="h-6 w-6" />
+              <span>View Analytics</span>
+            </Button>
             <Link to="/editor">
               <Button variant="outline" className="w-full h-24 flex-col gap-2">
                 <Settings className="h-6 w-6" />
