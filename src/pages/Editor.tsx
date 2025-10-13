@@ -4,13 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon } from "lucide-react";
+import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon, Edit2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import logo from "@/assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
 interface LinkItem {
   id: string;
@@ -29,6 +30,7 @@ interface ProfileData {
 const Editor = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { subscribed, productId } = useSubscription();
   const [isSaving, setIsSaving] = useState(false);
   
   const [profile, setProfile] = useState<ProfileData>({
@@ -49,6 +51,8 @@ const Editor = () => {
   
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [newLink, setNewLink] = useState({ title: "", url: "" });
+  const [editingLink, setEditingLink] = useState<string | null>(null);
+  const [editLinkData, setEditLinkData] = useState({ title: "", url: "" });
 
   const fontOptions = [
     { value: "font-sans", label: "Inter (Sans Serif)" },
@@ -69,7 +73,29 @@ const Editor = () => {
     { value: "font-serif", label: "Serif (Classic)" },
   ];
 
+  // Get plan limits
+  const getPlanLimits = () => {
+    if (productId === 'prod_TEBdtSpr5mGB0P') { // Business
+      return { maxLinks: Infinity };
+    } else if (productId === 'prod_TEBcCoBIS46kPd') { // Pro
+      return { maxLinks: Infinity };
+    } else { // Free
+      return { maxLinks: 10 };
+    }
+  };
+
   const handleAddLink = () => {
+    const limits = getPlanLimits();
+    
+    if (links.length >= limits.maxLinks) {
+      toast({
+        title: "Link limit reached",
+        description: `Your plan allows up to ${limits.maxLinks} links. Upgrade to add more.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (newLink.title && newLink.url) {
       setLinks([...links, { id: Date.now().toString(), ...newLink }]);
       setNewLink({ title: "", url: "" });
@@ -79,6 +105,31 @@ const Editor = () => {
 
   const handleDeleteLink = (id: string) => {
     setLinks(links.filter(link => link.id !== id));
+  };
+
+  const handleEditLink = (id: string) => {
+    const link = links.find(l => l.id === id);
+    if (link) {
+      setEditingLink(id);
+      setEditLinkData({ title: link.title, url: link.url });
+    }
+  };
+
+  const handleSaveEdit = () => {
+    if (editingLink && editLinkData.title && editLinkData.url) {
+      setLinks(links.map(link => 
+        link.id === editingLink 
+          ? { ...link, title: editLinkData.title, url: editLinkData.url }
+          : link
+      ));
+      setEditingLink(null);
+      setEditLinkData({ title: "", url: "" });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingLink(null);
+    setEditLinkData({ title: "", url: "" });
   };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -546,23 +597,59 @@ const Editor = () => {
                 ) : (
                   links.map((link) => (
                     <div key={link.id} className="border border-border rounded-xl p-4 hover:bg-muted/50 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <GripVertical className="h-5 w-5 text-muted-foreground cursor-move" />
-                        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <LinkIcon className="h-5 w-5 text-primary" />
+                      {editingLink === link.id ? (
+                        <div className="space-y-3">
+                          <div>
+                            <Label htmlFor={`edit-title-${link.id}`}>Title</Label>
+                            <Input
+                              id={`edit-title-${link.id}`}
+                              value={editLinkData.title}
+                              onChange={(e) => setEditLinkData({ ...editLinkData, title: e.target.value })}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor={`edit-url-${link.id}`}>URL</Label>
+                            <Input
+                              id={`edit-url-${link.id}`}
+                              value={editLinkData.url}
+                              onChange={(e) => setEditLinkData({ ...editLinkData, url: e.target.value })}
+                            />
+                          </div>
+                          <div className="flex gap-2">
+                            <Button onClick={handleSaveEdit} size="sm" className="flex-1">
+                              Save
+                            </Button>
+                            <Button onClick={handleCancelEdit} variant="outline" size="sm" className="flex-1">
+                              Cancel
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <p className="font-medium">{link.title}</p>
-                          <p className="text-sm text-muted-foreground">{link.url}</p>
+                      ) : (
+                        <div className="flex items-center gap-3">
+                          <GripVertical className="h-5 w-5 text-muted-foreground cursor-move" />
+                          <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <LinkIcon className="h-5 w-5 text-primary" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium">{link.title}</p>
+                            <p className="text-sm text-muted-foreground">{link.url}</p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEditLink(link.id)}
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteLink(link.id)}
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteLink(link.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
+                      )}
                     </div>
                   ))
                 )}

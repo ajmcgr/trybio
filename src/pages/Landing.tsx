@@ -165,8 +165,6 @@ const Landing = () => {
                 "Unlimited links",
                 "Custom domains",
                 "90-day analytics",
-                "A/B testing",
-                "No tips fee",
                 "Remove Bio branding"
               ]}
               highlighted
@@ -189,13 +187,11 @@ const Landing = () => {
               price="$49"
               description="For teams and agencies"
               features={[
-                "25 bio pages",
-                "Team access",
+                "20 bio pages",
+                "Unlimited links",
+                "Custom domains",
                 "12-month analytics",
-                "Priority support",
-                "API access",
-                "SSO",
-                "Remove Bio branding"
+                "Priority Support"
               ]}
               onSelect={() => {
                 if (subscribed && productId === SUBSCRIPTION_TIERS.business.productId) {

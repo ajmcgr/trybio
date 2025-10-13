@@ -77,15 +77,19 @@ const Upgrade = () => {
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  Basic link-in-bio page
+                  1 bio page
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  Up to 5 links
+                  10 links
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  Basic analytics
+                  Basic themes
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-primary" />
+                  7-day analytics
                 </li>
               </ul>
               {getCurrentPlan() !== 'Free' && (
@@ -111,7 +115,7 @@ const Upgrade = () => {
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  Everything in Free
+                  5 bio pages
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
@@ -119,11 +123,15 @@ const Upgrade = () => {
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  Advanced analytics
+                  Custom domains
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  Custom themes
+                  90-day analytics
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-primary" />
+                  Remove Bio branding
                 </li>
               </ul>
               {getCurrentPlan() !== 'Pro' ? (
@@ -157,19 +165,23 @@ const Upgrade = () => {
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  Everything in Pro
+                  20 bio pages
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  Team collaboration
+                  Unlimited links
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  Priority support
+                  Custom domains
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  White label options
+                  12-month analytics
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-primary" />
+                  Priority Support
                 </li>
               </ul>
               {getCurrentPlan() !== 'Business' ? (
