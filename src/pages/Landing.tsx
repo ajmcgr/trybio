@@ -31,42 +31,47 @@ const Landing = () => {
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6">
-        <div className="container mx-auto max-w-3xl text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-sm mb-8 animate-fade-in">
-            <Sparkles className="h-4 w-4 text-primary" />
-            <span>AI-powered bio pages in 60 seconds</span>
-          </div>
-          <h1 className="text-5xl md:text-7xl font-display font-medium mb-6 leading-tight animate-slide-up">
-            The fastest way to turn
-            <span className="text-primary"> attention </span>
-            into action
-          </h1>
-          <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: "0.1s" }}>
-            Create a stunning link-in-bio page that converts. AI-powered setup, beautiful themes, and powerful analytics—all in one place.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
-            <Link to="/auth?mode=signup">
-              <Button size="lg" className="gap-2 text-lg px-8 h-14">
-                Create your page free <ArrowRight className="h-5 w-5" />
-              </Button>
-            </Link>
-            <div className="max-w-md">
-              <div className="senja-embed" data-id="58e8f3b2-43d4-43fd-a3b3-201481da7ccd" data-mode="shadow" data-lazyload="false"></div>
+        <div className="container mx-auto max-w-7xl">
+          <div className="flex flex-col lg:flex-row gap-8 items-center">
+            {/* Left side - Hero Content (75%) */}
+            <div className="lg:w-3/4 text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-sm mb-8 animate-fade-in">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span>AI-powered bio pages in 60 seconds</span>
+              </div>
+              <h1 className="text-5xl md:text-7xl font-display font-medium mb-6 leading-tight animate-slide-up">
+                The fastest way to turn
+                <span className="text-primary"> attention </span>
+                into action
+              </h1>
+              <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto lg:mx-0 animate-slide-up" style={{ animationDelay: "0.1s" }}>
+                Create a stunning link-in-bio page that converts. AI-powered setup, beautiful themes, and powerful analytics—all in one place.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start items-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
+                <Link to="/auth?mode=signup">
+                  <Button size="lg" className="gap-2 text-lg px-8 h-14">
+                    Create your page free <ArrowRight className="h-5 w-5" />
+                  </Button>
+                </Link>
+                <div className="max-w-md">
+                  <div className="senja-embed" data-id="58e8f3b2-43d4-43fd-a3b3-201481da7ccd" data-mode="shadow" data-lazyload="false"></div>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mt-6">
+                No credit card required • Free forever plan
+              </p>
+            </div>
+            
+            {/* Right side - Bio Preview (25%) */}
+            <div className="lg:w-1/4 w-full max-w-sm lg:max-w-none">
+              <img 
+                src={alexBioPreview} 
+                alt="Bio page preview - Alex MacGregor's profile" 
+                className="w-full h-auto rounded-2xl shadow-2xl"
+              />
             </div>
           </div>
-          <p className="text-sm text-muted-foreground mt-6">
-            No credit card required • Free forever plan
-          </p>
         </div>
-      </section>
-
-      {/* Preview Section */}
-      <section className="relative">
-        <img 
-          src={alexBioPreview} 
-          alt="Bio page preview - Alex MacGregor's profile" 
-          className="w-full h-auto"
-        />
       </section>
 
       {/* Features Section */}
