@@ -49,7 +49,7 @@ const Landing = () => {
                 Create your page free <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
-            <div className="flex-1 max-w-md">
+            <div className="max-w-md">
               <div className="senja-embed" data-id="58e8f3b2-43d4-43fd-a3b3-201481da7ccd" data-mode="shadow" data-lazyload="false"></div>
             </div>
           </div>
