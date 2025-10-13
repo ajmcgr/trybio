@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon, Edit2 } from "lucide-react";
+import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon, Edit2, ChevronUp, ChevronDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import logo from "@/assets/logo.png";
@@ -130,6 +130,16 @@ const Editor = () => {
   const handleCancelEdit = () => {
     setEditingLink(null);
     setEditLinkData({ title: "", url: "" });
+  };
+
+  const handleMoveLink = (index: number, direction: 'up' | 'down') => {
+    const newLinks = [...links];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    if (targetIndex < 0 || targetIndex >= newLinks.length) return;
+    
+    [newLinks[index], newLinks[targetIndex]] = [newLinks[targetIndex], newLinks[index]];
+    setLinks(newLinks);
   };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -595,7 +605,7 @@ const Editor = () => {
                     No links yet. Click "Add Link" to get started!
                   </div>
                 ) : (
-                  links.map((link) => (
+                  links.map((link, index) => (
                     <div key={link.id} className="border border-border rounded-xl p-4 hover:bg-muted/50 transition-colors">
                       {editingLink === link.id ? (
                         <div className="space-y-3">
@@ -626,7 +636,26 @@ const Editor = () => {
                         </div>
                       ) : (
                         <div className="flex items-center gap-3">
-                          <GripVertical className="h-5 w-5 text-muted-foreground cursor-move" />
+                          <div className="flex flex-col gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0"
+                              onClick={() => handleMoveLink(index, 'up')}
+                              disabled={index === 0}
+                            >
+                              <ChevronUp className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0"
+                              onClick={() => handleMoveLink(index, 'down')}
+                              disabled={index === links.length - 1}
+                            >
+                              <ChevronDown className="h-4 w-4" />
+                            </Button>
+                          </div>
                           <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                             <LinkIcon className="h-5 w-5 text-primary" />
                           </div>
