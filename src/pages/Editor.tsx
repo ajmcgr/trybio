@@ -272,19 +272,19 @@ const Editor = () => {
           ({ error } = await supabase
             .from('profiles')
             .update(profileData)
-            .eq('id', currentProfileId));
+            .eq('user_id', currentProfileId));
         } else {
           // Create new profile
           const { data, error: insertError } = await supabase
             .from('profiles')
             .insert(profileData)
-            .select('id')
+            .select('user_id')
             .single();
           
           error = insertError;
           if (data) {
-            setCurrentProfileId(data.id);
-            setCurrentProfileKey('id');
+            setCurrentProfileId(data.user_id);
+            setCurrentProfileKey('user_id');
           }
         }
 

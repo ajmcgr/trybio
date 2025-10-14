@@ -12,6 +12,15 @@ create unique index if not exists profiles_username_unique on public.profiles (u
 
 alter table public.profiles add column if not exists full_name text;
 alter table public.profiles add column if not exists avatar_url text;
+alter table public.profiles add column if not exists bio text;
+alter table public.profiles add column if not exists wallpaper_url text;
+alter table public.profiles add column if not exists text_color text default '#FFFFFF';
+alter table public.profiles add column if not exists button_color text default '#000000';
+alter table public.profiles add column if not exists button_text_color text default '#FFFFFF';
+alter table public.profiles add column if not exists background_color text default '#000000';
+alter table public.profiles add column if not exists font text default 'font-sans';
+alter table public.profiles add column if not exists links jsonb default '[]'::jsonb;
+alter table public.profiles add column if not exists is_primary boolean default false;
 alter table public.profiles add column if not exists created_at timestamptz default now();
 alter table public.profiles add column if not exists updated_at timestamptz default now();
 
@@ -36,6 +45,15 @@ select
   username,
   full_name,
   avatar_url,
+  bio,
+  wallpaper_url,
+  text_color,
+  button_color,
+  button_text_color,
+  background_color,
+  font,
+  links,
+  is_primary,
   created_at,
   updated_at
 from public.profiles;

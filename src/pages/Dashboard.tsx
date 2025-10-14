@@ -225,12 +225,12 @@ const Dashboard = () => {
           full_name: '', 
           is_primary: false 
         })
-        .select('id')
+        .select('user_id')
         .single();
 
       if (error) throw error;
 
-      navigate(`/editor?id=${data.id}`);
+      navigate(`/editor?id=${data.user_id}`);
     } catch (error: any) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     }
@@ -241,7 +241,7 @@ const Dashboard = () => {
       const { error } = await supabase
         .from('profiles')
         .delete()
-        .eq('id', profile.id);
+        .eq('user_id', profile.id);
 
       if (error) throw error;
 
