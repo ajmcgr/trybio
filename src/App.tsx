@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor";
 import Profile from "./pages/Profile";
+import BioStats from "./pages/BioStats";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import About from "./pages/About";
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/editor" element={<Editor />} />
+          <Route path="/bio/stats" element={<BioStats />} />
           <Route path="/upgrade" element={<Upgrade />} />
           <Route path="/upgrade/success" element={<UpgradeSuccess />} />
           <Route path="/upgrade/cancel" element={<UpgradeCancel />} />

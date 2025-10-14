@@ -370,6 +370,11 @@ const Dashboard = () => {
                       )}
                     </div>
                     <div className="flex gap-2">
+                      <Link to={`/bio/stats?id=${profile.id}`}>
+                        <Button variant="ghost" size="sm">
+                          <BarChart3 className="h-4 w-4" />
+                        </Button>
+                      </Link>
                       {profile.username && (
                         <Link to={`/${profile.username}`} target="_blank">
                           <Button variant="ghost" size="sm">
@@ -408,36 +413,6 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Stats with Graphs */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <StatCard
-            title="Total Views"
-            value={stats.totalViews.toString()}
-            change={`${stats.viewsChange > 0 ? '+' : ''}${stats.viewsChange}%`}
-            icon={<BarChart3 className="h-5 w-5" />}
-            positive={stats.viewsChange >= 0}
-            chartData={stats.viewsData}
-            dataKey="views"
-          />
-          <StatCard
-            title="Total Clicks"
-            value={stats.totalClicks.toString()}
-            change={`${stats.clicksChange > 0 ? '+' : ''}${stats.clicksChange}%`}
-            icon={<LinkIcon className="h-5 w-5" />}
-            positive={stats.clicksChange >= 0}
-            chartData={stats.clicksData}
-            dataKey="clicks"
-          />
-          <StatCard
-            title="Conversion Rate"
-            value={stats.totalViews > 0 ? `${Math.round((stats.totalClicks / stats.totalViews) * 100)}%` : '0%'}
-            change="+0%"
-            icon={<TrendingUp className="h-5 w-5" />}
-            positive={true}
-            chartData={stats.viewsData}
-            dataKey="views"
-          />
-        </div>
       </div>
     </div>
   );
