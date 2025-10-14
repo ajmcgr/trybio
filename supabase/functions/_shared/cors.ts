@@ -1,3 +1,4 @@
+// CORS configuration for Edge Functions
 const ALLOWED_ORIGINS = [
   'https://trybio.ai',
   'https://www.trybio.ai',

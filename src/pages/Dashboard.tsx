@@ -14,13 +14,20 @@ const Dashboard = () => {
   const { toast } = useToast();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<{
+    totalViews: number;
+    totalClicks: number;
+    viewsChange: number;
+    clicksChange: number;
+    viewsData: Array<{ date: string; views: number }>;
+    clicksData: Array<{ date: string; clicks: number }>;
+  }>({
     totalViews: 0,
     totalClicks: 0,
     viewsChange: 0,
     clicksChange: 0,
-    viewsData: [] as { date: string; views: number }[],
-    clicksData: [] as { date: string; clicks: number }[],
+    viewsData: [],
+    clicksData: [],
   });
 
   useEffect(() => {
@@ -129,8 +136,8 @@ const Dashboard = () => {
         .order('clicked_at', { ascending: true });
 
       // Aggregate by day
-      const viewsByDay = aggregateByDay(viewsData || [], 'viewed_at');
-      const clicksByDay = aggregateByDay(clicksData || [], 'clicked_at');
+      const viewsByDay = aggregateViewsByDay(viewsData || []);
+      const clicksByDay = aggregateClicksByDay(clicksData || []);
 
       setStats({
         totalViews: totalViews || 0,
@@ -145,30 +152,46 @@ const Dashboard = () => {
     }
   };
 
-  const aggregateByDay = (data: any[], dateField: string) => {
+  const aggregateViewsByDay = (data: any[]): Array<{ date: string; views: number }> => {
     const dayMap: Record<string, number> = {};
     const now = new Date();
     
-    // Initialize last 7 days with 0
     for (let i = 6; i >= 0; i--) {
       const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       dayMap[dateStr] = 0;
     }
 
-    // Count occurrences per day
     data.forEach((item) => {
-      const date = new Date(item[dateField]);
+      const date = new Date(item.viewed_at);
       const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       if (dayMap.hasOwnProperty(dateStr)) {
         dayMap[dateStr]++;
       }
     });
 
-    return Object.entries(dayMap).map(([date, count]) => ({
-      date,
-      [dateField === 'viewed_at' ? 'views' : 'clicks']: count,
-    }));
+    return Object.entries(dayMap).map(([date, views]) => ({ date, views }));
+  };
+
+  const aggregateClicksByDay = (data: any[]): Array<{ date: string; clicks: number }> => {
+    const dayMap: Record<string, number> = {};
+    const now = new Date();
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      dayMap[dateStr] = 0;
+    }
+
+    data.forEach((item) => {
+      const date = new Date(item.clicked_at);
+      const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      if (dayMap.hasOwnProperty(dateStr)) {
+        dayMap[dateStr]++;
+      }
+    });
+
+    return Object.entries(dayMap).map(([date, clicks]) => ({ date, clicks }));
   };
 
   const handleLogout = async () => {
