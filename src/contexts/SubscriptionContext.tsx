@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
+import { useProStatus } from '@/lib/useProStatus';
 
 interface SubscriptionContextType {
   user: User | null;
@@ -22,58 +23,17 @@ export const PAYMENT_LINKS = {
 
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [subscribed, setSubscribed] = useState(false);
-  const [plan, setPlan] = useState<string | null>(null);
-  const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  
+  // Use the new useProStatus hook to read directly from pro_status table
+  const { loading, isPro, plan, subscriptionEnd } = useProStatus(supabase, { 
+    email: user?.email, 
+    debug: true 
+  });
 
   const refreshSubscription = async () => {
-    try {
-      console.log('[SubscriptionContext] Refreshing subscription status...');
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session?.user?.email) {
-        console.log('[SubscriptionContext] No session found');
-        setSubscribed(false);
-        setPlan(null);
-        setSubscriptionEnd(null);
-        setLoading(false);
-        return;
-      }
-
-      console.log('[SubscriptionContext] Checking pro_status for:', session.user.email);
-      
-      // Read from pro_status table
-      const { data, error } = await supabase
-        .from('pro_status')
-        .select('plan, current_period_end')
-        .eq('email', session.user.email)
-        .maybeSingle();
-
-      if (error) {
-        console.error('[SubscriptionContext] Error reading pro_status:', error);
-        setSubscribed(false);
-        setPlan(null);
-        setSubscriptionEnd(null);
-      } else if (data) {
-        console.log('[SubscriptionContext] Pro status found:', data);
-        setSubscribed(true);
-        setPlan(data.plan || 'pro');
-        setSubscriptionEnd(data.current_period_end);
-      } else {
-        console.log('[SubscriptionContext] No pro status found');
-        setSubscribed(false);
-        setPlan(null);
-        setSubscriptionEnd(null);
-      }
-    } catch (error) {
-      console.error('[SubscriptionContext] Error refreshing subscription:', error);
-      setSubscribed(false);
-      setPlan(null);
-      setSubscriptionEnd(null);
-    } finally {
-      setLoading(false);
-    }
+    // Force a re-render by updating user state
+    const { data: { session } } = await supabase.auth.getSession();
+    setUser(session?.user ?? null);
   };
 
   const openCustomerPortal = async () => {
@@ -100,23 +60,10 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
-      if (session) {
-        refreshSubscription();
-      } else {
-        setLoading(false);
-      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      if (session) {
-        refreshSubscription();
-      } else {
-        setSubscribed(false);
-        setPlan(null);
-        setSubscriptionEnd(null);
-        setLoading(false);
-      }
     });
 
     return () => subscription.unsubscribe();
@@ -126,7 +73,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     <SubscriptionContext.Provider
       value={{
         user,
-        subscribed,
+        subscribed: isPro,
         plan,
         subscriptionEnd,
         loading,

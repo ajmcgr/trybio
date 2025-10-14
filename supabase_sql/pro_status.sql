@@ -18,3 +18,8 @@ on public.pro_status
 for select
 to authenticated
 using ((auth.jwt() ->> 'email') = email);
+
+-- Optional: QUICK TEST SEED (remove after testing)
+insert into public.pro_status (email, plan)
+values ('alex@alexmacgregor.com', 'pro')
+on conflict (email) do update set plan='pro', updated_at=now();
