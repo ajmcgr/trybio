@@ -221,7 +221,7 @@ const Dashboard = () => {
       const { data, error } = await supabase
         .from('profiles')
         .insert({ user_id: user.id, name: '', is_primary: false })
-        .select('*')
+        .select()
         .single();
 
       if (error) throw error;
@@ -232,16 +232,19 @@ const Dashboard = () => {
     }
   };
 
-  const handleDeleteProfile = async (profileId: string) => {
+  const handleDeleteProfile = async (profile: any) => {
     try {
+      const key = profile?.id ? 'id' : 'user_id';
+      const value = profile?.id ?? profile?.user_id;
+
       const { error } = await supabase
         .from('profiles')
         .delete()
-        .eq('id', profileId);
+        .eq(key, value);
 
       if (error) throw error;
 
-      setProfiles(profiles.filter(p => p.id !== profileId));
+      setProfiles(profiles.filter(p => (p.id ?? p.user_id) !== value));
       toast({ title: "Bio page deleted successfully" });
     } catch (error: any) {
       toast({
@@ -324,7 +327,7 @@ const Dashboard = () => {
             ) : profiles.length > 0 ? (
               <div className="space-y-4">
                 {profiles.map((profile) => (
-                  <div key={profile.id} className="flex items-start gap-4 p-4 border border-border rounded-lg">
+                  <div key={profile.id ?? profile.user_id} className="flex items-start gap-4 p-4 border border-border rounded-lg">
                     <Avatar className="h-16 w-16">
                       <AvatarImage src={profile.avatar_url} />
                       <AvatarFallback className="bg-muted text-lg">
@@ -356,7 +359,7 @@ const Dashboard = () => {
                           </Button>
                         </Link>
                       )}
-                      <Link to={`/editor?id=${profile.id}`}>
+                      <Link to={`/editor?id=${profile.id ?? profile.user_id}`}>
                         <Button variant="outline" size="sm">
                           <Settings className="h-4 w-4 mr-2" />
                           Edit
@@ -366,7 +369,7 @@ const Dashboard = () => {
                         <Button 
                           variant="ghost" 
                           size="sm"
-                          onClick={() => handleDeleteProfile(profile.id)}
+                          onClick={() => handleDeleteProfile(profile)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

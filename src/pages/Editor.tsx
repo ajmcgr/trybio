@@ -282,7 +282,10 @@ const Editor = () => {
             .single();
           
           error = insertError;
-          if (data) setCurrentProfileId(data.id);
+          if (data) {
+            setCurrentProfileId((data as any).id ?? (data as any).user_id);
+            setCurrentProfileKey((data as any).id ? 'id' : 'user_id');
+          }
         }
 
         if (error) throw error;
