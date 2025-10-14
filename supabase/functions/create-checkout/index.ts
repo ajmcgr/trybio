@@ -50,14 +50,14 @@ serve(async (req) => {
     });
 
     return new Response(JSON.stringify({ url: session.url }), {
-      headers: { ...headers, "Content-Type": "application/json" },
       status: 200,
+      headers: { 'Content-Type': 'application/json', ...headers },
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     return new Response(JSON.stringify({ error: errorMessage }), {
-      headers: { ...headers, "Content-Type": "application/json" },
       status: 500,
+      headers: { 'Content-Type': 'application/json', ...headers },
     });
   }
 });

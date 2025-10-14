@@ -54,15 +54,15 @@ serve(async (req) => {
     logStep("Customer portal session created", { sessionId: portalSession.id, url: portalSession.url });
 
     return new Response(JSON.stringify({ url: portalSession.url }), {
-      headers: { ...headers, "Content-Type": "application/json" },
       status: 200,
+      headers: { 'Content-Type': 'application/json', ...headers },
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR in customer-portal", { message: errorMessage });
     return new Response(JSON.stringify({ error: errorMessage }), {
-      headers: { ...headers, "Content-Type": "application/json" },
       status: 500,
+      headers: { 'Content-Type': 'application/json', ...headers },
     });
   }
 });

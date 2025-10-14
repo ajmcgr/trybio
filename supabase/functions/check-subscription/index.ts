@@ -46,8 +46,8 @@ serve(async (req) => {
     if (customers.data.length === 0) {
       logStep("No customer found, updating unsubscribed state");
       return new Response(JSON.stringify({ subscribed: false }), {
-        headers: { ...headers, "Content-Type": "application/json" },
         status: 200,
+        headers: { 'Content-Type': 'application/json', ...headers },
       });
     }
 
@@ -78,15 +78,15 @@ serve(async (req) => {
       product_id: productId,
       subscription_end: subscriptionEnd
     }), {
-      headers: { ...headers, "Content-Type": "application/json" },
       status: 200,
+      headers: { 'Content-Type': 'application/json', ...headers },
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR in check-subscription", { message: errorMessage });
     return new Response(JSON.stringify({ error: errorMessage }), {
-      headers: { ...headers, "Content-Type": "application/json" },
       status: 500,
+      headers: { 'Content-Type': 'application/json', ...headers },
     });
   }
 });
