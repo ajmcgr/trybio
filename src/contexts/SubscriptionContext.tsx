@@ -10,7 +10,6 @@ interface SubscriptionContextType {
   subscriptionEnd: string | null;
   loading: boolean;
   refreshSubscription: () => Promise<void>;
-  openCustomerPortal: () => Promise<void>;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
@@ -36,42 +35,6 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     setUser(session?.user ?? null);
   };
 
-  const openCustomerPortal = async () => {
-    try {
-      console.log('[CustomerPortal] Opening customer portal...');
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        console.warn('[CustomerPortal] No session found, redirecting to /auth');
-        window.location.href = '/auth';
-        return;
-      }
-
-      console.log('[CustomerPortal] Invoking customer-portal function...');
-      const { data, error } = await supabase.functions.invoke('customer-portal', {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
-
-      if (error) {
-        console.error('[CustomerPortal] Error:', error);
-        throw error;
-      }
-
-      console.log('[CustomerPortal] Response:', data);
-
-      if (data?.url) {
-        console.log('[CustomerPortal] Redirecting to:', data.url);
-        window.location.href = data.url as string;
-      } else {
-        console.error('[CustomerPortal] No URL in response');
-      }
-    } catch (error) {
-      console.error('[CustomerPortal] Error opening customer portal:', error);
-    }
-  };
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -93,7 +56,6 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
         subscriptionEnd,
         loading,
         refreshSubscription,
-        openCustomerPortal,
       }}
     >
       {children}

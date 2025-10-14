@@ -21,11 +21,12 @@ import logo from "@/assets/logo.png";
 import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { STRIPE_PORTAL_URL } from "@/lib/billing";
 
 const Settings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { subscribed, plan, subscriptionEnd, refreshSubscription, openCustomerPortal, loading } = useSubscription();
+  const { subscribed, plan, subscriptionEnd, refreshSubscription, loading } = useSubscription();
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -179,9 +180,11 @@ const Settings = () => {
                   </div>
                 )}
                 <div className="flex gap-3 pt-2">
-                  <Button onClick={openCustomerPortal} disabled={loading}>
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    Manage Billing
+                  <Button asChild>
+                    <a href={STRIPE_PORTAL_URL} target="_blank" rel="noopener noreferrer">
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      Manage Billing
+                    </a>
                   </Button>
                   <Link to="/upgrade">
                     <Button variant="outline">

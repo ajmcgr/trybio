@@ -6,9 +6,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
 import alexBioPreview from "@/assets/alex-bio-preview.png";
+import { STRIPE_PORTAL_URL } from "@/lib/billing";
 
 const Landing = () => {
-  const { user, subscribed, plan, openCustomerPortal } = useSubscription();
+  const { user, subscribed, plan } = useSubscription();
 
   useEffect(() => {
     // Load Senja widget script
@@ -174,9 +175,9 @@ const Landing = () => {
                 "Remove Bio branding"
               ]}
                highlighted
-                onSelect={() => {
+               onSelect={() => {
                   if (subscribed && plan === 'pro') {
-                    openCustomerPortal();
+                    window.open(STRIPE_PORTAL_URL, '_blank');
                   } else {
                     window.open(PAYMENT_LINKS.pro_monthly, '_blank');
                   }
@@ -203,7 +204,7 @@ const Landing = () => {
               ]}
                onSelect={() => {
                   if (subscribed && plan !== 'pro') {
-                    openCustomerPortal();
+                    window.open(STRIPE_PORTAL_URL, '_blank');
                   } else {
                     window.open(PAYMENT_LINKS.business_monthly, '_blank');
                   }

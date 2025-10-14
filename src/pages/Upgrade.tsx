@@ -6,9 +6,10 @@ import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
 import { useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { STRIPE_PORTAL_URL } from "@/lib/billing";
 
 const Upgrade = () => {
-  const { subscribed, plan, refreshSubscription, openCustomerPortal, loading } = useSubscription();
+  const { subscribed, plan, refreshSubscription, loading } = useSubscription();
 
   useEffect(() => {
     refreshSubscription();
@@ -34,9 +35,11 @@ const Upgrade = () => {
               </Button>
             </Link>
             {subscribed && (
-              <Button variant="outline" onClick={openCustomerPortal} disabled={loading}>
-                <CreditCard className="h-4 w-4 mr-2" />
-                Manage Billing
+              <Button variant="outline" asChild>
+                <a href={STRIPE_PORTAL_URL} target="_blank" rel="noopener noreferrer">
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Manage Billing
+                </a>
               </Button>
             )}
           </div>
@@ -138,8 +141,10 @@ const Upgrade = () => {
                   </a>
                 </Button>
               ) : (
-                <Button variant="outline" className="w-full" onClick={openCustomerPortal} disabled={loading}>
-                  Manage Subscription
+                <Button variant="outline" className="w-full" asChild>
+                  <a href={STRIPE_PORTAL_URL} target="_blank" rel="noopener noreferrer">
+                    Manage Subscription
+                  </a>
                 </Button>
               )}
             </CardContent>
@@ -197,8 +202,10 @@ const Upgrade = () => {
                   </a>
                 </Button>
               ) : (
-                <Button variant="outline" className="w-full" onClick={openCustomerPortal} disabled={loading}>
-                  Manage Subscription
+                <Button variant="outline" className="w-full" asChild>
+                  <a href={STRIPE_PORTAL_URL} target="_blank" rel="noopener noreferrer">
+                    Manage Subscription
+                  </a>
                 </Button>
               )}
             </CardContent>
