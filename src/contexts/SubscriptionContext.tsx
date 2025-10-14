@@ -5,131 +5,74 @@ import { User } from '@supabase/supabase-js';
 interface SubscriptionContextType {
   user: User | null;
   subscribed: boolean;
-  productId: string | null;
-  priceId: string | null;
+  plan: string | null;
   subscriptionEnd: string | null;
   loading: boolean;
-  checkSubscription: () => Promise<void>;
-  createCheckout: (priceId: string) => Promise<void>;
+  refreshSubscription: () => Promise<void>;
   openCustomerPortal: () => Promise<void>;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
 
-const SUBSCRIPTION_TIERS = {
-  pro: {
-    priceId: 'price_1SHjFOLdEYJMHmhgROJ2Hdxz',
-    productId: 'prod_TEBcCoBIS46kPd',
-    name: 'Pro Plan',
-    price: 19,
-  },
-  business: {
-    priceId: 'price_1SHjFmLdEYJMHmhgrCPgUS2W',
-    productId: 'prod_TEBdtSpr5mGB0P',
-    name: 'Business Plan',
-    price: 49,
-  },
+// Payment Links
+export const PAYMENT_LINKS = {
+  pro_monthly: 'https://buy.stripe.com/bJe7sMgxegr48nvdlj9sk00',
+  business_monthly: 'https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk01',
 };
 
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [subscribed, setSubscribed] = useState(false);
-  const [productId, setProductId] = useState<string | null>(null);
-  const [priceId, setPriceId] = useState<string | null>(null);
+  const [plan, setPlan] = useState<string | null>(null);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const checkSubscription = async () => {
+  const refreshSubscription = async () => {
     try {
-      console.log('[SubscriptionContext] Checking subscription...');
+      console.log('[SubscriptionContext] Refreshing subscription status...');
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      
+      if (!session?.user?.email) {
         console.log('[SubscriptionContext] No session found');
         setSubscribed(false);
-        setProductId(null);
-        setPriceId(null);
+        setPlan(null);
         setSubscriptionEnd(null);
+        setLoading(false);
         return;
       }
 
-      console.log('[SubscriptionContext] User email:', session.user.email);
-      console.log('[SubscriptionContext] Session found, invoking check-subscription function');
-      const { data, error } = await supabase.functions.invoke('check-subscription', {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
-
-      console.log('[SubscriptionContext] RAW Function response:', JSON.stringify({ data, error }, null, 2));
+      console.log('[SubscriptionContext] Checking pro_status for:', session.user.email);
+      
+      // Read from pro_status table
+      const { data, error } = await supabase
+        .from('pro_status')
+        .select('plan, current_period_end')
+        .eq('email', session.user.email)
+        .maybeSingle();
 
       if (error) {
-        console.error('[SubscriptionContext] Function error:', error);
-        throw error;
+        console.error('[SubscriptionContext] Error reading pro_status:', error);
+        setSubscribed(false);
+        setPlan(null);
+        setSubscriptionEnd(null);
+      } else if (data) {
+        console.log('[SubscriptionContext] Pro status found:', data);
+        setSubscribed(true);
+        setPlan(data.plan || 'pro');
+        setSubscriptionEnd(data.current_period_end);
+      } else {
+        console.log('[SubscriptionContext] No pro status found');
+        setSubscribed(false);
+        setPlan(null);
+        setSubscriptionEnd(null);
       }
-
-      console.log('[SubscriptionContext] Setting subscription state:', {
-        subscribed: data.subscribed || false,
-        productId: data.product_id || null,
-        priceId: data.price_id || null,
-        subscriptionEnd: data.subscription_end || null
-      });
-
-      setSubscribed(data.subscribed || false);
-      setProductId(data.product_id || null);
-      setPriceId(data.price_id || null);
-      setSubscriptionEnd(data.subscription_end || null);
     } catch (error) {
-      console.error('[SubscriptionContext] Error checking subscription:', error);
+      console.error('[SubscriptionContext] Error refreshing subscription:', error);
       setSubscribed(false);
-      setProductId(null);
-      setPriceId(null);
+      setPlan(null);
       setSubscriptionEnd(null);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const createCheckout = async (priceId: string) => {
-    try {
-      console.log('Creating checkout for priceId:', priceId);
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        console.log('No session found, redirecting to signup');
-        window.location.href = '/auth?mode=signup';
-        return;
-      }
-
-      console.log('Invoking create-checkout function');
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { priceId },
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
-
-      console.log('Function response:', { data, error });
-
-      if (error) {
-        console.error('Function error:', error);
-        throw error;
-      }
-
-      if (data?.error) {
-        console.error('Data error:', data.error);
-        alert(`Error: ${data.error}`);
-        return;
-      }
-
-      if (data?.url) {
-        console.log('Opening checkout URL:', data.url);
-        window.open(data.url, '_blank');
-      } else {
-        console.error('No URL returned from checkout');
-        alert('Failed to create checkout session. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error creating checkout:', error);
-      alert('Failed to create checkout session. Please check console for details.');
     }
   };
 
@@ -158,7 +101,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session) {
-        checkSubscription();
+        refreshSubscription();
       } else {
         setLoading(false);
       }
@@ -167,10 +110,10 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (session) {
-        checkSubscription();
+        refreshSubscription();
       } else {
         setSubscribed(false);
-        setProductId(null);
+        setPlan(null);
         setSubscriptionEnd(null);
         setLoading(false);
       }
@@ -179,25 +122,15 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Check subscription every minute
-  useEffect(() => {
-    if (user) {
-      const interval = setInterval(checkSubscription, 60000);
-      return () => clearInterval(interval);
-    }
-  }, [user]);
-
   return (
     <SubscriptionContext.Provider
       value={{
         user,
         subscribed,
-        productId,
-        priceId,
+        plan,
         subscriptionEnd,
         loading,
-        checkSubscription,
-        createCheckout,
+        refreshSubscription,
         openCustomerPortal,
       }}
     >
@@ -213,5 +146,3 @@ export const useSubscription = () => {
   }
   return context;
 };
-
-export { SUBSCRIPTION_TIERS };

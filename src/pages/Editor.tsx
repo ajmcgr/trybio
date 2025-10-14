@@ -30,7 +30,7 @@ interface ProfileData {
 const Editor = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { subscribed, productId } = useSubscription();
+  const { subscribed, plan } = useSubscription();
   const [isSaving, setIsSaving] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   
@@ -76,9 +76,7 @@ const Editor = () => {
 
   // Get plan limits
   const getPlanLimits = () => {
-    if (productId === 'prod_TEBdtSpr5mGB0P') { // Business
-      return { maxLinks: Infinity };
-    } else if (productId === 'prod_TEBcCoBIS46kPd') { // Pro
+    if (subscribed && plan === 'pro') {
       return { maxLinks: Infinity };
     } else { // Free
       return { maxLinks: 10 };

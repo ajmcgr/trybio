@@ -5,24 +5,20 @@ import { Badge } from "@/components/ui/badge";
 import { CreditCard, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
-import { useSubscription } from "@/contexts/SubscriptionContext";
-import { SUBSCRIPTION_TIERS } from "@/contexts/SubscriptionContext";
+import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
 
 const Settings = () => {
-  const { subscribed, productId, priceId, subscriptionEnd, checkSubscription, openCustomerPortal, createCheckout, loading } = useSubscription();
+  const { subscribed, plan, subscriptionEnd, refreshSubscription, openCustomerPortal, loading } = useSubscription();
 
   useEffect(() => {
-    console.log('[Settings] Current subscription state:', { subscribed, productId, subscriptionEnd });
-    checkSubscription();
-  }, [checkSubscription]);
+    console.log('[Settings] Current subscription state:', { subscribed, plan, subscriptionEnd });
+    refreshSubscription();
+  }, [refreshSubscription]);
 
   const getCurrentPlan = () => {
-    console.log('[Settings] Getting current plan. subscribed:', subscribed, 'productId:', productId, 'priceId:', priceId);
+    console.log('[Settings] Getting current plan. subscribed:', subscribed, 'plan:', plan);
     if (!subscribed) return 'Free';
-    if (productId === SUBSCRIPTION_TIERS.pro.productId || priceId === SUBSCRIPTION_TIERS.pro.priceId) return 'Pro';
-    if (productId === SUBSCRIPTION_TIERS.business.productId || priceId === SUBSCRIPTION_TIERS.business.priceId) return 'Business';
-    // If subscribed but unknown product, default to Pro to avoid showing Free incorrectly
-    return 'Pro';
+    return plan === 'pro' ? 'Pro' : 'Business';
   };
 
   const formatDate = (dateString: string | null) => {
@@ -123,7 +119,7 @@ const Settings = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Pro</CardTitle>
-                  <div className="text-2xl font-bold">${SUBSCRIPTION_TIERS.pro.price}/mo</div>
+                  <div className="text-2xl font-bold">$19/mo</div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -157,7 +153,7 @@ const Settings = () => {
                   className="w-full" 
                   asChild
                 >
-                  <a href="https://buy.stripe.com/bJe7sMgxegr48nvdlj9sk00" target="_blank" rel="noopener noreferrer">
+                  <a href={PAYMENT_LINKS.pro_monthly} target="_blank" rel="noopener noreferrer">
                     Upgrade to Pro
                   </a>
                 </Button>
@@ -168,7 +164,7 @@ const Settings = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Business</CardTitle>
-                  <div className="text-2xl font-bold">${SUBSCRIPTION_TIERS.business.price}/mo</div>
+                  <div className="text-2xl font-bold">$49/mo</div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -206,7 +202,7 @@ const Settings = () => {
                   className="w-full" 
                   asChild
                 >
-                  <a href="https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk01" target="_blank" rel="noopener noreferrer">
+                  <a href={PAYMENT_LINKS.business_monthly} target="_blank" rel="noopener noreferrer">
                     Upgrade to Business
                   </a>
                 </Button>

@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useSubscription, SUBSCRIPTION_TIERS } from "@/contexts/SubscriptionContext";
+import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
 import alexBioPreview from "@/assets/alex-bio-preview.png";
 
 const Landing = () => {
-  const { user, subscribed, productId, priceId, createCheckout, openCustomerPortal } = useSubscription();
+  const { user, subscribed, plan, openCustomerPortal } = useSubscription();
 
   useEffect(() => {
     // Load Senja widget script
@@ -169,20 +169,20 @@ const Landing = () => {
                 "90-day analytics",
                 "Remove Bio branding"
               ]}
-              highlighted
-               onSelect={() => {
-                 if (subscribed && (productId === SUBSCRIPTION_TIERS.pro.productId || priceId === SUBSCRIPTION_TIERS.pro.priceId)) {
-                   openCustomerPortal();
-                 } else {
-                   createCheckout(SUBSCRIPTION_TIERS.pro.priceId);
-                 }
-               }}
-               buttonText={
-                 subscribed && (productId === SUBSCRIPTION_TIERS.pro.productId || priceId === SUBSCRIPTION_TIERS.pro.priceId)
-                   ? "Manage"
-                   : "Upgrade"
-               }
-               isCurrentPlan={subscribed && (productId === SUBSCRIPTION_TIERS.pro.productId || priceId === SUBSCRIPTION_TIERS.pro.priceId)}
+               highlighted
+                onSelect={() => {
+                  if (subscribed && plan === 'pro') {
+                    openCustomerPortal();
+                  } else {
+                    window.open(PAYMENT_LINKS.pro_monthly, '_blank');
+                  }
+                }}
+                buttonText={
+                  subscribed && plan === 'pro'
+                    ? "Manage"
+                    : "Upgrade"
+                }
+                isCurrentPlan={subscribed && plan === 'pro'}
             />
             <PricingCard
               name="Business"
@@ -198,19 +198,19 @@ const Landing = () => {
                 "Priority Support"
               ]}
                onSelect={() => {
-                 if (subscribed && (productId === SUBSCRIPTION_TIERS.business.productId || priceId === SUBSCRIPTION_TIERS.business.priceId)) {
-                   openCustomerPortal();
-                 } else {
-                   createCheckout(SUBSCRIPTION_TIERS.business.priceId);
-                 }
-               }}
-               buttonText={
-                 subscribed && (productId === SUBSCRIPTION_TIERS.business.productId || priceId === SUBSCRIPTION_TIERS.business.priceId)
-                   ? "Manage"
-                   : "Upgrade"
-               }
-               isCurrentPlan={subscribed && (productId === SUBSCRIPTION_TIERS.business.productId || priceId === SUBSCRIPTION_TIERS.business.priceId)}
-            />
+                  if (subscribed && plan !== 'pro') {
+                    openCustomerPortal();
+                  } else {
+                    window.open(PAYMENT_LINKS.business_monthly, '_blank');
+                  }
+                }}
+                buttonText={
+                  subscribed && plan !== 'pro'
+                    ? "Manage"
+                    : "Upgrade"
+                }
+                isCurrentPlan={subscribed && plan !== 'pro'}
+             />
           </div>
         </div>
       </section>

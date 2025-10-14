@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 
 const UpgradeSuccess = () => {
   const navigate = useNavigate();
-  const { checkSubscription } = useSubscription();
+  const { refreshSubscription } = useSubscription();
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
     const verifyAndRedirect = async () => {
-      await checkSubscription();
+      await refreshSubscription();
       setChecking(false);
       // Auto-redirect after 2 seconds
       setTimeout(() => {
@@ -19,7 +19,7 @@ const UpgradeSuccess = () => {
     };
     
     verifyAndRedirect();
-  }, [checkSubscription, navigate]);
+  }, [refreshSubscription, navigate]);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">

@@ -2,30 +2,21 @@ import { Button } from "@/components/ui/button";
 import { CreditCard, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
-import { useSubscription, SUBSCRIPTION_TIERS } from "@/contexts/SubscriptionContext";
+import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
 import { useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-// Stripe Payment Links
-const PAYMENT_LINKS = {
-  pro_monthly: 'https://buy.stripe.com/bJe7sMgxegr48nvdlj9sk00',
-  business_monthly: 'https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk01',
-};
-
 const Upgrade = () => {
-  const { subscribed, productId, priceId, checkSubscription, openCustomerPortal, loading } = useSubscription();
+  const { subscribed, plan, refreshSubscription, openCustomerPortal, loading } = useSubscription();
 
   useEffect(() => {
-    checkSubscription();
-  }, [checkSubscription]);
+    refreshSubscription();
+  }, [refreshSubscription]);
 
   const getCurrentPlan = () => {
     if (!subscribed) return 'Free';
-    if (productId === SUBSCRIPTION_TIERS.pro.productId || priceId === SUBSCRIPTION_TIERS.pro.priceId) return 'Pro';
-    if (productId === SUBSCRIPTION_TIERS.business.productId || priceId === SUBSCRIPTION_TIERS.business.priceId) return 'Business';
-    // If subscribed but unknown product, default to Pro to avoid showing Free incorrectly
-    return 'Pro';
+    return plan === 'pro' ? 'Pro' : 'Business';
   };
 
   return (
