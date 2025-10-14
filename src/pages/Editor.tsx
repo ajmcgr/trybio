@@ -255,7 +255,7 @@ const Editor = () => {
         const profileData = {
           user_id: user.id,
           name: profile.name,
-          username: profile.username,
+          username: profile.username?.trim() || null,
           bio: profile.bio,
           avatar_url: profile.avatarUrl,
           font: profile.font,

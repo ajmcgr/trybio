@@ -230,6 +230,8 @@ const Dashboard = () => {
     } catch (error: any) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     }
+  };
+
   const handleDeleteProfile = async (profileId: string) => {
     try {
       const { error } = await supabase
@@ -248,6 +250,8 @@ const Dashboard = () => {
         variant: "destructive",
       });
     }
+  };
+
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -262,6 +266,8 @@ const Dashboard = () => {
       });
     }
   };
+
+  return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card">
