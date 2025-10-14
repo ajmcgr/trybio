@@ -63,11 +63,11 @@ const Landing = () => {
             </div>
             
             {/* Right side - Bio Preview (30%) */}
-            <div className="lg:w-[30%] w-full flex justify-center">
+            <div className="lg:w-[30%] w-full flex justify-center p-0 m-0">
               <img 
                 src={alexBioPreview} 
                 alt="Bio page preview - Alex MacGregor's profile" 
-                className="w-full h-auto shadow-2xl rounded-2xl"
+                className="w-full h-auto shadow-2xl rounded-2xl m-0 p-0"
               />
             </div>
           </div>
