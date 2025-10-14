@@ -14,6 +14,7 @@ import Terms from "./pages/Terms";
 import About from "./pages/About";
 import Upgrade from "./pages/Upgrade";
 import Settings from "./pages/Settings";
+import DomainSettings from "./pages/DomainSettings";
 import UpgradeSuccess from "./pages/upgrade/Success";
 import UpgradeCancel from "./pages/upgrade/Cancel";
 import NotFound from "./pages/NotFound";
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/upgrade/success" element={<UpgradeSuccess />} />
           <Route path="/upgrade/cancel" element={<UpgradeCancel />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/settings/domain" element={<DomainSettings />} />
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />

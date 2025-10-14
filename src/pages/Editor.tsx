@@ -318,14 +318,18 @@ const Editor = () => {
   };
 
   const themeColors = [
-    { bg: "#e74c3c", text: "#ffffff", buttonBg: "#c0392b", buttonText: "#ffffff" },
-    { bg: "#f39c12", text: "#ffffff", buttonBg: "#d68910", buttonText: "#ffffff" },
-    { bg: "#2ecc71", text: "#ffffff", buttonBg: "#27ae60", buttonText: "#ffffff" },
-    { bg: "#3498db", text: "#ffffff", buttonBg: "#2980b9", buttonText: "#ffffff" },
-    { bg: "#9b59b6", text: "#ffffff", buttonBg: "#8e44ad", buttonText: "#ffffff" },
-    { bg: "#1abc9c", text: "#ffffff", buttonBg: "#16a085", buttonText: "#ffffff" },
-    { bg: "#34495e", text: "#ffffff", buttonBg: "#2c3e50", buttonText: "#ffffff" },
-    { bg: "#e91e63", text: "#ffffff", buttonBg: "#c2185b", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", text: "#ffffff", buttonBg: "#5a67d8", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", text: "#ffffff", buttonBg: "#e53e3e", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", text: "#ffffff", buttonBg: "#3182ce", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)", text: "#ffffff", buttonBg: "#38a169", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)", text: "#ffffff", buttonBg: "#ed8936", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #30cfd0 0%, #330867 100%)", text: "#ffffff", buttonBg: "#2c5282", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)", text: "#2d3748", buttonBg: "#4299e1", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)", text: "#2d3748", buttonBg: "#f687b3", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)", text: "#2d3748", buttonBg: "#ed8936", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%)", text: "#ffffff", buttonBg: "#e53e3e", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)", text: "#2d3748", buttonBg: "#805ad5", buttonText: "#ffffff" },
+    { bg: "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)", text: "#2d3748", buttonBg: "#9f7aea", buttonText: "#ffffff" },
   ];
 
   const applyTheme = (index: number) => {

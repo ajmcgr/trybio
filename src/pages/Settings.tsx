@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CreditCard, ArrowRight, CheckCircle2 } from "lucide-react";
+import { CreditCard, ArrowRight, CheckCircle2, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
@@ -109,6 +109,29 @@ const Settings = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Domain Settings - Only show for Pro/Business */}
+        {subscribed && (plan === 'pro' || plan === 'business') && (
+          <Card className="mb-6">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Custom Domain</CardTitle>
+                  <CardDescription>Connect your own domain to your bio page</CardDescription>
+                </div>
+                <Globe className="h-5 w-5 text-muted-foreground" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Link to="/settings/domain">
+                <Button variant="outline">
+                  Configure Domain
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Available Plans */}
         {!subscribed && (
