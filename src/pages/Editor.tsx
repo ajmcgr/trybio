@@ -8,7 +8,7 @@ import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripV
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import logo from "@/assets/logo.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useSubscription } from "@/contexts/SubscriptionContext";
@@ -31,8 +31,11 @@ const Editor = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { subscribed, plan } = useSubscription();
+  const [searchParams] = useSearchParams();
+  const profileId = searchParams.get('id');
   const [isSaving, setIsSaving] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [currentProfileId, setCurrentProfileId] = useState<string | null>(null);
   
   const [profile, setProfile] = useState<ProfileData>({
     name: "",
@@ -170,11 +173,37 @@ const Editor = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .single();
+        let data: any = null;
+        let error: any = null;
+        
+        if (profileId) {
+          // Load specific profile by ID
+          const result = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', user.id)
+            .eq('id', profileId)
+            .single();
+          data = result.data;
+          error = result.error;
+        } else {
+          // Load primary profile or first profile
+          const { data: profiles } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', user.id);
+          
+          if (profiles && profiles.length > 0) {
+            const primaryProfile = profiles.find(p => p.is_primary) || profiles[0];
+            const result = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', primaryProfile.id)
+              .single();
+            data = result.data;
+            error = result.error;
+          }
+        }
 
         if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
           console.error('Error loading profile:', error);
@@ -183,6 +212,7 @@ const Editor = () => {
         }
 
         if (data) {
+          setCurrentProfileId(data.id);
           setProfile({
             name: data.name || '',
             username: data.username || '',
@@ -205,7 +235,7 @@ const Editor = () => {
     };
 
     loadProfile();
-  }, []);
+  }, [profileId]);
 
   // Auto-save with debouncing - only after data is loaded
   useEffect(() => {
@@ -218,23 +248,40 @@ const Editor = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const { error } = await supabase
-          .from('profiles')
-          .upsert({
-            user_id: user.id,
-            name: profile.name,
-            username: profile.username,
-            bio: profile.bio,
-            avatar_url: profile.avatarUrl,
-            font: profile.font,
-            links: links,
-            wallpaper_url: wallpaperUrl,
-            text_color: textColor,
-            button_color: buttonColor,
-            button_text_color: buttonTextColor,
-            background_color: backgroundColor,
-            updated_at: new Date().toISOString(),
-          });
+        const profileData = {
+          user_id: user.id,
+          name: profile.name,
+          username: profile.username,
+          bio: profile.bio,
+          avatar_url: profile.avatarUrl,
+          font: profile.font,
+          links: links,
+          wallpaper_url: wallpaperUrl,
+          text_color: textColor,
+          button_color: buttonColor,
+          button_text_color: buttonTextColor,
+          background_color: backgroundColor,
+          updated_at: new Date().toISOString(),
+        };
+
+        let error;
+        if (currentProfileId) {
+          // Update existing profile
+          ({ error } = await supabase
+            .from('profiles')
+            .update(profileData)
+            .eq('id', currentProfileId));
+        } else {
+          // Create new profile
+          const { data, error: insertError } = await supabase
+            .from('profiles')
+            .insert(profileData)
+            .select()
+            .single();
+          
+          error = insertError;
+          if (data) setCurrentProfileId(data.id);
+        }
 
         if (error) throw error;
 
