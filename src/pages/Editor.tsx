@@ -266,26 +266,16 @@ const Editor = () => {
           updated_at: new Date().toISOString(),
         };
 
-        let error;
-        if (currentProfileId) {
-          // Update existing profile
-          ({ error } = await supabase
-            .from('profiles')
-            .update(profileData)
-            .eq(currentProfileKey, currentProfileId));
-        } else {
-          // Create new profile
-          const { data, error: insertError } = await supabase
-            .from('profiles')
-            .insert(profileData)
-            .select()
-            .single();
-          
-          error = insertError;
-          if (data) {
-            setCurrentProfileId((data as any).id ?? (data as any).user_id);
-            setCurrentProfileKey((data as any).id ? 'id' : 'user_id');
-          }
+        // Use upsert for idempotent saves
+        const { error } = await supabase
+          .from('profiles')
+          .upsert(profileData, { onConflict: 'user_id' })
+          .select()
+          .single();
+
+        if (!currentProfileId && !error) {
+          setCurrentProfileId(user.id);
+          setCurrentProfileKey('user_id');
         }
 
         if (error) throw error;

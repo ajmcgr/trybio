@@ -218,15 +218,11 @@ const Dashboard = () => {
         return;
       }
 
-      const { data, error } = await supabase
-        .from('profiles')
-        .insert({ user_id: user.id, name: '', is_primary: false })
-        .select()
-        .single();
+      // Ensure profile row exists (idempotent)
+      await supabase.rpc('ensure_profile_row');
 
-      if (error) throw error;
-
-      navigate(`/editor?id=${(data as any).id ?? (data as any).user_id}`);
+      // Navigate to editor
+      navigate(`/editor`);
     } catch (error: any) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     }
@@ -234,17 +230,14 @@ const Dashboard = () => {
 
   const handleDeleteProfile = async (profile: any) => {
     try {
-      const key = profile?.id ? 'id' : 'user_id';
-      const value = profile?.id ?? profile?.user_id;
-
       const { error } = await supabase
         .from('profiles')
         .delete()
-        .eq(key, value);
+        .eq('user_id', profile.user_id);
 
       if (error) throw error;
 
-      setProfiles(profiles.filter(p => (p.id ?? p.user_id) !== value));
+      setProfiles(profiles.filter(p => p.user_id !== profile.user_id));
       toast({ title: "Bio page deleted successfully" });
     } catch (error: any) {
       toast({
@@ -327,7 +320,7 @@ const Dashboard = () => {
             ) : profiles.length > 0 ? (
               <div className="space-y-4">
                 {profiles.map((profile) => (
-                  <div key={profile.id ?? profile.user_id} className="flex items-start gap-4 p-4 border border-border rounded-lg">
+                  <div key={profile.user_id} className="flex items-start gap-4 p-4 border border-border rounded-lg">
                     <Avatar className="h-16 w-16">
                       <AvatarImage src={profile.avatar_url} />
                       <AvatarFallback className="bg-muted text-lg">
@@ -359,7 +352,7 @@ const Dashboard = () => {
                           </Button>
                         </Link>
                       )}
-                      <Link to={`/editor?id=${profile.id ?? profile.user_id}`}>
+                      <Link to={`/editor`}>
                         <Button variant="outline" size="sm">
                           <Settings className="h-4 w-4 mr-2" />
                           Edit
