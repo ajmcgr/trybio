@@ -54,6 +54,8 @@ const Editor = () => {
   const [buttonColor, setButtonColor] = useState("#000000");
   const [buttonTextColor, setButtonTextColor] = useState("#ffffff");
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  const [buttonStyle, setButtonStyle] = useState<"solid" | "glass" | "outline">("solid");
+  const [buttonCorners, setButtonCorners] = useState<"square" | "round">("round");
   
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [newLink, setNewLink] = useState({ title: "", url: "" });
@@ -244,6 +246,8 @@ const Editor = () => {
           setButtonColor(data.button_color || '#000000');
           setButtonTextColor(data.button_text_color || '#ffffff');
           setBackgroundColor(data.background_color || '#ffffff');
+          setButtonStyle(data.button_style || 'solid');
+          setButtonCorners(data.button_corners || 'round');
         }
         setIsLoaded(true);
       } catch (error) {
@@ -282,6 +286,8 @@ const Editor = () => {
           button_color: buttonColor,
           button_text_color: buttonTextColor,
           background_color: backgroundColor,
+          button_style: buttonStyle,
+          button_corners: buttonCorners,
           updated_at: new Date().toISOString(),
         };
 
@@ -328,7 +334,7 @@ const Editor = () => {
 
     const timeoutId = setTimeout(saveData, 1000);
     return () => clearTimeout(timeoutId);
-  }, [isLoaded, profile, links, wallpaperUrl, textColor, buttonColor, buttonTextColor, backgroundColor]);
+  }, [isLoaded, profile, links, wallpaperUrl, textColor, buttonColor, buttonTextColor, backgroundColor, buttonStyle, buttonCorners]);
 
   const handlePreview = () => {
     localStorage.setItem('previewData', JSON.stringify({
@@ -339,6 +345,8 @@ const Editor = () => {
       buttonColor,
       buttonTextColor,
       backgroundColor,
+      buttonStyle,
+      buttonCorners,
     }));
     window.open('/profile?preview=true', '_blank');
   };
@@ -370,6 +378,8 @@ const Editor = () => {
           button_color: buttonColor,
           button_text_color: buttonTextColor,
           background_color: backgroundColor,
+          button_style: buttonStyle,
+          button_corners: buttonCorners,
           updated_at: new Date().toISOString(),
         });
 
@@ -612,6 +622,63 @@ const Editor = () => {
                     </div>
                   </div>
                 </div>
+                <div className="space-y-4 mt-4">
+                  <div>
+                    <Label>Button Style</Label>
+                    <div className="flex gap-2 mt-2">
+                      <Button
+                        type="button"
+                        variant={buttonStyle === "solid" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setButtonStyle("solid")}
+                        className="flex-1"
+                      >
+                        Solid
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={buttonStyle === "glass" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setButtonStyle("glass")}
+                        className="flex-1"
+                      >
+                        Glass
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={buttonStyle === "outline" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setButtonStyle("outline")}
+                        className="flex-1"
+                      >
+                        Outline
+                      </Button>
+                    </div>
+                  </div>
+                  <div>
+                    <Label>Button Corners</Label>
+                    <div className="flex gap-2 mt-2">
+                      <Button
+                        type="button"
+                        variant={buttonCorners === "square" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setButtonCorners("square")}
+                        className="flex-1"
+                      >
+                        Square
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={buttonCorners === "round" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setButtonCorners("round")}
+                        className="flex-1"
+                      >
+                        Round
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -807,18 +874,46 @@ const Editor = () => {
                 </p>
               </div>
               <div className="space-y-3">
-                {links.map((link) => (
-                  <button
-                    key={link.id}
-                    className="w-full py-3 px-4 rounded-xl font-medium transition-colors"
-                    style={{ 
-                      backgroundColor: buttonColor,
-                      color: buttonTextColor
-                    }}
-                  >
-                    {link.title}
-                  </button>
-                ))}
+                {links.map((link) => {
+                  const getButtonStyle = () => {
+                    const baseStyle = {
+                      color: buttonTextColor,
+                    };
+                    
+                    if (buttonStyle === "solid") {
+                      return {
+                        ...baseStyle,
+                        backgroundColor: buttonColor,
+                      };
+                    } else if (buttonStyle === "glass") {
+                      return {
+                        ...baseStyle,
+                        backgroundColor: `${buttonColor}33`,
+                        backdropFilter: "blur(10px)",
+                        border: `1px solid ${buttonColor}66`,
+                      };
+                    } else {
+                      return {
+                        ...baseStyle,
+                        backgroundColor: "transparent",
+                        border: `2px solid ${buttonColor}`,
+                        color: buttonColor,
+                      };
+                    }
+                  };
+
+                  return (
+                    <button
+                      key={link.id}
+                      className={`w-full py-3 px-4 font-medium transition-colors ${
+                        buttonCorners === "round" ? "rounded-full" : "rounded-lg"
+                      }`}
+                      style={getButtonStyle()}
+                    >
+                      {link.title}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>

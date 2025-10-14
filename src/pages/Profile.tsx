@@ -24,6 +24,8 @@ const Profile = () => {
   const [buttonColor, setButtonColor] = useState("#000000");
   const [buttonTextColor, setButtonTextColor] = useState("#ffffff");
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  const [buttonStyle, setButtonStyle] = useState<"solid" | "glass" | "outline">("solid");
+  const [buttonCorners, setButtonCorners] = useState<"square" | "round">("round");
   const [isPaidUser, setIsPaidUser] = useState(false);
 
   useEffect(() => {
@@ -40,6 +42,8 @@ const Profile = () => {
           setButtonColor(data.buttonColor);
           setButtonTextColor(data.buttonTextColor || '#ffffff');
           setBackgroundColor(data.backgroundColor);
+          setButtonStyle(data.buttonStyle || 'solid');
+          setButtonCorners(data.buttonCorners || 'round');
         }
       } else if (username) {
         // Load from Supabase by username for public profile
@@ -86,6 +90,8 @@ const Profile = () => {
           setButtonColor(row.button_color || '#000000');
           setButtonTextColor(row.button_text_color || '#ffffff');
           setBackgroundColor(row.background_color || '#ffffff');
+          setButtonStyle(row.button_style || 'solid');
+          setButtonCorners(row.button_corners || 'round');
 
           // Check if user has a paid subscription by reading from pro_status (optional)
           try {
@@ -181,22 +187,53 @@ const Profile = () => {
 
           {/* Links */}
           <div className="space-y-3">
-            {links.map((link) => (
-              <a
-                key={link.id}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => handleLinkClick(link)}
-                className="block w-full py-4 px-6 rounded-2xl font-medium hover:opacity-90 transition-opacity group"
-                style={{ backgroundColor: buttonColor, color: buttonTextColor }}
-              >
-                <div className="flex items-center justify-between">
-                  <span>{link.title}</span>
-                  <LinkIcon className="h-4 w-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-                </div>
-              </a>
-            ))}
+            {links.map((link) => {
+              const getButtonStyle = () => {
+                const baseStyle = {
+                  color: buttonTextColor,
+                };
+                
+                if (buttonStyle === "solid") {
+                  return {
+                    ...baseStyle,
+                    backgroundColor: buttonColor,
+                  };
+                } else if (buttonStyle === "glass") {
+                  return {
+                    ...baseStyle,
+                    backgroundColor: `${buttonColor}33`,
+                    backdropFilter: "blur(10px)",
+                    border: `1px solid ${buttonColor}66`,
+                  };
+                } else {
+                  return {
+                    ...baseStyle,
+                    backgroundColor: "transparent",
+                    border: `2px solid ${buttonColor}`,
+                    color: buttonColor,
+                  };
+                }
+              };
+
+              return (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => handleLinkClick(link)}
+                  className={`block w-full py-4 px-6 font-medium hover:opacity-90 transition-opacity group ${
+                    buttonCorners === "round" ? "rounded-full" : "rounded-lg"
+                  }`}
+                  style={getButtonStyle()}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>{link.title}</span>
+                    <LinkIcon className="h-4 w-4 opacity-70 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                </a>
+              );
+            })}
           </div>
         </div>
 
