@@ -48,7 +48,7 @@ const Profile = () => {
             .from('profiles')
             .select('*')
             .eq('username', username)
-            .single();
+            .maybeSingle();
 
           if (error) {
             console.error('Error loading profile:', error);

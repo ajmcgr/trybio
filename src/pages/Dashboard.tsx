@@ -168,12 +168,6 @@ const Dashboard = () => {
                 Settings
               </Button>
             </Link>
-            <Link to="/editor">
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                New Link
-              </Button>
-            </Link>
             <Button 
               variant="ghost" 
               size="sm" 

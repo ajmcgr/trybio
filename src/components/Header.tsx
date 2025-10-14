@@ -51,12 +51,6 @@ const Header = () => {
           <a href="/#pricing" className="text-sm text-foreground pointer-events-auto">Pricing</a>
           {user ? (
             <>
-              <Link to="/upgrade">
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <Zap className="h-4 w-4" />
-                  Upgrade
-                </Button>
-              </Link>
               <Link to="/dashboard">
                 <Button variant="ghost" size="sm">Dashboard</Button>
               </Link>
@@ -69,6 +63,12 @@ const Header = () => {
                 <LogOut className="h-4 w-4" />
                 Logout
               </Button>
+              <Link to="/upgrade">
+                <Button size="sm" className="gap-2">
+                  <Zap className="h-4 w-4" />
+                  Upgrade
+                </Button>
+              </Link>
             </>
           ) : (
             <>
