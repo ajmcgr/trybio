@@ -40,9 +40,9 @@ export function useProfile(supabase: SupabaseClient, userId?: string | null) {
     (async () => {
       try {
         const { data, error, status } = await supabase
-          .from("profiles_api") // COMPAT VIEW (id = user_id)
-          .select("id, username, full_name, avatar_url, bio, wallpaper_url, text_color, button_color, button_text_color, background_color, font, links, is_primary")
-          .eq("id", userId)
+          .from("profiles_api")
+          .select("id, user_id, username, full_name, avatar_url, bio, wallpaper_url, text_color, button_color, button_text_color, background_color, font, links, is_primary")
+          .eq("user_id", userId)
           .maybeSingle();
 
         if (status >= 400) {
