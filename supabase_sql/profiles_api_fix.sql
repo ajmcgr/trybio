@@ -45,6 +45,7 @@ before update on public.profiles
 for each row execute function public.set_updated_at();
 
 -- 3) Function to get user's subscription plan from pro_status
+drop function if exists public.get_user_plan(uuid);
 create or replace function public.get_user_plan(_user_id uuid)
 returns text
 language sql
@@ -64,6 +65,7 @@ as $$
 $$;
 
 -- 4) Function to check if user can create a profile based on their plan
+drop function if exists public.can_create_profile(uuid);
 create or replace function public.can_create_profile(_user_id uuid)
 returns boolean
 language plpgsql
