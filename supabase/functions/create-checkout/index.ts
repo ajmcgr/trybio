@@ -22,7 +22,8 @@ serve(async (req) => {
     const user = data.user;
     if (!user?.email) throw new Error("User not authenticated or email not available");
 
-    const { priceId } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const priceId = body.priceId || Deno.env.get("STRIPE_PRICE_PRO");
     if (!priceId) throw new Error("Price ID is required");
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { 
@@ -45,8 +46,8 @@ serve(async (req) => {
         },
       ],
       mode: "subscription",
-      success_url: `${req.headers.get("origin")}/dashboard?success=true`,
-      cancel_url: `${req.headers.get("origin")}/?canceled=true`,
+      success_url: `https://trybio.ai/upgrade/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `https://trybio.ai/upgrade/cancel`,
     });
 
     return new Response(JSON.stringify({ url: session.url }), {
