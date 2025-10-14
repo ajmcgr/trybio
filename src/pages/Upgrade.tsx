@@ -7,20 +7,18 @@ import { useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+// Stripe Payment Links
+const PAYMENT_LINKS = {
+  pro_monthly: 'https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk01',
+  pro_yearly: 'https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk02', // Update with actual yearly link
+};
+
 const Upgrade = () => {
-  const { subscribed, productId, checkSubscription, openCustomerPortal, createCheckout, loading } = useSubscription();
+  const { subscribed, productId, checkSubscription, openCustomerPortal, loading } = useSubscription();
 
   useEffect(() => {
     checkSubscription();
   }, [checkSubscription]);
-
-  const handleUpgrade = async (priceId: string) => {
-    try {
-      await createCheckout(priceId);
-    } catch (error) {
-      console.error('Error creating checkout:', error);
-    }
-  };
 
   const getCurrentPlan = () => {
     if (!subscribed) return 'Free';
@@ -141,13 +139,14 @@ const Upgrade = () => {
               {getCurrentPlan() !== 'Pro' ? (
                 <Button 
                   className="w-full" 
-                  onClick={() => handleUpgrade('price_1SHjFOLdEYJMHmhgROJ2Hdxz')}
-                  disabled={loading}
+                  asChild
                 >
-                  Upgrade to Pro
+                  <a href={PAYMENT_LINKS.pro_monthly} target="_blank" rel="noopener noreferrer">
+                    Upgrade to Pro
+                  </a>
                 </Button>
               ) : (
-                <Button variant="outline" className="w-full" onClick={openCustomerPortal}>
+                <Button variant="outline" className="w-full" onClick={openCustomerPortal} disabled={loading}>
                   Manage Subscription
                 </Button>
               )}
@@ -199,13 +198,14 @@ const Upgrade = () => {
               {getCurrentPlan() !== 'Business' ? (
                 <Button 
                   className="w-full" 
-                  onClick={() => handleUpgrade('price_1SHjFmLdEYJMHmhgrCPgUS2W')}
-                  disabled={loading}
+                  asChild
                 >
-                  Upgrade to Business
+                  <a href={PAYMENT_LINKS.pro_yearly} target="_blank" rel="noopener noreferrer">
+                    Upgrade to Business
+                  </a>
                 </Button>
               ) : (
-                <Button variant="outline" className="w-full" onClick={openCustomerPortal}>
+                <Button variant="outline" className="w-full" onClick={openCustomerPortal} disabled={loading}>
                   Manage Subscription
                 </Button>
               )}

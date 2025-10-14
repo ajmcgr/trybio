@@ -140,10 +140,11 @@ const Settings = () => {
                 </ul>
                 <Button 
                   className="w-full" 
-                  onClick={() => createCheckout(SUBSCRIPTION_TIERS.pro.priceId)}
-                  disabled={loading}
+                  asChild
                 >
-                  Upgrade to Pro
+                  <a href="https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk01" target="_blank" rel="noopener noreferrer">
+                    Upgrade to Pro
+                  </a>
                 </Button>
               </CardContent>
             </Card>
@@ -176,10 +177,11 @@ const Settings = () => {
                 </ul>
                 <Button 
                   className="w-full" 
-                  onClick={() => createCheckout(SUBSCRIPTION_TIERS.business.priceId)}
-                  disabled={loading}
+                  asChild
                 >
-                  Upgrade to Business
+                  <a href="https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk02" target="_blank" rel="noopener noreferrer">
+                    Upgrade to Business
+                  </a>
                 </Button>
               </CardContent>
             </Card>
