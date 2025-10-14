@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 
 declare global {
   interface Window {
-    $crisp?: any[];
+    $crisp?: any;
   }
 }
 
@@ -12,8 +12,6 @@ const CrispChat = () => {
 
   useEffect(() => {
     // Check if we're on a bio page (dynamic username route)
-    // Bio pages are any route that matches /:username pattern
-    // We exclude known routes like /dashboard, /auth, /settings, etc.
     const knownRoutes = [
       "/",
       "/auth",
@@ -31,14 +29,26 @@ const CrispChat = () => {
       (route) => location.pathname === route || location.pathname.startsWith(route)
     );
 
-    // Hide or show Crisp chat based on whether we're on a bio page
-    if (window.$crisp) {
-      if (isBioPage) {
-        window.$crisp.push(["do", "chat:hide"]);
-      } else {
-        window.$crisp.push(["do", "chat:show"]);
+    // Wait for Crisp to be ready before trying to hide/show
+    const checkCrisp = setInterval(() => {
+      if (window.$crisp && window.$crisp.is && window.$crisp.is("chat:visible") !== undefined) {
+        clearInterval(checkCrisp);
+        
+        if (isBioPage) {
+          window.$crisp.push(["do", "chat:hide"]);
+        } else {
+          window.$crisp.push(["do", "chat:show"]);
+        }
       }
-    }
+    }, 100);
+
+    // Cleanup interval after 5 seconds if Crisp never loads
+    const timeout = setTimeout(() => clearInterval(checkCrisp), 5000);
+
+    return () => {
+      clearInterval(checkCrisp);
+      clearTimeout(timeout);
+    };
   }, [location.pathname]);
 
   return null;
