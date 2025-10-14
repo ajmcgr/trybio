@@ -5,8 +5,10 @@ export const allowedOrigins = [
 ];
 
 export function getCorsHeaders(origin: string | null) {
+  const allowOrigin = origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
   return {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': allowOrigin,
+    'Access-Control-Allow-Credentials': 'true',
     'Vary': 'Origin',
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -15,5 +17,5 @@ export function getCorsHeaders(origin: string | null) {
 
 export function okOptions(req: Request) {
   const headers = getCorsHeaders(req.headers.get('origin'));
-  return new Response('ok', { status: 200, headers });
+  return new Response(null, { status: 204, headers });
 }
