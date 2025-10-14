@@ -67,7 +67,7 @@ const Landing = () => {
               <img 
                 src={alexBioPreview} 
                 alt="Bio page preview - Alex MacGregor's profile" 
-                className="w-full h-auto"
+                className="w-full h-auto shadow-2xl rounded-2xl"
               />
             </div>
           </div>
