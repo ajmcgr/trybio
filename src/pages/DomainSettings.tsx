@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Globe, CheckCircle2, ExternalLink, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
@@ -11,19 +12,49 @@ import { useSubscription } from "@/contexts/SubscriptionContext";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
+interface BioPage {
+  user_id: string;
+  username: string;
+  name: string;
+}
+
 const DomainSettings = () => {
   const { subscribed, plan } = useSubscription();
   const { toast } = useToast();
   const [customDomain, setCustomDomain] = useState("");
   const [savedDomain, setSavedDomain] = useState("");
+  const [selectedPage, setSelectedPage] = useState("");
+  const [bioPages, setBioPages] = useState<BioPage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const canUseDomains = subscribed && (plan === 'pro' || plan === 'business');
 
   useEffect(() => {
+    loadBioPages();
     loadDomainSettings();
   }, []);
+
+  const loadBioPages = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('user_id, username, name')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      setBioPages(data || []);
+      if (data && data.length > 0) {
+        setSelectedPage(data[0].user_id);
+      }
+    } catch (error) {
+      console.error('Error loading bio pages:', error);
+    }
+  };
 
   const loadDomainSettings = async () => {
     try {
@@ -33,7 +64,7 @@ const DomainSettings = () => {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('custom_domain')
+        .select('custom_domain, user_id')
         .eq('user_id', user.id)
         .single();
 
@@ -45,6 +76,7 @@ const DomainSettings = () => {
       if (data?.custom_domain) {
         setSavedDomain(data.custom_domain);
         setCustomDomain(data.custom_domain);
+        setSelectedPage(data.user_id);
       }
     } catch (error) {
       console.error('Error loading domain settings:', error);
@@ -68,21 +100,32 @@ const DomainSettings = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      if (!selectedPage) {
+        toast({
+          title: "No Bio Page Selected",
+          description: "Please select a bio page to map your domain to.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const { error } = await supabase
         .from('profiles')
         .update({
           custom_domain: customDomain || null,
           updated_at: new Date().toISOString(),
         })
-        .eq('user_id', user.id);
+        .eq('user_id', selectedPage);
 
       if (error) throw error;
 
       setSavedDomain(customDomain);
+      
+      const selectedBioPage = bioPages.find(page => page.user_id === selectedPage);
       toast({
         title: "Domain Saved",
         description: customDomain 
-          ? "Your custom domain has been saved. Follow the instructions below to set it up."
+          ? `Domain mapped to @${selectedBioPage?.username}. Follow the instructions below to set it up.`
           : "Custom domain has been removed.",
       });
     } catch (error: any) {
@@ -155,6 +198,29 @@ const DomainSettings = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
+              <Label htmlFor="bio-page">Bio Page</Label>
+              <Select 
+                value={selectedPage} 
+                onValueChange={setSelectedPage}
+                disabled={!canUseDomains || isLoading || bioPages.length === 0}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a bio page" />
+                </SelectTrigger>
+                <SelectContent>
+                  {bioPages.map((page) => (
+                    <SelectItem key={page.user_id} value={page.user_id}>
+                      @{page.username} {page.name ? `(${page.name})` : ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Your custom domain will point to this bio page
+              </p>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="domain">Custom Domain</Label>
               <div className="flex gap-2">
                 <Input
@@ -166,7 +232,7 @@ const DomainSettings = () => {
                 />
                 <Button 
                   onClick={handleSaveDomain}
-                  disabled={!canUseDomains || isSaving || customDomain === savedDomain}
+                  disabled={!canUseDomains || isSaving || (customDomain === savedDomain && !!selectedPage)}
                 >
                   {isSaving ? "Saving..." : "Save"}
                 </Button>
