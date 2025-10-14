@@ -32,6 +32,7 @@ const Editor = () => {
   const { toast } = useToast();
   const { subscribed, productId } = useSubscription();
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   
   const [profile, setProfile] = useState<ProfileData>({
     name: "",
@@ -179,6 +180,7 @@ const Editor = () => {
 
         if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
           console.error('Error loading profile:', error);
+          setIsLoaded(true);
           return;
         }
 
@@ -197,16 +199,21 @@ const Editor = () => {
           setButtonTextColor(data.button_text_color || '#ffffff');
           setBackgroundColor(data.background_color || '#ffffff');
         }
+        setIsLoaded(true);
       } catch (error) {
         console.error('Error loading profile:', error);
+        setIsLoaded(true);
       }
     };
 
     loadProfile();
   }, []);
 
-  // Auto-save with debouncing
+  // Auto-save with debouncing - only after data is loaded
   useEffect(() => {
+    // Don't auto-save until the profile data has been loaded
+    if (!isLoaded) return;
+
     const saveData = async () => {
       try {
         setIsSaving(true);
@@ -252,7 +259,7 @@ const Editor = () => {
 
     const timeoutId = setTimeout(saveData, 1000);
     return () => clearTimeout(timeoutId);
-  }, [profile, links, wallpaperUrl, textColor, buttonColor, buttonTextColor, backgroundColor]);
+  }, [isLoaded, profile, links, wallpaperUrl, textColor, buttonColor, buttonTextColor, backgroundColor]);
 
   const handlePreview = () => {
     localStorage.setItem('previewData', JSON.stringify({
