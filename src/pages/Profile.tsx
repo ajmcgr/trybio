@@ -58,7 +58,7 @@ const Profile = () => {
           if (data) {
             setProfileId(data.id);
             setProfile({
-              name: data.name || '',
+              name: data.full_name || '',
               username: data.username || '',
               bio: data.bio || '',
               avatarUrl: data.avatar_url || '',
