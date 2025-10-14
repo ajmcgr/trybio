@@ -12,10 +12,12 @@ const Settings = () => {
   const { subscribed, productId, subscriptionEnd, checkSubscription, openCustomerPortal, createCheckout, loading } = useSubscription();
 
   useEffect(() => {
+    console.log('[Settings] Current subscription state:', { subscribed, productId, subscriptionEnd });
     checkSubscription();
   }, [checkSubscription]);
 
   const getCurrentPlan = () => {
+    console.log('[Settings] Getting current plan. subscribed:', subscribed, 'productId:', productId);
     if (!subscribed) return 'Free';
     if (productId === SUBSCRIPTION_TIERS.pro.productId) return 'Pro';
     if (productId === SUBSCRIPTION_TIERS.business.productId) return 'Business';

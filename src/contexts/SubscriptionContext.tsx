@@ -18,13 +18,13 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(u
 const SUBSCRIPTION_TIERS = {
   pro: {
     priceId: 'price_1SHjFOLdEYJMHmhgROJ2Hdxz',
-    productId: 'prod_RMVOVSt7NZjGAW', // Updated from actual Stripe payment link
+    productId: 'prod_TEBcCoBIS46kPd',
     name: 'Pro Plan',
     price: 19,
   },
   business: {
     priceId: 'price_1SHjFmLdEYJMHmhgrCPgUS2W',
-    productId: 'prod_RMVPwDw2dKlF3V', // Updated from actual Stripe payment link
+    productId: 'prod_TEBdtSpr5mGB0P',
     name: 'Business Plan',
     price: 49,
   },
@@ -39,27 +39,38 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
   const checkSubscription = async () => {
     try {
+      console.log('[SubscriptionContext] Checking subscription...');
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
+        console.log('[SubscriptionContext] No session found');
         setSubscribed(false);
         setProductId(null);
         setSubscriptionEnd(null);
         return;
       }
 
+      console.log('[SubscriptionContext] Session found, invoking check-subscription function');
       const { data, error } = await supabase.functions.invoke('check-subscription', {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
         },
       });
 
+      console.log('[SubscriptionContext] Function response:', { data, error });
+
       if (error) throw error;
+
+      console.log('[SubscriptionContext] Setting subscription state:', {
+        subscribed: data.subscribed || false,
+        productId: data.product_id || null,
+        subscriptionEnd: data.subscription_end || null
+      });
 
       setSubscribed(data.subscribed || false);
       setProductId(data.product_id || null);
       setSubscriptionEnd(data.subscription_end || null);
     } catch (error) {
-      console.error('Error checking subscription:', error);
+      console.error('[SubscriptionContext] Error checking subscription:', error);
       setSubscribed(false);
       setProductId(null);
       setSubscriptionEnd(null);
