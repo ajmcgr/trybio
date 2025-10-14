@@ -8,7 +8,7 @@ import { useSubscription, SUBSCRIPTION_TIERS } from "@/contexts/SubscriptionCont
 import alexBioPreview from "@/assets/alex-bio-preview.png";
 
 const Landing = () => {
-  const { user, subscribed, productId, createCheckout, openCustomerPortal } = useSubscription();
+  const { user, subscribed, productId, priceId, createCheckout, openCustomerPortal } = useSubscription();
 
   useEffect(() => {
     // Load Senja widget script
@@ -170,19 +170,19 @@ const Landing = () => {
                 "Remove Bio branding"
               ]}
               highlighted
-              onSelect={() => {
-                if (subscribed && productId === SUBSCRIPTION_TIERS.pro.productId) {
-                  openCustomerPortal();
-                } else {
-                  createCheckout(SUBSCRIPTION_TIERS.pro.priceId);
-                }
-              }}
-              buttonText={
-                subscribed && productId === SUBSCRIPTION_TIERS.pro.productId
-                  ? "Manage"
-                  : "Upgrade"
-              }
-              isCurrentPlan={subscribed && productId === SUBSCRIPTION_TIERS.pro.productId}
+               onSelect={() => {
+                 if (subscribed && (productId === SUBSCRIPTION_TIERS.pro.productId || priceId === SUBSCRIPTION_TIERS.pro.priceId)) {
+                   openCustomerPortal();
+                 } else {
+                   createCheckout(SUBSCRIPTION_TIERS.pro.priceId);
+                 }
+               }}
+               buttonText={
+                 subscribed && (productId === SUBSCRIPTION_TIERS.pro.productId || priceId === SUBSCRIPTION_TIERS.pro.priceId)
+                   ? "Manage"
+                   : "Upgrade"
+               }
+               isCurrentPlan={subscribed && (productId === SUBSCRIPTION_TIERS.pro.productId || priceId === SUBSCRIPTION_TIERS.pro.priceId)}
             />
             <PricingCard
               name="Business"
@@ -197,19 +197,19 @@ const Landing = () => {
                 "Remove Bio branding",
                 "Priority Support"
               ]}
-              onSelect={() => {
-                if (subscribed && productId === SUBSCRIPTION_TIERS.business.productId) {
-                  openCustomerPortal();
-                } else {
-                  createCheckout(SUBSCRIPTION_TIERS.business.priceId);
-                }
-              }}
-              buttonText={
-                subscribed && productId === SUBSCRIPTION_TIERS.business.productId
-                  ? "Manage"
-                  : "Upgrade"
-              }
-              isCurrentPlan={subscribed && productId === SUBSCRIPTION_TIERS.business.productId}
+               onSelect={() => {
+                 if (subscribed && (productId === SUBSCRIPTION_TIERS.business.productId || priceId === SUBSCRIPTION_TIERS.business.priceId)) {
+                   openCustomerPortal();
+                 } else {
+                   createCheckout(SUBSCRIPTION_TIERS.business.priceId);
+                 }
+               }}
+               buttonText={
+                 subscribed && (productId === SUBSCRIPTION_TIERS.business.productId || priceId === SUBSCRIPTION_TIERS.business.priceId)
+                   ? "Manage"
+                   : "Upgrade"
+               }
+               isCurrentPlan={subscribed && (productId === SUBSCRIPTION_TIERS.business.productId || priceId === SUBSCRIPTION_TIERS.business.priceId)}
             />
           </div>
         </div>

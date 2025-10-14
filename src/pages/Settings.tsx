@@ -9,7 +9,7 @@ import { useSubscription } from "@/contexts/SubscriptionContext";
 import { SUBSCRIPTION_TIERS } from "@/contexts/SubscriptionContext";
 
 const Settings = () => {
-  const { subscribed, productId, subscriptionEnd, checkSubscription, openCustomerPortal, createCheckout, loading } = useSubscription();
+  const { subscribed, productId, priceId, subscriptionEnd, checkSubscription, openCustomerPortal, createCheckout, loading } = useSubscription();
 
   useEffect(() => {
     console.log('[Settings] Current subscription state:', { subscribed, productId, subscriptionEnd });
@@ -17,11 +17,12 @@ const Settings = () => {
   }, [checkSubscription]);
 
   const getCurrentPlan = () => {
-    console.log('[Settings] Getting current plan. subscribed:', subscribed, 'productId:', productId);
+    console.log('[Settings] Getting current plan. subscribed:', subscribed, 'productId:', productId, 'priceId:', priceId);
     if (!subscribed) return 'Free';
-    if (productId === SUBSCRIPTION_TIERS.pro.productId) return 'Pro';
-    if (productId === SUBSCRIPTION_TIERS.business.productId) return 'Business';
-    return 'Free';
+    if (productId === SUBSCRIPTION_TIERS.pro.productId || priceId === SUBSCRIPTION_TIERS.pro.priceId) return 'Pro';
+    if (productId === SUBSCRIPTION_TIERS.business.productId || priceId === SUBSCRIPTION_TIERS.business.priceId) return 'Business';
+    // If subscribed but unknown product, default to Pro to avoid showing Free incorrectly
+    return 'Pro';
   };
 
   const formatDate = (dateString: string | null) => {

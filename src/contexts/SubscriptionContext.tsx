@@ -6,6 +6,7 @@ interface SubscriptionContextType {
   user: User | null;
   subscribed: boolean;
   productId: string | null;
+  priceId: string | null;
   subscriptionEnd: string | null;
   loading: boolean;
   checkSubscription: () => Promise<void>;
@@ -34,6 +35,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [subscribed, setSubscribed] = useState(false);
   const [productId, setProductId] = useState<string | null>(null);
+  const [priceId, setPriceId] = useState<string | null>(null);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -45,6 +47,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
         console.log('[SubscriptionContext] No session found');
         setSubscribed(false);
         setProductId(null);
+        setPriceId(null);
         setSubscriptionEnd(null);
         return;
       }
@@ -63,16 +66,19 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       console.log('[SubscriptionContext] Setting subscription state:', {
         subscribed: data.subscribed || false,
         productId: data.product_id || null,
+        priceId: data.price_id || null,
         subscriptionEnd: data.subscription_end || null
       });
 
       setSubscribed(data.subscribed || false);
       setProductId(data.product_id || null);
+      setPriceId(data.price_id || null);
       setSubscriptionEnd(data.subscription_end || null);
     } catch (error) {
       console.error('[SubscriptionContext] Error checking subscription:', error);
       setSubscribed(false);
       setProductId(null);
+      setPriceId(null);
       setSubscriptionEnd(null);
     } finally {
       setLoading(false);
@@ -183,6 +189,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
         user,
         subscribed,
         productId,
+        priceId,
         subscriptionEnd,
         loading,
         checkSubscription,

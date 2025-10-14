@@ -61,6 +61,7 @@ serve(async (req) => {
     });
 
     let productId = null;
+    let priceId = null;
     let subscriptionEnd = null;
 
     // Prefer active/trialing subscriptions
@@ -74,7 +75,8 @@ serve(async (req) => {
       subscriptionEnd = new Date(subscription.current_period_end * 1000).toISOString();
       logStep("Subscription found", { subscriptionId: subscription.id, status: subscription.status, endDate: subscriptionEnd });
       productId = (subscription.items.data[0]?.price?.product as string) ?? null;
-      logStep("Determined subscription tier", { productId });
+      priceId = (subscription.items.data[0]?.price?.id as string) ?? null;
+      logStep("Determined subscription tier", { productId, priceId });
     } else {
       logStep("No active or trialing subscription found", { count: subscriptionsRes.data.length, statuses: subscriptionsRes.data.map((s: any) => s.status) });
     }
@@ -82,6 +84,7 @@ serve(async (req) => {
     return new Response(JSON.stringify({
       subscribed: hasSub,
       product_id: productId,
+      price_id: priceId,
       subscription_end: subscriptionEnd
     }), {
       status: 200,

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { CreditCard, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
-import { useSubscription } from "@/contexts/SubscriptionContext";
+import { useSubscription, SUBSCRIPTION_TIERS } from "@/contexts/SubscriptionContext";
 import { useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +14,7 @@ const PAYMENT_LINKS = {
 };
 
 const Upgrade = () => {
-  const { subscribed, productId, checkSubscription, openCustomerPortal, loading } = useSubscription();
+  const { subscribed, productId, priceId, checkSubscription, openCustomerPortal, loading } = useSubscription();
 
   useEffect(() => {
     checkSubscription();
@@ -22,9 +22,10 @@ const Upgrade = () => {
 
   const getCurrentPlan = () => {
     if (!subscribed) return 'Free';
-    if (productId === 'prod_TEBcCoBIS46kPd') return 'Pro';
-    if (productId === 'prod_TEBdtSpr5mGB0P') return 'Business';
-    return 'Free';
+    if (productId === SUBSCRIPTION_TIERS.pro.productId || priceId === SUBSCRIPTION_TIERS.pro.priceId) return 'Pro';
+    if (productId === SUBSCRIPTION_TIERS.business.productId || priceId === SUBSCRIPTION_TIERS.business.priceId) return 'Business';
+    // If subscribed but unknown product, default to Pro to avoid showing Free incorrectly
+    return 'Pro';
   };
 
   return (
