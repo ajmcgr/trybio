@@ -18,13 +18,13 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(u
 const SUBSCRIPTION_TIERS = {
   pro: {
     priceId: 'price_1SHjFOLdEYJMHmhgROJ2Hdxz',
-    productId: 'prod_TEBcCoBIS46kPd',
+    productId: 'prod_RMVOVSt7NZjGAW', // Updated from actual Stripe payment link
     name: 'Pro Plan',
     price: 19,
   },
   business: {
     priceId: 'price_1SHjFmLdEYJMHmhgrCPgUS2W',
-    productId: 'prod_TEBdtSpr5mGB0P',
+    productId: 'prod_RMVPwDw2dKlF3V', // Updated from actual Stripe payment link
     name: 'Business Plan',
     price: 49,
   },
