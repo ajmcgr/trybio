@@ -241,6 +241,9 @@ const Editor = () => {
   useEffect(() => {
     // Don't auto-save until the profile data has been loaded
     if (!isLoaded) return;
+    
+    // Don't auto-save if creating new profile and no data entered yet
+    if (!currentProfileId && !profile.name && !profile.username && !profile.bio) return;
 
     const saveData = async () => {
       try {
