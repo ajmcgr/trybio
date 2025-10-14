@@ -340,7 +340,7 @@ const Editor = () => {
         .from('profiles')
         .upsert({
           user_id: user.id,
-          name: profile.name,
+          full_name: profile.name,
           username: profile.username,
           bio: profile.bio,
           avatar_url: profile.avatarUrl,

@@ -332,12 +332,12 @@ const Dashboard = () => {
                     <Avatar className="h-16 w-16">
                       <AvatarImage src={profile.avatar_url} />
                       <AvatarFallback className="bg-muted text-lg">
-                        {profile.name ? profile.name.slice(0, 2).toUpperCase() : "U"}
+                        {profile.full_name ? profile.full_name.slice(0, 2).toUpperCase() : "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-bold text-lg">{profile.name || "No name set"}</h3>
+                        <h3 className="font-bold text-lg">{profile.full_name || "No name set"}</h3>
                         {profile.is_primary && (
                           <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Primary</span>
                         )}

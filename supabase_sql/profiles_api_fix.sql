@@ -156,7 +156,12 @@ create policy profiles_delete_own on public.profiles
 for delete to authenticated
 using (auth.uid() = user_id);
 
--- 8) Refresh PostgREST schema cache
+-- 8) Grant permissions and refresh schema cache
+grant usage on schema public to anon, authenticated;
+grant all on public.profiles to anon, authenticated;
+grant all on public.profiles_api to anon, authenticated;
+
+-- Force PostgREST to reload the schema cache
 notify pgrst, 'reload schema';
 
 -- END
