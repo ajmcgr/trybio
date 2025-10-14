@@ -39,14 +39,33 @@ export function useProfile(supabase: SupabaseClient, userId?: string | null) {
 
     (async () => {
       try {
-        const { data, error, status } = await supabase
+        // Try by user_id first
+        let data: any = null;
+        let error: any = null;
+        let status = 200;
+
+        const r1 = await supabase
           .from("profiles_api")
           .select("id, user_id, username, full_name, avatar_url, bio, wallpaper_url, text_color, button_color, button_text_color, background_color, font, links, is_primary")
           .eq("user_id", userId)
           .maybeSingle();
 
+        if (r1.error) {
+          const r2 = await supabase
+            .from("profiles_api")
+            .select("id, user_id, username, full_name, avatar_url, bio, wallpaper_url, text_color, button_color, button_text_color, background_color, font, links, is_primary")
+            .eq("id", userId)
+            .maybeSingle();
+          data = r2.data;
+          error = r2.error;
+          status = r2.status ?? 200;
+        } else {
+          data = r1.data;
+          error = r1.error;
+          status = r1.status ?? 200;
+        }
+
         if (status >= 400) {
-          // Stop the spam: set a short backoff (e.g., 10 minutes)
           hardErrorUntil.current = Date.now() + 10 * 60 * 1000;
         }
         if (error) {

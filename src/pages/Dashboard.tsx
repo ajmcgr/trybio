@@ -42,14 +42,31 @@ const Dashboard = () => {
           return;
         }
 
-        const { data, error } = await supabase
+        // Robust fetch: try by user_id, then fallback by id (compat view variants)
+        let data: any[] | null = null;
+        let err: any = null;
+
+        const q1 = await supabase
           .from('profiles_api')
           .select('*')
           .eq('user_id', user.id)
           .order('is_primary', { ascending: false })
           .order('created_at', { ascending: false });
 
-        if (error) throw error;
+        if (q1.error) {
+          const q2 = await supabase
+            .from('profiles_api')
+            .select('*')
+            .eq('id', user.id)
+            .order('is_primary', { ascending: false })
+            .order('created_at', { ascending: false });
+          data = q2.data || [];
+          err = q2.error;
+        } else {
+          data = q1.data || [];
+        }
+
+        if (err) throw err;
         setProfiles(data || []);
 
         // Load analytics for the primary profile

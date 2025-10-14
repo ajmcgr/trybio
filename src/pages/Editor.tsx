@@ -180,22 +180,41 @@ const Editor = () => {
         
         if (profileId) {
           // Load all profiles for the user, then find match by id or user_id
-          const { data: profiles, error: listError } = await supabase
+          const q1 = await supabase
             .from('profiles_api')
             .select('*')
             .eq('user_id', user.id);
-          if (listError) {
-            error = listError;
-          } else {
-            data = profiles?.find((p: any) => p.id === profileId) || profiles?.[0] || null;
+
+          let profiles: any[] = q1.data || [];
+          if (q1.error) {
+            const q2 = await supabase
+              .from('profiles_api')
+              .select('*')
+              .eq('id', user.id);
+            profiles = q2.data || [];
+            error = q2.error;
           }
+
+          if (!q1.error) {
+            error = null;
+          }
+
+          data = profiles?.find((p: any) => p.id === profileId) || profiles?.[0] || null;
         } else {
-          // Load primary profile or first profile
-          const { data: profiles } = await supabase
+          const q = await supabase
             .from('profiles_api')
             .select('*')
             .eq('user_id', user.id);
-          
+
+          let profiles = q.data || [];
+          if (q.error) {
+            const q2 = await supabase
+              .from('profiles_api')
+              .select('*')
+              .eq('id', user.id);
+            profiles = q2.data || [];
+          }
+
           if (profiles && profiles.length > 0) {
             const primaryProfile = profiles.find(p => p.is_primary) || profiles[0];
             data = primaryProfile;

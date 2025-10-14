@@ -41,16 +41,26 @@ const DomainSettings = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data, error } = await supabase
+      const q = await supabase
         .from('profiles_api')
         .select('id, user_id, username, full_name')
         .eq('user_id', user.id);
 
-      if (error) throw error;
-
-      setBioPages(data || []);
-      if (data && data.length > 0) {
-        setSelectedPage(data[0].id);
+      if (q.error) {
+        const q2 = await supabase
+          .from('profiles_api')
+          .select('id, user_id, username, full_name')
+          .eq('id', user.id);
+        if (q2.error) throw q2.error;
+        setBioPages(q2.data || []);
+        if (q2.data && q2.data.length > 0) {
+          setSelectedPage(q2.data[0].id);
+        }
+      } else {
+        setBioPages(q.data || []);
+        if (q.data && q.data.length > 0) {
+          setSelectedPage(q.data[0].id);
+        }
       }
     } catch (error) {
       console.error('Error loading bio pages:', error);
@@ -63,21 +73,32 @@ const DomainSettings = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data, error } = await supabase
+      const q = await supabase
         .from('profiles_api')
         .select('custom_domain, id, user_id')
         .eq('user_id', user.id)
         .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error loading domain:', error);
-        return;
-      }
-
-      if (data?.custom_domain) {
-        setSavedDomain(data.custom_domain);
-        setCustomDomain(data.custom_domain);
-        setSelectedPage(data.id);
+      if (q.error && q.error.code !== 'PGRST116') {
+        // fallback if view uses id mapping only
+        const q2 = await supabase
+          .from('profiles_api')
+          .select('custom_domain, id, user_id')
+          .eq('id', user.id)
+          .maybeSingle();
+        if (q2.error && q2.error.code !== 'PGRST116') {
+          console.error('Error loading domain:', q2.error);
+          return;
+        }
+        if (q2.data) {
+          setSavedDomain(q2.data.custom_domain || '');
+          setCustomDomain(q2.data.custom_domain || '');
+          setSelectedPage(q2.data.id);
+        }
+      } else if (q.data) {
+        setSavedDomain(q.data.custom_domain || '');
+        setCustomDomain(q.data.custom_domain || '');
+        setSelectedPage(q.data.id);
       }
     } catch (error) {
       console.error('Error loading domain settings:', error);
