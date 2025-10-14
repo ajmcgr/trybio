@@ -210,9 +210,26 @@ const Dashboard = () => {
       navigate('/upgrade');
       return;
     }
-    navigate('/editor');
-  };
 
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate('/auth');
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert({ user_id: user.id, name: '', is_primary: false })
+        .select('id')
+        .single();
+
+      if (error) throw error;
+
+      navigate(`/editor?id=${data.id}`);
+    } catch (error: any) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    }
   const handleDeleteProfile = async (profileId: string) => {
     try {
       const { error } = await supabase
@@ -231,8 +248,6 @@ const Dashboard = () => {
         variant: "destructive",
       });
     }
-  };
-
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -247,8 +262,6 @@ const Dashboard = () => {
       });
     }
   };
-
-  return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card">

@@ -32,7 +32,8 @@ const Editor = () => {
   const { toast } = useToast();
   const { subscribed, plan } = useSubscription();
   const [searchParams] = useSearchParams();
-  const profileId = searchParams.get('id');
+  const rawProfileId = searchParams.get('id');
+  const profileId = rawProfileId && rawProfileId !== 'undefined' && rawProfileId !== 'null' ? rawProfileId : null;
   const [isSaving, setIsSaving] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentProfileId, setCurrentProfileId] = useState<string | null>(null);
