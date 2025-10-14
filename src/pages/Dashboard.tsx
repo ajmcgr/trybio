@@ -221,12 +221,12 @@ const Dashboard = () => {
       const { data, error } = await supabase
         .from('profiles')
         .insert({ user_id: user.id, name: '', is_primary: false })
-        .select('id')
+        .select('*')
         .single();
 
       if (error) throw error;
 
-      navigate(`/editor?id=${data.id}`);
+      navigate(`/editor?id=${(data as any).id ?? (data as any).user_id}`);
     } catch (error: any) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     }

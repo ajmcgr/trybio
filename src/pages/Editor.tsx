@@ -37,6 +37,7 @@ const Editor = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentProfileId, setCurrentProfileId] = useState<string | null>(null);
+  const [currentProfileKey, setCurrentProfileKey] = useState<'id' | 'user_id'>('id');
   
   const [profile, setProfile] = useState<ProfileData>({
     name: "",
@@ -178,15 +179,16 @@ const Editor = () => {
         let error: any = null;
         
         if (profileId) {
-          // Load specific profile by ID
-          const result = await supabase
+          // Load all profiles for the user, then find match by id or user_id
+          const { data: profiles, error: listError } = await supabase
             .from('profiles')
             .select('*')
-            .eq('user_id', user.id)
-            .eq('id', profileId)
-            .single();
-          data = result.data;
-          error = result.error;
+            .eq('user_id', user.id);
+          if (listError) {
+            error = listError;
+          } else {
+            data = profiles?.find((p: any) => p.id === profileId || p.user_id === profileId) || profiles?.[0] || null;
+          }
         } else {
           // Load primary profile or first profile
           const { data: profiles } = await supabase
@@ -196,13 +198,8 @@ const Editor = () => {
           
           if (profiles && profiles.length > 0) {
             const primaryProfile = profiles.find(p => p.is_primary) || profiles[0];
-            const result = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', primaryProfile.id)
-              .single();
-            data = result.data;
-            error = result.error;
+            data = primaryProfile;
+            error = null;
           }
         }
 
@@ -213,7 +210,8 @@ const Editor = () => {
         }
 
         if (data) {
-          setCurrentProfileId(data.id);
+          setCurrentProfileId(data.id ?? data.user_id);
+          setCurrentProfileKey(data.id ? 'id' : 'user_id');
           setProfile({
             name: data.name || '',
             username: data.username || '',
@@ -274,7 +272,7 @@ const Editor = () => {
           ({ error } = await supabase
             .from('profiles')
             .update(profileData)
-            .eq('id', currentProfileId));
+            .eq(currentProfileKey, currentProfileId));
         } else {
           // Create new profile
           const { data, error: insertError } = await supabase
