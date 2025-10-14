@@ -56,7 +56,7 @@ const Profile = () => {
           }
 
           if (data) {
-            setProfileId(data.user_id);
+            setProfileId(data.id);
             setProfile({
               name: data.name || '',
               username: data.username || '',
@@ -92,7 +92,7 @@ const Profile = () => {
             await supabase
               .from('profile_views')
               .insert({
-                profile_id: data.user_id,
+                profile_id: data.id,
                 user_agent: navigator.userAgent,
                 referrer: document.referrer
               });

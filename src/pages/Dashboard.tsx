@@ -55,7 +55,7 @@ const Dashboard = () => {
         // Load analytics for the primary profile
         if (data && data.length > 0) {
           const primaryProfile = data.find(p => p.is_primary) || data[0];
-          await loadAnalytics(primaryProfile.user_id);
+          await loadAnalytics(primaryProfile.id);
         }
       } catch (error) {
         console.error('Error loading profiles:', error);
@@ -215,6 +215,17 @@ const Dashboard = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         navigate('/auth');
+        return;
+      }
+
+      // If a profile already exists, just open it to avoid duplicate key errors
+      const { data: existing } = await supabase
+        .from('profiles_api')
+        .select('id')
+        .eq('id', user.id);
+
+      if (existing && existing.length > 0) {
+        navigate(`/editor?id=${existing[0].id}`);
         return;
       }
 
