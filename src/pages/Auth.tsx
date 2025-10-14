@@ -36,7 +36,7 @@ const Auth = () => {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/`,
+            emailRedirectTo: `${window.location.origin}/dashboard`,
             data: {
               full_name: name,
             },
@@ -45,8 +45,9 @@ const Auth = () => {
         if (error) throw error;
         toast({
           title: "Account created!",
-          description: "Please check your email to verify your account.",
+          description: "Redirecting to dashboard...",
         });
+        navigate("/dashboard");
       }
     } catch (error: any) {
       toast({
