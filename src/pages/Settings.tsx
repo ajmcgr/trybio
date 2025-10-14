@@ -142,7 +142,7 @@ const Settings = () => {
                   className="w-full" 
                   asChild
                 >
-                  <a href="https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk01" target="_blank" rel="noopener noreferrer">
+                  <a href="https://buy.stripe.com/bJe7sMgxegr48nvdlj9sk00" target="_blank" rel="noopener noreferrer">
                     Upgrade to Pro
                   </a>
                 </Button>
@@ -179,7 +179,7 @@ const Settings = () => {
                   className="w-full" 
                   asChild
                 >
-                  <a href="https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk02" target="_blank" rel="noopener noreferrer">
+                  <a href="https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk01" target="_blank" rel="noopener noreferrer">
                     Upgrade to Business
                   </a>
                 </Button>

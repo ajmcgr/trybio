@@ -9,8 +9,8 @@ import { Badge } from "@/components/ui/badge";
 
 // Stripe Payment Links
 const PAYMENT_LINKS = {
-  pro_monthly: 'https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk01',
-  pro_yearly: 'https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk02', // Update with actual yearly link
+  pro_monthly: 'https://buy.stripe.com/bJe7sMgxegr48nvdlj9sk00',
+  business_monthly: 'https://buy.stripe.com/fZu3cw94M5Mq6fn5SR9sk01',
 };
 
 const Upgrade = () => {
@@ -200,7 +200,7 @@ const Upgrade = () => {
                   className="w-full" 
                   asChild
                 >
-                  <a href={PAYMENT_LINKS.pro_yearly} target="_blank" rel="noopener noreferrer">
+                  <a href={PAYMENT_LINKS.business_monthly} target="_blank" rel="noopener noreferrer">
                     Upgrade to Business
                   </a>
                 </Button>
