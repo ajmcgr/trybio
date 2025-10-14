@@ -45,7 +45,7 @@ const Dashboard = () => {
         const { data, error } = await supabase
           .from('profiles_api')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('id', user.id)
           .order('is_primary', { ascending: false })
           .order('created_at', { ascending: false });
 

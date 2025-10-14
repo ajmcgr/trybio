@@ -39,7 +39,9 @@ const Settings = () => {
   }, [refreshSubscription]);
 
   const getCurrentPlan = () => {
-    console.log('[Settings] Getting current plan. subscribed:', subscribed, 'plan:', plan);
+    if (process.env.NODE_ENV === "development") {
+      console.log('[Settings] Getting current plan. subscribed:', subscribed, 'plan:', plan);
+    }
     if (!subscribed) return 'Free';
     return plan === 'pro' ? 'Pro' : 'Business';
   };

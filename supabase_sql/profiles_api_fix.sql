@@ -111,12 +111,11 @@ create trigger on_auth_user_created
 after insert on auth.users
 for each row execute function public.handle_new_user();
 
--- 6) Read-only view (profiles_api) - now just exposes all columns directly since id exists
+-- 6) Read-only view (profiles_api) - maps user_id -> id for compatibility
 drop view if exists public.profiles_api;
 create view public.profiles_api as
 select
-  id,
-  user_id,
+  user_id as id,
   username,
   full_name,
   avatar_url,

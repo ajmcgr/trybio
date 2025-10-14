@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon, Edit2, ChevronUp, ChevronDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import logo from "@/assets/logo.png";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
@@ -630,9 +630,12 @@ const Editor = () => {
                       Add Link
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent aria-describedby="add-link-desc">
                     <DialogHeader>
                       <DialogTitle>Add New Link</DialogTitle>
+                      <DialogDescription id="add-link-desc">
+                        Add a new link to your bio page
+                      </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 mt-4">
                       <div>
