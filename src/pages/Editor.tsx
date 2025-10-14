@@ -181,9 +181,9 @@ const Editor = () => {
         if (profileId) {
           // Load all profiles for the user, then find match by id or user_id
           const { data: profiles, error: listError } = await supabase
-            .from('profiles')
+            .from('profiles_api')
             .select('*')
-            .eq('user_id', user.id);
+            .eq('id', user.id);
           if (listError) {
             error = listError;
           } else {
@@ -192,9 +192,9 @@ const Editor = () => {
         } else {
           // Load primary profile or first profile
           const { data: profiles } = await supabase
-            .from('profiles')
+            .from('profiles_api')
             .select('*')
-            .eq('user_id', user.id);
+            .eq('id', user.id);
           
           if (profiles && profiles.length > 0) {
             const primaryProfile = profiles.find(p => p.is_primary) || profiles[0];

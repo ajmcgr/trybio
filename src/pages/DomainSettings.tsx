@@ -13,9 +13,9 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
 interface BioPage {
-  user_id: string;
+  id: string;
   username: string;
-  name: string;
+  full_name: string;
 }
 
 const DomainSettings = () => {
@@ -41,15 +41,15 @@ const DomainSettings = () => {
       if (!user) return;
 
       const { data, error } = await supabase
-        .from('profiles')
-        .select('user_id, username, name')
-        .eq('user_id', user.id);
+        .from('profiles_api')
+        .select('id, username, full_name')
+        .eq('id', user.id);
 
       if (error) throw error;
 
       setBioPages(data || []);
       if (data && data.length > 0) {
-        setSelectedPage(data[0].user_id);
+        setSelectedPage(data[0].id);
       }
     } catch (error) {
       console.error('Error loading bio pages:', error);
@@ -63,10 +63,10 @@ const DomainSettings = () => {
       if (!user) return;
 
       const { data, error } = await supabase
-        .from('profiles')
-        .select('custom_domain, user_id')
-        .eq('user_id', user.id)
-        .single();
+        .from('profiles_api')
+        .select('custom_domain, id')
+        .eq('id', user.id)
+        .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {
         console.error('Error loading domain:', error);
@@ -76,7 +76,7 @@ const DomainSettings = () => {
       if (data?.custom_domain) {
         setSavedDomain(data.custom_domain);
         setCustomDomain(data.custom_domain);
-        setSelectedPage(data.user_id);
+        setSelectedPage(data.id);
       }
     } catch (error) {
       console.error('Error loading domain settings:', error);
@@ -121,7 +121,7 @@ const DomainSettings = () => {
 
       setSavedDomain(customDomain);
       
-      const selectedBioPage = bioPages.find(page => page.user_id === selectedPage);
+      const selectedBioPage = bioPages.find(page => page.id === selectedPage);
       toast({
         title: "Domain Saved",
         description: customDomain 
@@ -209,8 +209,8 @@ const DomainSettings = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {bioPages.map((page) => (
-                    <SelectItem key={page.user_id} value={page.user_id}>
-                      @{page.username} {page.name ? `(${page.name})` : ''}
+                    <SelectItem key={page.id} value={page.id}>
+                      @{page.username} {page.full_name ? `(${page.full_name})` : ''}
                     </SelectItem>
                   ))}
                 </SelectContent>

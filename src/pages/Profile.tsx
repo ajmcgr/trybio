@@ -45,7 +45,7 @@ const Profile = () => {
         // Load from Supabase by username for public profile
         try {
           const { data, error } = await supabase
-            .from('profiles')
+            .from('profiles_api')
             .select('*')
             .eq('username', username)
             .maybeSingle();
