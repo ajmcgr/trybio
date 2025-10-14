@@ -39,7 +39,11 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const openCustomerPortal = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+        console.warn('[CustomerPortal] No session found, redirecting to /auth');
+        window.location.href = '/auth';
+        return;
+      }
 
       const { data, error } = await supabase.functions.invoke('customer-portal', {
         headers: {
@@ -49,8 +53,9 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) throw error;
 
-      if (data.url) {
-        window.open(data.url, '_blank');
+      if (data?.url) {
+        // Use same-tab navigation to avoid popup blockers
+        window.location.href = data.url as string;
       }
     } catch (error) {
       console.error('Error opening customer portal:', error);
