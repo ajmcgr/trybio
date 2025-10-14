@@ -118,16 +118,20 @@ const Landing = () => {
 
       {/* Themes Section */}
       <section id="themes" className="py-24 px-6 bg-secondary/50">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-medium mb-4">Themes that stand out</h2>
             <p className="text-xl text-muted-foreground">Premium designs that make you look professional instantly</p>
           </div>
           <div className="grid md:grid-cols-4 gap-6">
-            <ThemeCard name="Sunset" bgColor="#e74c3c" />
-            <ThemeCard name="Ocean" bgColor="#3498db" />
-            <ThemeCard name="Forest" bgColor="#2ecc71" />
-            <ThemeCard name="Purple" bgColor="#9b59b6" />
+            <ThemeCard name="Purple Dream" bgGradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)" />
+            <ThemeCard name="Sunset Bliss" bgGradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)" />
+            <ThemeCard name="Ocean Breeze" bgGradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)" />
+            <ThemeCard name="Fresh Mint" bgGradient="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)" />
+            <ThemeCard name="Night Sky" bgImage="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=800&auto=format&fit=crop" />
+            <ThemeCard name="City Lights" bgImage="https://images.unsplash.com/photo-1514565131-fce0801e5785?w=800&auto=format&fit=crop" />
+            <ThemeCard name="Nature" bgImage="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&auto=format&fit=crop" />
+            <ThemeCard name="Abstract" bgImage="https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=800&auto=format&fit=crop" />
           </div>
         </div>
       </section>
@@ -281,24 +285,32 @@ const FeatureCard = ({ icon, title, description }: { icon: React.ReactNode; titl
   </div>
 );
 
-const ThemeCard = ({ name, bgColor }: { name: string; bgColor: string }) => (
-  <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-xl transition-shadow">
-    <div 
-      className="aspect-[9/16] rounded-xl mb-4 flex items-center justify-center text-white font-semibold" 
-      style={{ backgroundColor: bgColor }}
-    >
-      <div className="text-center">
-        <div className="w-16 h-16 rounded-full bg-white/20 mx-auto mb-3"></div>
-        <div className="space-y-2">
-          <div className="h-2 w-20 bg-white/30 rounded mx-auto"></div>
-          <div className="h-2 w-16 bg-white/30 rounded mx-auto"></div>
+const ThemeCard = ({ name, bgColor, bgGradient, bgImage }: { name: string; bgColor?: string; bgGradient?: string; bgImage?: string }) => {
+  const backgroundStyle = bgImage 
+    ? { backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    : bgGradient 
+      ? { background: bgGradient }
+      : { backgroundColor: bgColor };
+
+  return (
+    <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-xl transition-shadow">
+      <div 
+        className="aspect-[9/16] rounded-xl mb-4 flex items-center justify-center text-white font-semibold" 
+        style={backgroundStyle}
+      >
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm mx-auto mb-3"></div>
+          <div className="space-y-2">
+            <div className="h-2 w-20 bg-white/30 backdrop-blur-sm rounded mx-auto"></div>
+            <div className="h-2 w-16 bg-white/30 backdrop-blur-sm rounded mx-auto"></div>
+          </div>
         </div>
       </div>
+      <h3 className="font-semibold mb-2">{name}</h3>
+      <p className="text-sm text-muted-foreground">Beautiful and minimal</p>
     </div>
-    <h3 className="font-semibold mb-2">{name}</h3>
-    <p className="text-sm text-muted-foreground">Beautiful and minimal</p>
-  </div>
-);
+  );
+};
 
 const PricingCard = ({ name, price, description, features, highlighted, onSelect, buttonText, isCurrentPlan }: {
   name: string;

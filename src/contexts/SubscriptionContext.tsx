@@ -38,27 +38,37 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
   const openCustomerPortal = async () => {
     try {
+      console.log('[CustomerPortal] Opening customer portal...');
       const { data: { session } } = await supabase.auth.getSession();
+      
       if (!session) {
         console.warn('[CustomerPortal] No session found, redirecting to /auth');
         window.location.href = '/auth';
         return;
       }
 
+      console.log('[CustomerPortal] Invoking customer-portal function...');
       const { data, error } = await supabase.functions.invoke('customer-portal', {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('[CustomerPortal] Error:', error);
+        throw error;
+      }
+
+      console.log('[CustomerPortal] Response:', data);
 
       if (data?.url) {
-        // Use same-tab navigation to avoid popup blockers
+        console.log('[CustomerPortal] Redirecting to:', data.url);
         window.location.href = data.url as string;
+      } else {
+        console.error('[CustomerPortal] No URL in response');
       }
     } catch (error) {
-      console.error('Error opening customer portal:', error);
+      console.error('[CustomerPortal] Error opening customer portal:', error);
     }
   };
 
