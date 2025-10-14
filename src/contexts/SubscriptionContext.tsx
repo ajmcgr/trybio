@@ -70,12 +70,15 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
   const createCheckout = async (priceId: string) => {
     try {
+      console.log('Creating checkout for priceId:', priceId);
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
+        console.log('No session found, redirecting to signup');
         window.location.href = '/auth?mode=signup';
         return;
       }
 
+      console.log('Invoking create-checkout function');
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: { priceId },
         headers: {
@@ -83,13 +86,29 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
         },
       });
 
-      if (error) throw error;
+      console.log('Function response:', { data, error });
 
-      if (data.url) {
+      if (error) {
+        console.error('Function error:', error);
+        throw error;
+      }
+
+      if (data?.error) {
+        console.error('Data error:', data.error);
+        alert(`Error: ${data.error}`);
+        return;
+      }
+
+      if (data?.url) {
+        console.log('Opening checkout URL:', data.url);
         window.open(data.url, '_blank');
+      } else {
+        console.error('No URL returned from checkout');
+        alert('Failed to create checkout session. Please try again.');
       }
     } catch (error) {
       console.error('Error creating checkout:', error);
+      alert('Failed to create checkout session. Please check console for details.');
     }
   };
 
