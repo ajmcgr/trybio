@@ -52,6 +52,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
+      console.log('[SubscriptionContext] User email:', session.user.email);
       console.log('[SubscriptionContext] Session found, invoking check-subscription function');
       const { data, error } = await supabase.functions.invoke('check-subscription', {
         headers: {
@@ -59,9 +60,12 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
         },
       });
 
-      console.log('[SubscriptionContext] Function response:', { data, error });
+      console.log('[SubscriptionContext] RAW Function response:', JSON.stringify({ data, error }, null, 2));
 
-      if (error) throw error;
+      if (error) {
+        console.error('[SubscriptionContext] Function error:', error);
+        throw error;
+      }
 
       console.log('[SubscriptionContext] Setting subscription state:', {
         subscribed: data.subscribed || false,
