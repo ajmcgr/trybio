@@ -131,3 +131,14 @@ All colors MUST be HSL.
     @apply font-display font-medium;
   }
 }
+
+/* Force-hide Crisp on public bio pages (CSS fallback) */
+html[data-crisp-off="true"] [id^="crisp-"],
+html[data-crisp-off="true"] .crisp-client,
+[id^="crisp-"]:where([data-force-hide="true"]),
+.crisp-client:where([data-force-hide="true"]) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
