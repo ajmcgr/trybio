@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 
 interface BioPage {
   id: string;
+  user_id: string;
   username: string;
   full_name: string;
 }
@@ -42,8 +43,8 @@ const DomainSettings = () => {
 
       const { data, error } = await supabase
         .from('profiles_api')
-        .select('id, username, full_name')
-        .eq('id', user.id);
+        .select('id, user_id, username, full_name')
+        .eq('user_id', user.id);
 
       if (error) throw error;
 
@@ -64,8 +65,8 @@ const DomainSettings = () => {
 
       const { data, error } = await supabase
         .from('profiles_api')
-        .select('custom_domain, id')
-        .eq('id', user.id)
+        .select('custom_domain, id, user_id')
+        .eq('user_id', user.id)
         .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {
@@ -115,7 +116,7 @@ const DomainSettings = () => {
           custom_domain: customDomain || null,
           updated_at: new Date().toISOString(),
         })
-        .eq('user_id', selectedPage);
+        .eq('id', selectedPage);
 
       if (error) throw error;
 

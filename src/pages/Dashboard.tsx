@@ -45,7 +45,7 @@ const Dashboard = () => {
         const { data, error } = await supabase
           .from('profiles_api')
           .select('*')
-          .eq('id', user.id)
+          .eq('user_id', user.id)
           .order('is_primary', { ascending: false })
           .order('created_at', { ascending: false });
 
@@ -218,17 +218,6 @@ const Dashboard = () => {
         return;
       }
 
-      // If a profile already exists, just open it to avoid duplicate key errors
-      const { data: existing } = await supabase
-        .from('profiles_api')
-        .select('id')
-        .eq('id', user.id);
-
-      if (existing && existing.length > 0) {
-        navigate(`/editor?id=${existing[0].id}`);
-        return;
-      }
-
       const { data, error } = await supabase
         .from('profiles')
         .insert({ 
@@ -236,12 +225,12 @@ const Dashboard = () => {
           full_name: '', 
           is_primary: false 
         })
-        .select('user_id')
+        .select('id')
         .single();
 
       if (error) throw error;
 
-      navigate(`/editor?id=${data.user_id}`);
+      navigate(`/editor?id=${data.id}`);
     } catch (error: any) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     }
@@ -252,7 +241,7 @@ const Dashboard = () => {
       const { error } = await supabase
         .from('profiles')
         .delete()
-        .eq('user_id', profile.id);
+        .eq('id', profile.id);
 
       if (error) throw error;
 

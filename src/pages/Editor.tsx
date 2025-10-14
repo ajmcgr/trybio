@@ -183,18 +183,18 @@ const Editor = () => {
           const { data: profiles, error: listError } = await supabase
             .from('profiles_api')
             .select('*')
-            .eq('id', user.id);
+            .eq('user_id', user.id);
           if (listError) {
             error = listError;
           } else {
-            data = profiles?.find((p: any) => p.id === profileId || p.user_id === profileId) || profiles?.[0] || null;
+            data = profiles?.find((p: any) => p.id === profileId) || profiles?.[0] || null;
           }
         } else {
           // Load primary profile or first profile
           const { data: profiles } = await supabase
             .from('profiles_api')
             .select('*')
-            .eq('id', user.id);
+            .eq('user_id', user.id);
           
           if (profiles && profiles.length > 0) {
             const primaryProfile = profiles.find(p => p.is_primary) || profiles[0];
@@ -210,8 +210,8 @@ const Editor = () => {
         }
 
         if (data) {
-          setCurrentProfileId(data.id ?? data.user_id);
-          setCurrentProfileKey(data.id ? 'id' : 'user_id');
+          setCurrentProfileId(data.id);
+          setCurrentProfileKey('id');
           setProfile({
             name: data.name || '',
             username: data.username || '',
@@ -272,19 +272,19 @@ const Editor = () => {
           ({ error } = await supabase
             .from('profiles')
             .update(profileData)
-            .eq('user_id', currentProfileId));
+            .eq('id', currentProfileId));
         } else {
           // Create new profile
           const { data, error: insertError } = await supabase
             .from('profiles')
             .insert(profileData)
-            .select('user_id')
+            .select('id')
             .single();
           
           error = insertError;
           if (data) {
-            setCurrentProfileId(data.user_id);
-            setCurrentProfileKey('user_id');
+            setCurrentProfileId(data.id);
+            setCurrentProfileKey('id');
           }
         }
 
