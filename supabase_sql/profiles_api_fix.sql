@@ -53,7 +53,12 @@ security definer
 set search_path = public
 as $$
   select coalesce(
-    (select product_id from public.pro_status where user_id = _user_id and subscribed = true limit 1),
+    (
+      select plan 
+      from public.pro_status 
+      where email = (select email from auth.users where id = _user_id) 
+      limit 1
+    ),
     'free'
   );
 $$;
@@ -81,9 +86,9 @@ begin
   
   -- Determine max profiles based on plan
   max_profiles := case user_plan
-    when 'prod_RXCLLYRbS86yEm' then 5  -- pro plan product_id
-    when 'prod_RXCMgf3YWnXbR8' then 20 -- business plan product_id
-    else 1  -- free plan
+    when 'pro' then 5        -- pro plan
+    when 'business' then 20  -- business plan
+    else 1                   -- free plan
   end;
   
   return current_count < max_profiles;
