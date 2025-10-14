@@ -129,15 +129,27 @@ const Settings = () => {
                 <ul className="space-y-2 text-sm mb-4">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-primary" />
+                    5 bio pages
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
                     Unlimited links
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-primary" />
-                    Advanced analytics
+                    All Themes
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-primary" />
-                    Custom themes
+                    Custom domains
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    90-day analytics
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    Remove Bio branding
                   </li>
                 </ul>
                 <Button 
@@ -162,19 +174,31 @@ const Settings = () => {
                 <ul className="space-y-2 text-sm mb-4">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-primary" />
-                    Everything in Pro
+                    20 bio pages
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-primary" />
-                    Team collaboration
+                    Unlimited links
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-primary" />
-                    Priority support
+                    All Themes
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-primary" />
-                    White label options
+                    Custom domains
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    12-month analytics
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    Remove Bio branding
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    Priority Support
                   </li>
                 </ul>
                 <Button 
