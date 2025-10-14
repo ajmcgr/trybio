@@ -252,7 +252,7 @@ const Editor = () => {
 
         const profileData = {
           user_id: user.id,
-          name: profile.name,
+          full_name: profile.name,
           username: profile.username?.trim() || null,
           bio: profile.bio,
           avatar_url: profile.avatarUrl,
@@ -266,16 +266,26 @@ const Editor = () => {
           updated_at: new Date().toISOString(),
         };
 
-        // Use upsert for idempotent saves
-        const { error } = await supabase
-          .from('profiles')
-          .upsert(profileData, { onConflict: 'user_id' })
-          .select()
-          .single();
-
-        if (!currentProfileId && !error) {
-          setCurrentProfileId(user.id);
-          setCurrentProfileKey('user_id');
+        let error;
+        if (currentProfileId) {
+          // Update existing profile
+          ({ error } = await supabase
+            .from('profiles')
+            .update(profileData)
+            .eq('id', currentProfileId));
+        } else {
+          // Create new profile
+          const { data, error: insertError } = await supabase
+            .from('profiles')
+            .insert(profileData)
+            .select('id')
+            .single();
+          
+          error = insertError;
+          if (data) {
+            setCurrentProfileId(data.id);
+            setCurrentProfileKey('id');
+          }
         }
 
         if (error) throw error;
