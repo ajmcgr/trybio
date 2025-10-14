@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, BarChart3, Link as LinkIcon, Settings, Zap, LogOut, ExternalLink, Eye } from "lucide-react";
+import { Plus, BarChart3, Link as LinkIcon, Settings, Zap, LogOut, ExternalLink, Eye, TrendingUp } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { LineChart, Line, ResponsiveContainer, Tooltip } from "recharts";
 import logo from "@/assets/logo.png";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
@@ -18,8 +19,9 @@ const Dashboard = () => {
     totalClicks: 0,
     viewsChange: 0,
     clicksChange: 0,
+    viewsData: [] as { date: string; views: number }[],
+    clicksData: [] as { date: string; clicks: number }[],
   });
-  const [recentActivity, setRecentActivity] = useState<any[]>([]);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -111,25 +113,62 @@ const Dashboard = () => {
         ? Math.round(((lastWeekClicks || 0) - previousWeekClicks) / previousWeekClicks * 100)
         : 0;
 
+      // Get daily data for last 7 days
+      const { data: viewsData } = await supabase
+        .from('profile_views')
+        .select('viewed_at')
+        .eq('profile_id', profileId)
+        .gte('viewed_at', oneWeekAgo.toISOString())
+        .order('viewed_at', { ascending: true });
+
+      const { data: clicksData } = await supabase
+        .from('link_clicks')
+        .select('clicked_at')
+        .eq('profile_id', profileId)
+        .gte('clicked_at', oneWeekAgo.toISOString())
+        .order('clicked_at', { ascending: true });
+
+      // Aggregate by day
+      const viewsByDay = aggregateByDay(viewsData || [], 'viewed_at');
+      const clicksByDay = aggregateByDay(clicksData || [], 'clicked_at');
+
       setStats({
         totalViews: totalViews || 0,
         totalClicks: totalClicks || 0,
         viewsChange,
         clicksChange,
+        viewsData: viewsByDay,
+        clicksData: clicksByDay,
       });
-
-      // Get recent activity (last 10 clicks)
-      const { data: clicks } = await supabase
-        .from('link_clicks')
-        .select('*')
-        .eq('profile_id', profileId)
-        .order('clicked_at', { ascending: false })
-        .limit(10);
-
-      setRecentActivity(clicks || []);
     } catch (error) {
       console.error('Error loading analytics:', error);
     }
+  };
+
+  const aggregateByDay = (data: any[], dateField: string) => {
+    const dayMap: Record<string, number> = {};
+    const now = new Date();
+    
+    // Initialize last 7 days with 0
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      dayMap[dateStr] = 0;
+    }
+
+    // Count occurrences per day
+    data.forEach((item) => {
+      const date = new Date(item[dateField]);
+      const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      if (dayMap.hasOwnProperty(dateStr)) {
+        dayMap[dateStr]++;
+      }
+    });
+
+    return Object.entries(dayMap).map(([date, count]) => ({
+      date,
+      [dateField === 'viewed_at' ? 'views' : 'clicks']: count,
+    }));
   };
 
   const handleLogout = async () => {
@@ -251,7 +290,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Stats */}
+        {/* Stats with Graphs */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <StatCard
             title="Total Views"
@@ -259,6 +298,8 @@ const Dashboard = () => {
             change={`${stats.viewsChange > 0 ? '+' : ''}${stats.viewsChange}%`}
             icon={<BarChart3 className="h-5 w-5" />}
             positive={stats.viewsChange >= 0}
+            chartData={stats.viewsData}
+            dataKey="views"
           />
           <StatCard
             title="Total Clicks"
@@ -266,77 +307,32 @@ const Dashboard = () => {
             change={`${stats.clicksChange > 0 ? '+' : ''}${stats.clicksChange}%`}
             icon={<LinkIcon className="h-5 w-5" />}
             positive={stats.clicksChange >= 0}
+            chartData={stats.clicksData}
+            dataKey="clicks"
           />
           <StatCard
             title="Conversion Rate"
             value={stats.totalViews > 0 ? `${Math.round((stats.totalClicks / stats.totalViews) * 100)}%` : '0%'}
             change="+0%"
-            icon={<BarChart3 className="h-5 w-5" />}
+            icon={<TrendingUp className="h-5 w-5" />}
             positive={true}
+            chartData={stats.viewsData}
+            dataKey="views"
           />
-        </div>
-
-        {/* Quick Actions */}
-        <div className="bg-card border border-border rounded-2xl p-8 mb-8">
-          <h2 className="text-2xl font-display font-medium mb-6">Quick Actions</h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            <Link to="/editor">
-              <Button variant="outline" className="w-full h-24 flex-col gap-2">
-                <Plus className="h-6 w-6" />
-                <span>Create New Link</span>
-              </Button>
-            </Link>
-            <Button variant="outline" className="w-full h-24 flex-col gap-2" disabled>
-              <BarChart3 className="h-6 w-6" />
-              <span>View Analytics</span>
-            </Button>
-            <Link to="/editor">
-              <Button variant="outline" className="w-full h-24 flex-col gap-2">
-                <Settings className="h-6 w-6" />
-                <span>Edit Theme</span>
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Recent Activity */}
-        <div className="bg-card border border-border rounded-2xl p-8">
-          <h2 className="text-2xl font-display font-medium mb-6">Recent Activity</h2>
-          {recentActivity.length > 0 ? (
-            <div className="space-y-3">
-              {recentActivity.map((activity) => (
-                <div key={activity.id} className="flex items-center justify-between py-3 border-b border-border last:border-0">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                      <LinkIcon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="font-medium">{activity.link_title}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(activity.clicked_at).toLocaleDateString()} at {new Date(activity.clicked_at).toLocaleTimeString()}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex items-center justify-center py-12">
-              <p className="text-muted-foreground">No activity yet. Share your bio link to get started!</p>
-            </div>
-          )}
         </div>
       </div>
     </div>
   );
 };
 
-const StatCard = ({ title, value, change, icon, positive = true }: {
+const StatCard = ({ title, value, change, icon, positive = true, chartData, dataKey }: {
   title: string;
   value: string;
   change: string;
   icon: React.ReactNode;
   positive?: boolean;
+  chartData?: any[];
+  dataKey?: string;
 }) => (
   <div className="bg-card border border-border rounded-2xl p-6">
     <div className="flex items-center justify-between mb-4">
@@ -346,9 +342,31 @@ const StatCard = ({ title, value, change, icon, positive = true }: {
       </div>
     </div>
     <div className="text-3xl font-bold mb-1">{value}</div>
-    <div className={`text-sm ${positive ? 'text-green-600' : 'text-red-600'}`}>
+    <div className={`text-sm mb-4 ${positive ? 'text-green-600' : 'text-red-600'}`}>
       {change} from last week
     </div>
+    {chartData && chartData.length > 0 && (
+      <div className="h-16 -mx-2">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={chartData}>
+            <Tooltip
+              contentStyle={{
+                backgroundColor: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
+                borderRadius: '8px',
+              }}
+            />
+            <Line
+              type="monotone"
+              dataKey={dataKey}
+              stroke="hsl(var(--primary))"
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    )}
   </div>
 );
 

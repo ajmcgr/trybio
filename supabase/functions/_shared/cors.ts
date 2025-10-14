@@ -19,7 +19,7 @@ export function getCorsHeaders(origin: string | null): Record<string, string> {
 export function handleOptions(req: Request): Response {
   const headers = getCorsHeaders(req.headers.get('origin'));
   return new Response(null, { 
-    status: 200, 
+    status: 204, 
     headers 
   });
 }
