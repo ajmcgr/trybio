@@ -234,7 +234,7 @@ const Editor = () => {
           setCurrentProfileId(data.id);
           setCurrentProfileKey('id');
           setProfile({
-            name: data.name || '',
+            name: data.full_name || '',
             username: data.username || '',
             bio: data.bio || '',
             avatarUrl: data.avatar_url || '',
