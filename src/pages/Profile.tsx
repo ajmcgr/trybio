@@ -44,59 +44,73 @@ const Profile = () => {
       } else if (username) {
         // Load from Supabase by username for public profile
         try {
-          const { data, error } = await supabase
+          // Try profiles_api first
+          const q1 = await supabase
             .from('profiles_api')
             .select('*')
             .eq('username', username)
             .maybeSingle();
 
-          if (error) {
-            console.error('Error loading profile:', error);
+          let row: any = q1.data || null;
+          if (q1.error) {
+            console.warn('[Profile] profiles_api read error', q1.error);
+          }
+
+          // Fallback: non-single fetch if maybeSingle fails to coerce
+          if (!row && !q1.error) {
+            const q2 = await supabase
+              .from('profiles_api')
+              .select('*')
+              .eq('username', username)
+              .limit(1);
+            if (q2.error) console.warn('[Profile] profiles_api list error', q2.error);
+            row = q2.data?.[0] || null;
+          }
+
+          if (!row) {
+            console.warn('[Profile] No profile found for username', username);
             return;
           }
 
-          if (data) {
-            setProfileId(data.id);
-            setProfile({
-              name: data.full_name || '',
-              username: data.username || '',
-              bio: data.bio || '',
-              avatarUrl: data.avatar_url || '',
-              font: data.font || 'font-sans',
-            });
-            setLinks(data.links || []);
-            setWallpaperUrl(data.wallpaper_url || '');
-            setTextColor(data.text_color || '#000000');
-            setButtonColor(data.button_color || '#000000');
-            setButtonTextColor(data.button_text_color || '#ffffff');
-            setBackgroundColor(data.background_color || '#ffffff');
+          setProfileId(row.id);
+          setProfile({
+            name: row.full_name || row.username || '',
+            username: row.username || '',
+            bio: row.bio || '',
+            avatarUrl: row.avatar_url || '',
+            font: row.font || 'font-sans',
+          });
+          setLinks(row.links || []);
+          setWallpaperUrl(row.wallpaper_url || '');
+          setTextColor(row.text_color || '#000000');
+          setButtonColor(row.button_color || '#000000');
+          setButtonTextColor(row.button_text_color || '#ffffff');
+          setBackgroundColor(row.background_color || '#ffffff');
 
-            // Check if user has a paid subscription by reading from pro_status
-            try {
-              const { data: { session } } = await supabase.auth.getSession();
-              if (session?.user?.email) {
-                const { data: proData } = await supabase
-                  .from('pro_status')
-                  .select('plan')
-                  .eq('email', session.user.email)
-                  .maybeSingle();
-                
-                setIsPaidUser(!!proData && proData.plan === 'pro');
-              }
-            } catch (error) {
-              console.error('Error checking subscription:', error);
-              setIsPaidUser(false);
+          // Check if user has a paid subscription by reading from pro_status (optional)
+          try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user?.email) {
+              const { data: proData } = await supabase
+                .from('pro_status')
+                .select('plan')
+                .eq('email', session.user.email)
+                .maybeSingle();
+              setIsPaidUser(!!proData && proData.plan === 'pro');
             }
-
-            // Track profile view (only for public profiles, not previews)
-            await supabase
-              .from('profile_views')
-              .insert({
-                profile_id: data.id,
-                user_agent: navigator.userAgent,
-                referrer: document.referrer
-              });
+          } catch (error) {
+            console.error('Error checking subscription:', error);
+            setIsPaidUser(false);
           }
+
+          // Track profile view (only for public profiles, not previews)
+          await supabase
+            .from('profile_views')
+            .insert({
+              profile_id: row.id,
+              user_agent: navigator.userAgent,
+              referrer: document.referrer
+            });
         } catch (error) {
           console.error('Error loading profile:', error);
         }
