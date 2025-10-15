@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
-import phoneBioMockup from "@/assets/bio-trans.png";
+import phoneBioMockup from "@/assets/bio-trans-4.png";
 import { STRIPE_PORTAL_URL } from "@/lib/billing";
 import { SocialIcon } from "@/components/SocialIcon";
 
