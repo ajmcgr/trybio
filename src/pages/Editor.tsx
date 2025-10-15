@@ -356,57 +356,6 @@ const Editor = () => {
     window.open('/profile?preview=true', '_blank');
   };
 
-  const handlePublish = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: "Error",
-          description: "You must be logged in to publish",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      const payload: any = {
-        user_id: user.id,
-        full_name: profile.name,
-        username: profile.username?.trim() || null,
-        bio: profile.bio,
-        avatar_url: profile.avatarUrl,
-        font: profile.font,
-        links,
-        wallpaper_url: wallpaperUrl,
-        text_color: textColor,
-        button_color: buttonColor,
-        button_text_color: buttonTextColor,
-        background_color: backgroundColor,
-        updated_at: new Date().toISOString(),
-      };
-      
-      if (supportsButtonFields) {
-        payload.button_style = buttonStyle;
-        payload.button_corners = buttonCorners;
-      }
-
-      const { error } = await supabase
-        .from('profiles')
-        .upsert(payload);
-
-      if (error) throw error;
-
-      toast({
-        title: "Published!",
-        description: "Your profile has been published successfully.",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
 
   const themeColors = [
     { bg: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", text: "#ffffff", buttonBg: "#5a67d8", buttonText: "#ffffff" },
@@ -452,9 +401,6 @@ const Editor = () => {
             <Button variant="ghost" size="sm" onClick={handlePreview}>
               <Eye className="h-4 w-4 mr-2" />
               Preview
-            </Button>
-            <Button size="sm" onClick={handlePublish}>
-              Publish
             </Button>
           </div>
         </div>
