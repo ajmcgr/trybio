@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { SocialHandlesManager } from "@/components/SocialHandlesManager";
 import { SocialIconCustomizer } from "@/components/SocialIconCustomizer";
+import { SocialIconsDisplay } from "@/components/SocialIconsDisplay";
 
 interface LinkItem {
   id: string;
@@ -839,6 +840,13 @@ const Editor = () => {
                 backgroundPosition: 'center'
               }}
             >
+              {currentProfileId && (
+                <SocialIconsDisplay 
+                  profileId={currentProfileId} 
+                  displayPosition="above"
+                  isPreview={true}
+                />
+              )}
               <div className="text-center mb-6">
                 <Avatar className="h-20 w-20 mx-auto mb-3">
                   <AvatarImage src={profile.avatarUrl} />
@@ -860,6 +868,13 @@ const Editor = () => {
                   {profile.bio || "Your bio goes here"}
                 </p>
               </div>
+              {currentProfileId && (
+                <SocialIconsDisplay 
+                  profileId={currentProfileId} 
+                  displayPosition="below"
+                  isPreview={true}
+                />
+              )}
               <div className="space-y-3">
                 {links.map((link) => {
                   const getButtonStyle = () => {
