@@ -176,6 +176,10 @@ const Landing = () => {
               ]}
                highlighted
                onSelect={() => {
+                  if (!user) {
+                    window.location.href = '/auth?mode=signup';
+                    return;
+                  }
                   if (subscribed && plan === 'pro') {
                     window.open(STRIPE_PORTAL_URL, '_blank');
                   } else {
@@ -203,6 +207,10 @@ const Landing = () => {
                 "Priority Support"
               ]}
                onSelect={() => {
+                  if (!user) {
+                    window.location.href = '/auth?mode=signup';
+                    return;
+                  }
                   if (subscribed && plan !== 'pro') {
                     window.open(STRIPE_PORTAL_URL, '_blank');
                   } else {

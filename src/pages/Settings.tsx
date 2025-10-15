@@ -26,7 +26,7 @@ import { STRIPE_PORTAL_URL } from "@/lib/billing";
 const Settings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { subscribed, plan, subscriptionEnd, refreshSubscription, loading } = useSubscription();
+  const { user, subscribed, plan, subscriptionEnd, refreshSubscription, loading } = useSubscription();
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -131,6 +131,14 @@ const Settings = () => {
   };
 
   const currentPlan = getCurrentPlan();
+
+  const handleUpgradeClick = (paymentLink: string) => {
+    if (!user) {
+      navigate('/auth?mode=signup');
+      return;
+    }
+    window.open(paymentLink, '_blank');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -276,11 +284,9 @@ const Settings = () => {
                 </ul>
                 <Button 
                   className="w-full" 
-                  asChild
+                  onClick={() => handleUpgradeClick(PAYMENT_LINKS.pro_monthly)}
                 >
-                  <a href={PAYMENT_LINKS.pro_monthly} target="_blank" rel="noopener noreferrer">
-                    Upgrade to Pro
-                  </a>
+                  Upgrade to Pro
                 </Button>
               </CardContent>
             </Card>
@@ -325,11 +331,9 @@ const Settings = () => {
                 </ul>
                 <Button 
                   className="w-full" 
-                  asChild
+                  onClick={() => handleUpgradeClick(PAYMENT_LINKS.business_monthly)}
                 >
-                  <a href={PAYMENT_LINKS.business_monthly} target="_blank" rel="noopener noreferrer">
-                    Upgrade to Business
-                  </a>
+                  Upgrade to Business
                 </Button>
               </CardContent>
             </Card>
