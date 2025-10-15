@@ -55,7 +55,12 @@ create policy "Users can view their own link clicks"
   );
 
 -- Create indexes for better performance
-create index profile_views_profile_id_idx on public.profile_views(profile_id);
-create index profile_views_viewed_at_idx on public.profile_views(viewed_at);
-create index link_clicks_profile_id_idx on public.link_clicks(profile_id);
-create index link_clicks_clicked_at_idx on public.link_clicks(clicked_at);
+create index if not exists profile_views_profile_id_idx on public.profile_views(profile_id);
+create index if not exists profile_views_viewed_at_idx on public.profile_views(viewed_at);
+create index if not exists link_clicks_profile_id_idx on public.link_clicks(profile_id);
+create index if not exists link_clicks_clicked_at_idx on public.link_clicks(clicked_at);
+
+-- Permissions for frontend roles
+grant usage on schema public to anon, authenticated;
+grant all on table public.profile_views to anon, authenticated;
+grant all on table public.link_clicks to anon, authenticated;
