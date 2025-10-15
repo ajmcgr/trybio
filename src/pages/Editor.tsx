@@ -56,7 +56,8 @@ const Editor = () => {
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
   const [buttonStyle, setButtonStyle] = useState<"solid" | "glass" | "outline">("solid");
   const [buttonCorners, setButtonCorners] = useState<"square" | "round">("round");
-  
+  const [supportsButtonFields, setSupportsButtonFields] = useState(false);
+
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [newLink, setNewLink] = useState({ title: "", url: "" });
   const [editingLink, setEditingLink] = useState<string | null>(null);
@@ -248,6 +249,7 @@ const Editor = () => {
           setBackgroundColor(data.background_color || '#ffffff');
           setButtonStyle(data.button_style || 'solid');
           setButtonCorners(data.button_corners || 'round');
+          setSupportsButtonFields('button_style' in data && 'button_corners' in data);
         }
         setIsLoaded(true);
       } catch (error) {
@@ -273,23 +275,26 @@ const Editor = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const profileData = {
+        const profileData: any = {
           user_id: user.id,
           full_name: profile.name,
           username: profile.username?.trim() || null,
           bio: profile.bio,
           avatar_url: profile.avatarUrl,
           font: profile.font,
-          links: links,
+          links,
           wallpaper_url: wallpaperUrl,
           text_color: textColor,
           button_color: buttonColor,
           button_text_color: buttonTextColor,
           background_color: backgroundColor,
-          button_style: buttonStyle,
-          button_corners: buttonCorners,
           updated_at: new Date().toISOString(),
         };
+
+        if (supportsButtonFields) {
+          profileData.button_style = buttonStyle;
+          profileData.button_corners = buttonCorners;
+        }
 
         let error;
         if (currentProfileId) {
@@ -365,23 +370,28 @@ const Editor = () => {
 
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          user_id: user.id,
-          full_name: profile.name,
-          username: profile.username,
-          bio: profile.bio,
-          avatar_url: profile.avatarUrl,
-          font: profile.font,
-          links: links,
-          wallpaper_url: wallpaperUrl,
-          text_color: textColor,
-          button_color: buttonColor,
-          button_text_color: buttonTextColor,
-          background_color: backgroundColor,
-          button_style: buttonStyle,
-          button_corners: buttonCorners,
-          updated_at: new Date().toISOString(),
-        });
+        .upsert(() => {
+          const payload: any = {
+            user_id: user.id,
+            full_name: profile.name,
+            username: profile.username?.trim() || null,
+            bio: profile.bio,
+            avatar_url: profile.avatarUrl,
+            font: profile.font,
+            links,
+            wallpaper_url: wallpaperUrl,
+            text_color: textColor,
+            button_color: buttonColor,
+            button_text_color: buttonTextColor,
+            background_color: backgroundColor,
+            updated_at: new Date().toISOString(),
+          };
+          if (supportsButtonFields) {
+            payload.button_style = buttonStyle;
+            payload.button_corners = buttonCorners;
+          }
+          return payload;
+        }());
 
       if (error) throw error;
 
