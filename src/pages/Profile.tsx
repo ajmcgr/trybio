@@ -27,6 +27,8 @@ const Profile = () => {
   const [buttonStyle, setButtonStyle] = useState<"solid" | "glass" | "outline">("solid");
   const [buttonCorners, setButtonCorners] = useState<"square" | "round">("round");
   const [isPaidUser, setIsPaidUser] = useState(false);
+  const [fontSize, setFontSize] = useState(16);
+  const [fontWeight, setFontWeight] = useState<"normal" | "medium" | "semibold" | "bold">("normal");
   const [iconPreviewHandles, setIconPreviewHandles] = useState<any[] | null>(null);
   const [iconPreviewSettings, setIconPreviewSettings] = useState<any | null>(null);
 
@@ -46,6 +48,8 @@ const Profile = () => {
           setBackgroundColor(data.backgroundColor);
           setButtonStyle(data.buttonStyle || 'solid');
           setButtonCorners(data.buttonCorners || 'round');
+          setFontSize(data.fontSize || 16);
+          setFontWeight(data.fontWeight || 'normal');
           setProfileId(data.profileId || null);
           setIconPreviewHandles(data.previewHandles || null);
           setIconPreviewSettings(data.previewSettings || null);
@@ -97,6 +101,8 @@ const Profile = () => {
           setBackgroundColor(row.background_color || '#ffffff');
           setButtonStyle(row.button_style || 'solid');
           setButtonCorners(row.button_corners || 'round');
+          setFontSize(row.font_size || 16);
+          setFontWeight(row.font_weight || 'normal');
 
           // Check if user has a paid subscription by reading from pro_status (optional)
           try {
@@ -174,17 +180,40 @@ const Profile = () => {
               </AvatarFallback>
             </Avatar>
             {profile.name && (
-              <h1 className={`text-2xl font-bold mb-2 ${profile.font}`} style={{ color: textColor }}>
+              <h1 
+                className={`text-2xl font-bold mb-2 ${profile.font}`} 
+                style={{ 
+                  color: textColor,
+                  fontSize: `${fontSize + 8}px`,
+                  fontWeight: fontWeight === "normal" ? 400 : fontWeight === "medium" ? 500 : fontWeight === "semibold" ? 600 : 700
+                }}
+              >
                 {profile.name}
               </h1>
             )}
             {profile.username && (
-              <h2 className={`text-lg font-medium mb-3 ${profile.font}`} style={{ color: textColor, opacity: 0.9 }}>
+              <h2 
+                className={`text-lg font-medium mb-3 ${profile.font}`} 
+                style={{ 
+                  color: textColor, 
+                  opacity: 0.9,
+                  fontSize: `${fontSize + 2}px`,
+                  fontWeight: fontWeight === "normal" ? 400 : fontWeight === "medium" ? 500 : fontWeight === "semibold" ? 600 : 700
+                }}
+              >
                 @{profile.username}
               </h2>
             )}
             {profile.bio && (
-              <p className={`text-sm ${profile.font}`} style={{ color: textColor, opacity: 0.8 }}>
+              <p 
+                className={`text-sm ${profile.font}`} 
+                style={{ 
+                  color: textColor, 
+                  opacity: 0.8,
+                  fontSize: `${fontSize}px`,
+                  fontWeight: fontWeight === "normal" ? 400 : fontWeight === "medium" ? 500 : fontWeight === "semibold" ? 600 : 700
+                }}
+              >
                 {profile.bio}
               </p>
             )}

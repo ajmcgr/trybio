@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon, Edit2, ChevronUp, ChevronDown, ExternalLink, Share2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
@@ -60,6 +61,8 @@ const Editor = () => {
   const [buttonStyle, setButtonStyle] = useState<"solid" | "glass" | "outline">("solid");
   const [buttonCorners, setButtonCorners] = useState<"square" | "round">("round");
   const [supportsButtonFields, setSupportsButtonFields] = useState(false);
+  const [fontSize, setFontSize] = useState(16);
+  const [fontWeight, setFontWeight] = useState<"normal" | "medium" | "semibold" | "bold">("normal");
   const [socialIconPosition, setSocialIconPosition] = useState<'above' | 'below'>('below');
   const [iconPreviewHandles, setIconPreviewHandles] = useState<any[] | null>(null);
   const [iconPreviewSettings, setIconPreviewSettings] = useState<any | null>(null);
@@ -257,6 +260,8 @@ const Editor = () => {
           setButtonStyle(data.button_style || 'solid');
           setButtonCorners(data.button_corners || 'round');
           setSupportsButtonFields('button_style' in data && 'button_corners' in data);
+          setFontSize(data.font_size || 16);
+          setFontWeight(data.font_weight || 'normal');
         }
         setIsLoaded(true);
       } catch (error) {
@@ -354,6 +359,9 @@ const Editor = () => {
           profileData.button_style = buttonStyle;
           profileData.button_corners = buttonCorners;
         }
+        
+        profileData.font_size = fontSize;
+        profileData.font_weight = fontWeight;
 
         let error;
         if (currentProfileId) {
@@ -398,7 +406,7 @@ const Editor = () => {
 
     const timeoutId = setTimeout(saveData, 1000);
     return () => clearTimeout(timeoutId);
-  }, [isLoaded, profile, links, wallpaperUrl, textColor, buttonColor, buttonTextColor, backgroundColor, buttonStyle, buttonCorners]);
+  }, [isLoaded, profile, links, wallpaperUrl, textColor, buttonColor, buttonTextColor, backgroundColor, buttonStyle, buttonCorners, fontSize, fontWeight]);
 
   const handlePreview = async () => {
     try {
@@ -445,6 +453,8 @@ const Editor = () => {
         backgroundColor,
         buttonStyle,
         buttonCorners,
+        fontSize,
+        fontWeight,
         profileId: currentProfileId,
         previewHandles,
         previewSettings,
@@ -462,6 +472,8 @@ const Editor = () => {
         backgroundColor,
         buttonStyle,
         buttonCorners,
+        fontSize,
+        fontWeight,
         profileId: currentProfileId,
       }));
       window.open('/profile?preview=true', '_blank');
@@ -703,6 +715,55 @@ const Editor = () => {
                   </div>
                 </div>
                 <div className="space-y-4 mt-4">
+                  <div>
+                    <Label htmlFor="fontSize">Font Size: {fontSize}px</Label>
+                    <Slider
+                      id="fontSize"
+                      min={12}
+                      max={24}
+                      step={1}
+                      value={[fontSize]}
+                      onValueChange={([value]) => setFontSize(value)}
+                      className="mt-2"
+                    />
+                  </div>
+                  <div>
+                    <Label>Font Weight</Label>
+                    <div className="grid grid-cols-4 gap-2 mt-2">
+                      <Button
+                        type="button"
+                        variant={fontWeight === "normal" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setFontWeight("normal")}
+                      >
+                        Normal
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={fontWeight === "medium" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setFontWeight("medium")}
+                      >
+                        Medium
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={fontWeight === "semibold" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setFontWeight("semibold")}
+                      >
+                        Semibold
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={fontWeight === "bold" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setFontWeight("bold")}
+                      >
+                        Bold
+                      </Button>
+                    </div>
+                  </div>
                   <div>
                     <Label>Button Style</Label>
                     <div className="flex gap-2 mt-2">
@@ -960,16 +1021,39 @@ const Editor = () => {
                   </AvatarFallback>
                 </Avatar>
                 {profile.name && (
-                  <h2 className={`font-bold text-xl mb-1 ${profile.font}`} style={{ color: textColor }}>
+                  <h2 
+                    className={`font-bold text-xl mb-1 ${profile.font}`} 
+                    style={{ 
+                      color: textColor,
+                      fontSize: `${fontSize + 4}px`,
+                      fontWeight: fontWeight === "normal" ? 400 : fontWeight === "medium" ? 500 : fontWeight === "semibold" ? 600 : 700
+                    }}
+                  >
                     {profile.name}
                   </h2>
                 )}
                 {profile.username && (
-                  <h3 className={`font-medium text-base mb-2 ${profile.font}`} style={{ color: textColor, opacity: 0.9 }}>
+                  <h3 
+                    className={`font-medium text-base mb-2 ${profile.font}`} 
+                    style={{ 
+                      color: textColor, 
+                      opacity: 0.9,
+                      fontSize: `${fontSize}px`,
+                      fontWeight: fontWeight === "normal" ? 400 : fontWeight === "medium" ? 500 : fontWeight === "semibold" ? 600 : 700
+                    }}
+                  >
                     @{profile.username}
                   </h3>
                 )}
-                <p className={`text-sm ${profile.font}`} style={{ color: textColor, opacity: 0.8 }}>
+                <p 
+                  className={`text-sm ${profile.font}`} 
+                  style={{ 
+                    color: textColor, 
+                    opacity: 0.8,
+                    fontSize: `${fontSize - 2}px`,
+                    fontWeight: fontWeight === "normal" ? 400 : fontWeight === "medium" ? 500 : fontWeight === "semibold" ? 600 : 700
+                  }}
+                >
                   {profile.bio || "Your bio goes here"}
                 </p>
               </div>
