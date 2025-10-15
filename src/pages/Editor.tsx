@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon, Edit2, ChevronUp, ChevronDown } from "lucide-react";
+import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon, Edit2, ChevronUp, ChevronDown, ExternalLink } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import logo from "@/assets/logo.png";
@@ -397,6 +397,18 @@ const Editor = () => {
           <div className="flex items-center gap-3">
             {isSaving && (
               <span className="text-sm text-muted-foreground">Saving...</span>
+            )}
+            {profile.username && (
+              <a 
+                href={`/${profile.username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="ghost" size="sm">
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Live
+                </Button>
+              </a>
             )}
             <Button variant="ghost" size="sm" onClick={handlePreview}>
               <Eye className="h-4 w-4 mr-2" />
