@@ -46,7 +46,7 @@ const Landing = () => {
                 <span className="text-primary"> attention </span>
                 into action
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto lg:mx-0 animate-slide-up break-words" style={{ animationDelay: "0.1s" }}>
+              <p className="text-base md:text-lg lg:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto lg:mx-0 animate-slide-up px-2" style={{ animationDelay: "0.1s" }}>
                 Create a stunning link-in-bio page that converts. AI-powered setup, beautiful themes, and powerful analytics—all in one place.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start items-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
@@ -64,12 +64,12 @@ const Landing = () => {
               </p>
 
               {/* Social Media Icons Row */}
-              <div className="flex items-center justify-center lg:justify-start gap-3 mt-8 opacity-60 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 md:gap-3 mt-8 opacity-60 animate-fade-in px-2" style={{ animationDelay: "0.3s" }}>
                 {['instagram', 'youtube', 'tiktok', 'x', 'whatsapp', 'telegram', 'threads', 'facebook', 'snapchat'].map((platform) => (
                   <SocialIcon
                     key={platform}
                     platform={platform}
-                    size={24}
+                    size={20}
                     style="monochrome"
                     shape="circle"
                     hover="scale"
