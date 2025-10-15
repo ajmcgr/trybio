@@ -48,11 +48,11 @@ const Profile = () => {
       } else if (username) {
         // Load from Supabase by username for public profile
         try {
-          // Try profiles_api first
+          // Try profiles_api first (case-insensitive username lookup)
           const q1 = await supabase
             .from('profiles_api')
             .select('*')
-            .eq('username', username)
+            .ilike('username', username)
             .maybeSingle();
 
           let row: any = q1.data || null;
@@ -65,7 +65,7 @@ const Profile = () => {
             const q2 = await supabase
               .from('profiles_api')
               .select('*')
-              .eq('username', username)
+              .ilike('username', username)
               .limit(1);
             if (q2.error) console.warn('[Profile] profiles_api list error', q2.error);
             row = q2.data?.[0] || null;
