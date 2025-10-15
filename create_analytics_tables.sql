@@ -1,5 +1,9 @@
 -- Create analytics tables for tracking views and clicks
 
+-- Drop existing tables if they exist
+drop table if exists public.profile_views cascade;
+drop table if exists public.link_clicks cascade;
+
 -- Table for profile views
 create table public.profile_views (
   id uuid default gen_random_uuid() primary key,
