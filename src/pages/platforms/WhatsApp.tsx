@@ -16,7 +16,7 @@ const WhatsApp = () => {
               <MessageCircle className="h-4 w-4 text-green-500" />
               <span>WhatsApp Link in Bio</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-display font-medium mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-medium mb-6 leading-tight break-words">
               The Best Link in Bio for <span className="text-green-500">WhatsApp</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
@@ -50,7 +50,7 @@ const WhatsApp = () => {
           </div>
 
           <div className="bg-gradient-to-br from-green-500/10 to-green-700/10 rounded-3xl p-12 border border-green-500/20 text-center">
-            <h2 className="text-3xl md:text-4xl font-display font-medium mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-medium mb-4 break-words">
               Ready to Grow Your WhatsApp Business?
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">

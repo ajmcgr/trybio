@@ -16,7 +16,7 @@ const Telegram = () => {
               <Send className="h-4 w-4 text-blue-500" />
               <span>Telegram Link in Bio</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-display font-medium mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-medium mb-6 leading-tight break-words">
               The Best Link in Bio for <span className="text-blue-500">Telegram</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
@@ -50,7 +50,7 @@ const Telegram = () => {
           </div>
 
           <div className="bg-gradient-to-br from-blue-500/10 to-blue-700/10 rounded-3xl p-12 border border-blue-500/20 text-center">
-            <h2 className="text-3xl md:text-4xl font-display font-medium mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-medium mb-4 break-words">
               Ready to Elevate Your Telegram Channel?
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">

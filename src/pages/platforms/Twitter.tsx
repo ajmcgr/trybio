@@ -16,7 +16,7 @@ const Twitter = () => {
               <TwitterIcon className="h-4 w-4" />
               <span>X (Twitter) Link in Bio</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-display font-medium mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-medium mb-6 leading-tight break-words">
               The Best Link in Bio for <span className="text-slate-900 dark:text-white">X (Twitter)</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
@@ -50,7 +50,7 @@ const Twitter = () => {
           </div>
 
           <div className="bg-gradient-to-br from-slate-900/10 to-slate-700/10 rounded-3xl p-12 border border-slate-900/20 text-center">
-            <h2 className="text-3xl md:text-4xl font-display font-medium mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-medium mb-4 break-words">
               Ready to Amplify Your X Presence?
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
