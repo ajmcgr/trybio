@@ -41,12 +41,12 @@ const Landing = () => {
                 <Sparkles className="h-4 w-4 text-primary" />
                 <span>AI-powered bio pages in 60 seconds</span>
               </div>
-              <h1 className="text-5xl md:text-7xl font-display font-medium mb-6 leading-tight animate-slide-up">
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-display font-medium mb-6 leading-tight animate-slide-up break-words">
                 The fastest way to turn
                 <span className="text-primary"> attention </span>
                 into action
               </h1>
-              <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto lg:mx-0 animate-slide-up" style={{ animationDelay: "0.1s" }}>
+              <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto lg:mx-0 animate-slide-up break-words" style={{ animationDelay: "0.1s" }}>
                 Create a stunning link-in-bio page that converts. AI-powered setup, beautiful themes, and powerful analytics—all in one place.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start items-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
