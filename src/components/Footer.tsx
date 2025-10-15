@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <footer className="border-t border-border py-12 px-6">
-      <div className="container mx-auto max-w-4xl">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+      <div className="container mx-auto max-w-6xl">
+        <div className="grid md:grid-cols-5 gap-8 mb-8">
           <div>
             <h4 className="font-sans font-semibold mb-4">About</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
@@ -19,6 +19,20 @@ const Footer = () => {
               <li><a href="mailto:alex@trybio.ai" className="hover:text-foreground transition-colors">Support</a></li>
               <li><Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
               <li><Link to="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-sans font-semibold mb-4">Platforms</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li><Link to="/platforms/instagram" className="hover:text-foreground transition-colors">Instagram</Link></li>
+              <li><Link to="/platforms/youtube" className="hover:text-foreground transition-colors">YouTube</Link></li>
+              <li><Link to="/platforms/tiktok" className="hover:text-foreground transition-colors">TikTok</Link></li>
+              <li><Link to="/platforms/twitter" className="hover:text-foreground transition-colors">X (Twitter)</Link></li>
+              <li><Link to="/platforms/facebook" className="hover:text-foreground transition-colors">Facebook</Link></li>
+              <li><Link to="/platforms/whatsapp" className="hover:text-foreground transition-colors">WhatsApp</Link></li>
+              <li><Link to="/platforms/telegram" className="hover:text-foreground transition-colors">Telegram</Link></li>
+              <li><Link to="/platforms/threads" className="hover:text-foreground transition-colors">Threads</Link></li>
+              <li><Link to="/platforms/snapchat" className="hover:text-foreground transition-colors">Snapchat</Link></li>
             </ul>
           </div>
           <div>

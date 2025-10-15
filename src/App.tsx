@@ -25,6 +25,15 @@ import ContentPlanner from "./pages/tools/ContentPlanner";
 import InfluencerRateCalculator from "./pages/tools/InfluencerRateCalculator";
 import BioTextGenerator from "./pages/tools/BioTextGenerator";
 import CaptionGenerator from "./pages/tools/CaptionGenerator";
+import Instagram from "./pages/platforms/Instagram";
+import YouTube from "./pages/platforms/YouTube";
+import TikTok from "./pages/platforms/TikTok";
+import Twitter from "./pages/platforms/Twitter";
+import Facebook from "./pages/platforms/Facebook";
+import WhatsApp from "./pages/platforms/WhatsApp";
+import Telegram from "./pages/platforms/Telegram";
+import Threads from "./pages/platforms/Threads";
+import Snapchat from "./pages/platforms/Snapchat";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +64,15 @@ const App = () => (
           <Route path="/tools/influencer-rate-calculator" element={<InfluencerRateCalculator />} />
           <Route path="/tools/bio-text-generator" element={<BioTextGenerator />} />
           <Route path="/tools/caption-generator" element={<CaptionGenerator />} />
+          <Route path="/platforms/instagram" element={<Instagram />} />
+          <Route path="/platforms/youtube" element={<YouTube />} />
+          <Route path="/platforms/tiktok" element={<TikTok />} />
+          <Route path="/platforms/twitter" element={<Twitter />} />
+          <Route path="/platforms/facebook" element={<Facebook />} />
+          <Route path="/platforms/whatsapp" element={<WhatsApp />} />
+          <Route path="/platforms/telegram" element={<Telegram />} />
+          <Route path="/platforms/threads" element={<Threads />} />
+          <Route path="/platforms/snapchat" element={<Snapchat />} />
           <Route path="/:username" element={<Profile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
