@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
 import alexBioPreview from "@/assets/alex-bio-preview.png";
 import { STRIPE_PORTAL_URL } from "@/lib/billing";
+import { SocialIcon } from "@/components/SocialIcon";
 
 const Landing = () => {
   const { user, subscribed, plan } = useSubscription();
@@ -61,6 +62,21 @@ const Landing = () => {
               <p className="text-sm text-muted-foreground mt-6">
                 No credit card required • Free forever plan
               </p>
+
+              {/* Social Media Icons Row */}
+              <div className="flex items-center justify-center lg:justify-start gap-3 mt-8 opacity-60 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+                {['instagram', 'youtube', 'tiktok', 'x', 'whatsapp', 'telegram', 'threads', 'facebook', 'snapchat'].map((platform) => (
+                  <SocialIcon
+                    key={platform}
+                    platform={platform}
+                    size={24}
+                    style="monochrome"
+                    shape="circle"
+                    hover="scale"
+                    color="currentColor"
+                  />
+                ))}
+              </div>
             </div>
             
             {/* Right side - Bio Preview (45%) */}
