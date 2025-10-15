@@ -13,7 +13,7 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { SocialHandlesManager } from "@/components/SocialHandlesManager";
-import { SocialIconCustomizer } from "@/components/SocialIconCustomizer";
+import { SocialIconCustomizer, IconSettings } from "@/components/SocialIconCustomizer";
 import { SocialIconsDisplay } from "@/components/SocialIconsDisplay";
 
 interface LinkItem {
@@ -63,6 +63,7 @@ const Editor = () => {
   const [socialIconPosition, setSocialIconPosition] = useState<'above' | 'below'>('below');
   const [iconPreviewHandles, setIconPreviewHandles] = useState<any[] | null>(null);
   const [iconPreviewSettings, setIconPreviewSettings] = useState<any | null>(null);
+  const [liveIconSettings, setLiveIconSettings] = useState<IconSettings | null>(null);
 
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [newLink, setNewLink] = useState({ title: "", url: "" });
@@ -773,7 +774,10 @@ const Editor = () => {
                 </div>
 
                 <div className="bg-card border border-border rounded-2xl p-6">
-                  <SocialIconCustomizer profileId={currentProfileId} />
+                  <SocialIconCustomizer 
+                    profileId={currentProfileId} 
+                    onSettingsChange={setLiveIconSettings}
+                  />
                 </div>
               </>
             )}
@@ -975,6 +979,7 @@ const Editor = () => {
                 isPreview={true}
                 previewHandles={iconPreviewHandles || undefined}
                 previewSettings={iconPreviewSettings || undefined}
+                settingsOverride={liveIconSettings || undefined}
               />
               <div className="space-y-3">
                 {links.map((link) => {
@@ -1024,6 +1029,7 @@ const Editor = () => {
                 isPreview={true}
                 previewHandles={iconPreviewHandles || undefined}
                 previewSettings={iconPreviewSettings || undefined}
+                settingsOverride={liveIconSettings || undefined}
               />
             </div>
           </div>

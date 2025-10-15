@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { SocialIcon } from './SocialIcon';
 
-interface IconSettings {
+export interface IconSettings {
   position: 'above' | 'below';
   style: 'brand' | 'monochrome' | 'outline';
   shape: 'circle' | 'rounded' | 'square';
@@ -21,9 +21,13 @@ interface IconSettings {
 
 interface SocialIconCustomizerProps {
   profileId: string;
+  onSettingsChange?: (settings: IconSettings) => void;
 }
 
-export const SocialIconCustomizer: React.FC<SocialIconCustomizerProps> = ({ profileId }) => {
+export const SocialIconCustomizer: React.FC<SocialIconCustomizerProps> = ({ 
+  profileId, 
+  onSettingsChange 
+}) => {
   const [settings, setSettings] = useState<IconSettings>({
     position: 'below',
     style: 'brand',
@@ -35,6 +39,7 @@ export const SocialIconCustomizer: React.FC<SocialIconCustomizerProps> = ({ prof
     color: '#000000',
   });
   const { toast } = useToast();
+  const saveTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     fetchSettings();
@@ -49,7 +54,7 @@ export const SocialIconCustomizer: React.FC<SocialIconCustomizerProps> = ({ prof
 
     if (error || !data) return;
 
-    setSettings({
+    const newSettings = {
       position: data.social_icon_position || 'below',
       style: data.social_icon_style || 'brand',
       shape: data.social_icon_shape || 'circle',
@@ -58,26 +63,37 @@ export const SocialIconCustomizer: React.FC<SocialIconCustomizerProps> = ({ prof
       alignment: data.social_icon_alignment || 'center',
       hover: data.social_icon_hover || 'scale',
       color: data.social_icon_color || '#000000',
-    });
+    };
+    setSettings(newSettings);
+    onSettingsChange?.(newSettings);
   };
 
-  const updateSetting = async (key: keyof IconSettings, value: any) => {
+  const updateSetting = (key: keyof IconSettings, value: any) => {
+    // Instant local update for optimistic UI
     const newSettings = { ...settings, [key]: value };
     setSettings(newSettings);
+    onSettingsChange?.(newSettings);
 
-    const dbKey = `social_icon_${key}`;
-    const { error } = await supabase
-      .from('profiles')
-      .update({ [dbKey]: value })
-      .eq('id', profileId);
-
-    if (error) {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
+    // Debounced save to Supabase
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
     }
+
+    saveTimeoutRef.current = setTimeout(async () => {
+      const dbKey = `social_icon_${key}`;
+      const { error } = await supabase
+        .from('profiles')
+        .update({ [dbKey]: value })
+        .eq('id', profileId);
+
+      if (error) {
+        toast({
+          title: 'Error',
+          description: error.message,
+          variant: 'destructive',
+        });
+      }
+    }, 400);
   };
 
   return (

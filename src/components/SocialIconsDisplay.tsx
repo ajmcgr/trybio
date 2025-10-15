@@ -27,6 +27,7 @@ interface SocialIconsDisplayProps {
   isPreview?: boolean;
   previewHandles?: Partial<SocialHandle>[];
   previewSettings?: Partial<IconSettings>;
+  settingsOverride?: Partial<IconSettings>;
 }
 
 export const SocialIconsDisplay: React.FC<SocialIconsDisplayProps> = ({ 
@@ -35,6 +36,7 @@ export const SocialIconsDisplay: React.FC<SocialIconsDisplayProps> = ({
   isPreview = false,
   previewHandles,
   previewSettings,
+  settingsOverride,
 }) => {
   const [handles, setHandles] = useState<SocialHandle[]>([]);
   const [settings, setSettings] = useState<IconSettings>({
@@ -110,6 +112,16 @@ export const SocialIconsDisplay: React.FC<SocialIconsDisplayProps> = ({
     };
   }, [profileId, isPreview, previewHandles, previewSettings]);
 
+  // Apply settings override for instant preview updates
+  useEffect(() => {
+    if (settingsOverride) {
+      setSettings(prev => ({
+        ...prev,
+        ...settingsOverride,
+      }));
+    }
+  }, [settingsOverride]);
+
   const fetchData = async () => {
     // Fetch handles
     const { data: handlesData } = await supabase
@@ -169,8 +181,12 @@ export const SocialIconsDisplay: React.FC<SocialIconsDisplayProps> = ({
     right: 'justify-end',
   }[settings.alignment];
 
+  // Key to force remount on structural changes
+  const structuralKey = `${settings.position}-${settings.style}-${settings.shape}`;
+
   return (
     <div 
+      key={structuralKey}
       className={`flex flex-wrap ${alignmentClass} my-6`}
       style={{ gap: `${settings.spacing}px` }}
     >
