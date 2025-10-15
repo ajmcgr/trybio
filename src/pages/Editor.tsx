@@ -368,30 +368,30 @@ const Editor = () => {
         return;
       }
 
+      const payload: any = {
+        user_id: user.id,
+        full_name: profile.name,
+        username: profile.username?.trim() || null,
+        bio: profile.bio,
+        avatar_url: profile.avatarUrl,
+        font: profile.font,
+        links,
+        wallpaper_url: wallpaperUrl,
+        text_color: textColor,
+        button_color: buttonColor,
+        button_text_color: buttonTextColor,
+        background_color: backgroundColor,
+        updated_at: new Date().toISOString(),
+      };
+      
+      if (supportsButtonFields) {
+        payload.button_style = buttonStyle;
+        payload.button_corners = buttonCorners;
+      }
+
       const { error } = await supabase
         .from('profiles')
-        .upsert(() => {
-          const payload: any = {
-            user_id: user.id,
-            full_name: profile.name,
-            username: profile.username?.trim() || null,
-            bio: profile.bio,
-            avatar_url: profile.avatarUrl,
-            font: profile.font,
-            links,
-            wallpaper_url: wallpaperUrl,
-            text_color: textColor,
-            button_color: buttonColor,
-            button_text_color: buttonTextColor,
-            background_color: backgroundColor,
-            updated_at: new Date().toISOString(),
-          };
-          if (supportsButtonFields) {
-            payload.button_style = buttonStyle;
-            payload.button_corners = buttonCorners;
-          }
-          return payload;
-        }());
+        .upsert(payload);
 
       if (error) throw error;
 
