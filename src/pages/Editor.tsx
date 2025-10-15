@@ -398,6 +398,10 @@ const Editor = () => {
             {isSaving && (
               <span className="text-sm text-muted-foreground">Saving...</span>
             )}
+            <Button variant="ghost" size="sm" onClick={handlePreview}>
+              <Eye className="h-4 w-4 mr-2" />
+              Preview
+            </Button>
             {profile.username && (
               <a 
                 href={`/${profile.username}`}
@@ -410,10 +414,6 @@ const Editor = () => {
                 </Button>
               </a>
             )}
-            <Button variant="ghost" size="sm" onClick={handlePreview}>
-              <Eye className="h-4 w-4 mr-2" />
-              Preview
-            </Button>
           </div>
         </div>
       </header>
