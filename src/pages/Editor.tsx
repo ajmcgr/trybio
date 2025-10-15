@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon, Edit2, ChevronUp, ChevronDown, ExternalLink } from "lucide-react";
+import { Plus, Eye, Settings, Palette, Sparkles, Link as LinkIcon, Trash2, GripVertical, Upload, Image as ImageIcon, Edit2, ChevronUp, ChevronDown, ExternalLink, Share2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import logo from "@/assets/logo.png";
@@ -12,6 +12,8 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useSubscription } from "@/contexts/SubscriptionContext";
+import { SocialHandlesManager } from "@/components/SocialHandlesManager";
+import { SocialIconCustomizer } from "@/components/SocialIconCustomizer";
 
 interface LinkItem {
   id: string;
@@ -649,6 +651,23 @@ const Editor = () => {
                 </div>
               </div>
             </div>
+
+            {/* Social Media Section */}
+            {currentProfileId && (
+              <>
+                <div className="bg-card border border-border rounded-2xl p-6">
+                  <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <Share2 className="h-5 w-5" />
+                    Social Media Icons
+                  </h2>
+                  <SocialHandlesManager profileId={currentProfileId} />
+                </div>
+
+                <div className="bg-card border border-border rounded-2xl p-6">
+                  <SocialIconCustomizer profileId={currentProfileId} />
+                </div>
+              </>
+            )}
 
             {/* Theme Section */}
             <div className="bg-card border border-border rounded-2xl p-6">
