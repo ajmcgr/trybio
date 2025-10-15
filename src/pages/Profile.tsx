@@ -233,9 +233,11 @@ const Profile = () => {
           {/* Links */}
           <div className="space-y-3">
             {links.map((link) => {
-              const getButtonStyle = () => {
-                const baseStyle = {
+              const getButtonStyle = (): React.CSSProperties => {
+                const baseStyle: React.CSSProperties = {
                   color: buttonTextColor,
+                  fontSize: `${fontSize}px`,
+                  fontWeight: fontWeight === "normal" ? 400 : fontWeight === "medium" ? 500 : fontWeight === "semibold" ? 600 : 700,
                 };
                 
                 if (buttonStyle === "solid") {
@@ -267,7 +269,7 @@ const Profile = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => handleLinkClick(link)}
-                  className={`block w-full py-4 px-6 font-medium hover:opacity-90 transition-opacity group ${
+                  className={`block w-full py-4 px-6 hover:opacity-90 transition-opacity group ${
                     buttonCorners === "round" ? "rounded-full" : "rounded-lg"
                   }`}
                   style={getButtonStyle()}

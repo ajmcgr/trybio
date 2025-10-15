@@ -1068,8 +1068,10 @@ const Editor = () => {
               <div className="space-y-3">
                 {links.map((link) => {
                   const getButtonStyle = () => {
-                    const baseStyle = {
+                    const baseStyle: React.CSSProperties = {
                       color: buttonTextColor,
+                      fontSize: `${fontSize}px`,
+                      fontWeight: fontWeight === "normal" ? 400 : fontWeight === "medium" ? 500 : fontWeight === "semibold" ? 600 : 700,
                     };
                     
                     if (buttonStyle === "solid") {
@@ -1097,7 +1099,7 @@ const Editor = () => {
                   return (
                     <button
                       key={link.id}
-                      className={`w-full py-3 px-4 font-medium transition-colors ${
+                      className={`w-full py-3 px-4 transition-colors ${
                         buttonCorners === "round" ? "rounded-full" : "rounded-lg"
                       }`}
                       style={getButtonStyle()}
