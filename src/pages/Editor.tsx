@@ -61,6 +61,8 @@ const Editor = () => {
   const [buttonCorners, setButtonCorners] = useState<"square" | "round">("round");
   const [supportsButtonFields, setSupportsButtonFields] = useState(false);
   const [socialIconPosition, setSocialIconPosition] = useState<'above' | 'below'>('below');
+  const [iconPreviewHandles, setIconPreviewHandles] = useState<any[] | null>(null);
+  const [iconPreviewSettings, setIconPreviewSettings] = useState<any | null>(null);
 
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [newLink, setNewLink] = useState({ title: "", url: "" });
@@ -264,6 +266,58 @@ const Editor = () => {
 
     loadProfile();
   }, [profileId]);
+
+  // Keep social icon preview data in sync for the live preview panel
+  useEffect(() => {
+    if (!currentProfileId) return;
+
+    const fetchIconData = async () => {
+      const { data: handlesData } = await supabase
+        .from('social_handles')
+        .select('*')
+        .eq('profile_id', currentProfileId)
+        .eq('is_visible', true)
+        .order('position', { ascending: true });
+      setIconPreviewHandles(handlesData || []);
+
+      const { data: settingsData } = await supabase
+        .from('profiles')
+        .select('social_icon_position, social_icon_style, social_icon_shape, social_icon_size, social_icon_spacing, social_icon_alignment, social_icon_hover, social_icon_color')
+        .eq('id', currentProfileId)
+        .single();
+
+      if (settingsData) {
+        setIconPreviewSettings({
+          position: settingsData.social_icon_position || 'below',
+          style: settingsData.social_icon_style || 'brand',
+          shape: settingsData.social_icon_shape || 'circle',
+          size: settingsData.social_icon_size || 32,
+          spacing: settingsData.social_icon_spacing || 12,
+          alignment: settingsData.social_icon_alignment || 'center',
+          hover: settingsData.social_icon_hover || 'scale',
+          color: settingsData.social_icon_color || '#000000',
+        });
+      } else {
+        setIconPreviewSettings(null);
+      }
+    };
+
+    fetchIconData();
+
+    const channel = supabase
+      .channel(`editor-profile-${currentProfileId}-social`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'social_handles', filter: `profile_id=eq.${currentProfileId}` }, () => {
+        fetchIconData();
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${currentProfileId}` }, () => {
+        fetchIconData();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentProfileId]);
 
   // Auto-save with debouncing - only after data is loaded
   useEffect(() => {
@@ -915,14 +969,13 @@ const Editor = () => {
                   {profile.bio || "Your bio goes here"}
                 </p>
               </div>
-              {currentProfileId && (
-                <SocialIconsDisplay 
-                  profileId={currentProfileId} 
-                  displayPosition="above"
-                  isPreview={true}
-                  key={`above-${currentProfileId}`}
-                />
-              )}
+              <SocialIconsDisplay 
+                profileId={currentProfileId || 'preview-editor'} 
+                displayPosition="above"
+                isPreview={true}
+                previewHandles={iconPreviewHandles || undefined}
+                previewSettings={iconPreviewSettings || undefined}
+              />
               <div className="space-y-3">
                 {links.map((link) => {
                   const getButtonStyle = () => {
@@ -965,14 +1018,13 @@ const Editor = () => {
                   );
                 })}
               </div>
-              {currentProfileId && (
-                <SocialIconsDisplay 
-                  profileId={currentProfileId} 
-                  displayPosition="below"
-                  isPreview={true}
-                  key={`below-${currentProfileId}`}
-                />
-              )}
+              <SocialIconsDisplay 
+                profileId={currentProfileId || 'preview-editor'} 
+                displayPosition="below"
+                isPreview={true}
+                previewHandles={iconPreviewHandles || undefined}
+                previewSettings={iconPreviewSettings || undefined}
+              />
             </div>
           </div>
         </div>
