@@ -25,12 +25,16 @@ interface SocialIconsDisplayProps {
   profileId: string;
   displayPosition: 'above' | 'below';
   isPreview?: boolean;
+  previewHandles?: Partial<SocialHandle>[];
+  previewSettings?: Partial<IconSettings>;
 }
 
 export const SocialIconsDisplay: React.FC<SocialIconsDisplayProps> = ({ 
   profileId, 
   displayPosition,
-  isPreview = false
+  isPreview = false,
+  previewHandles,
+  previewSettings,
 }) => {
   const [handles, setHandles] = useState<SocialHandle[]>([]);
   const [settings, setSettings] = useState<IconSettings>({
@@ -45,6 +49,31 @@ export const SocialIconsDisplay: React.FC<SocialIconsDisplayProps> = ({
   });
 
   useEffect(() => {
+    if (isPreview) {
+      // Use preview data when provided; otherwise fetch once from DB
+      let seeded = false;
+      if (previewHandles && previewHandles.length) {
+        const sorted = [...previewHandles]
+          .filter((h) => h.is_visible !== false)
+          .sort((a, b) => (a.position ?? 0) - (b.position ?? 0)) as SocialHandle[];
+        setHandles(sorted as SocialHandle[]);
+        seeded = true;
+      }
+
+      if (previewSettings) {
+        setSettings((prev) => ({
+          ...prev,
+          ...previewSettings,
+        }));
+      }
+
+      if (!seeded) {
+        // Fallback: fetch current data from database (no realtime subscribe)
+        fetchData();
+      }
+      return;
+    }
+
     fetchData();
     
     // Set up real-time subscription for changes
@@ -79,7 +108,7 @@ export const SocialIconsDisplay: React.FC<SocialIconsDisplayProps> = ({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [profileId]);
+  }, [profileId, isPreview, previewHandles, previewSettings]);
 
   const fetchData = async () => {
     // Fetch handles
