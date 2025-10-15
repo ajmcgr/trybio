@@ -356,6 +356,7 @@ const Editor = () => {
       backgroundColor,
       buttonStyle,
       buttonCorners,
+      profileId: currentProfileId,
     }));
     window.open('/profile?preview=true', '_blank');
   };

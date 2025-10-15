@@ -44,6 +44,7 @@ const Profile = () => {
           setBackgroundColor(data.backgroundColor);
           setButtonStyle(data.buttonStyle || 'solid');
           setButtonCorners(data.buttonCorners || 'round');
+          setProfileId(data.profileId || null);
         }
       } else if (username) {
         // Load from Supabase by username for public profile
