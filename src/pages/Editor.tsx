@@ -60,6 +60,7 @@ const Editor = () => {
   const [buttonStyle, setButtonStyle] = useState<"solid" | "glass" | "outline">("solid");
   const [buttonCorners, setButtonCorners] = useState<"square" | "round">("round");
   const [supportsButtonFields, setSupportsButtonFields] = useState(false);
+  const [socialIconPosition, setSocialIconPosition] = useState<'above' | 'below'>('below');
 
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [newLink, setNewLink] = useState({ title: "", url: "" });
