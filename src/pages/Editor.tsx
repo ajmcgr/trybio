@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -267,41 +267,41 @@ const Editor = () => {
     loadProfile();
   }, [profileId]);
 
+  const fetchIconData = useCallback(async () => {
+    if (!currentProfileId) return;
+    const { data: handlesData } = await supabase
+      .from('social_handles')
+      .select('*')
+      .eq('profile_id', currentProfileId)
+      .eq('is_visible', true)
+      .order('position', { ascending: true });
+    setIconPreviewHandles(handlesData || []);
+
+    const { data: settingsData } = await supabase
+      .from('profiles')
+      .select('social_icon_position, social_icon_style, social_icon_shape, social_icon_size, social_icon_spacing, social_icon_alignment, social_icon_hover, social_icon_color')
+      .eq('id', currentProfileId)
+      .single();
+
+    if (settingsData) {
+      setIconPreviewSettings({
+        position: settingsData.social_icon_position || 'below',
+        style: settingsData.social_icon_style || 'brand',
+        shape: settingsData.social_icon_shape || 'circle',
+        size: settingsData.social_icon_size || 32,
+        spacing: settingsData.social_icon_spacing || 12,
+        alignment: settingsData.social_icon_alignment || 'center',
+        hover: settingsData.social_icon_hover || 'scale',
+        color: settingsData.social_icon_color || '#000000',
+      });
+    } else {
+      setIconPreviewSettings(null);
+    }
+  }, [currentProfileId]);
+
   // Keep social icon preview data in sync for the live preview panel
   useEffect(() => {
     if (!currentProfileId) return;
-
-    const fetchIconData = async () => {
-      const { data: handlesData } = await supabase
-        .from('social_handles')
-        .select('*')
-        .eq('profile_id', currentProfileId)
-        .eq('is_visible', true)
-        .order('position', { ascending: true });
-      setIconPreviewHandles(handlesData || []);
-
-      const { data: settingsData } = await supabase
-        .from('profiles')
-        .select('social_icon_position, social_icon_style, social_icon_shape, social_icon_size, social_icon_spacing, social_icon_alignment, social_icon_hover, social_icon_color')
-        .eq('id', currentProfileId)
-        .single();
-
-      if (settingsData) {
-        setIconPreviewSettings({
-          position: settingsData.social_icon_position || 'below',
-          style: settingsData.social_icon_style || 'brand',
-          shape: settingsData.social_icon_shape || 'circle',
-          size: settingsData.social_icon_size || 32,
-          spacing: settingsData.social_icon_spacing || 12,
-          alignment: settingsData.social_icon_alignment || 'center',
-          hover: settingsData.social_icon_hover || 'scale',
-          color: settingsData.social_icon_color || '#000000',
-        });
-      } else {
-        setIconPreviewSettings(null);
-      }
-    };
-
     fetchIconData();
 
     const channel = supabase
@@ -317,7 +317,7 @@ const Editor = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [currentProfileId]);
+  }, [currentProfileId, fetchIconData]);
 
   // Auto-save with debouncing - only after data is loaded
   useEffect(() => {
@@ -769,7 +769,7 @@ const Editor = () => {
                     <Share2 className="h-5 w-5" />
                     Social Media Icons
                   </h2>
-                  <SocialHandlesManager profileId={currentProfileId} />
+                  <SocialHandlesManager profileId={currentProfileId} onChange={fetchIconData} />
                 </div>
 
                 <div className="bg-card border border-border rounded-2xl p-6">

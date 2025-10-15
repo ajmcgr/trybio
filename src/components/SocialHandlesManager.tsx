@@ -71,9 +71,10 @@ const normalizeUrl = (platform: string, input: string): { handle: string; url: s
 
 interface SocialHandlesManagerProps {
   profileId: string;
+  onChange?: () => void;
 }
 
-export const SocialHandlesManager: React.FC<SocialHandlesManagerProps> = ({ profileId }) => {
+export const SocialHandlesManager: React.FC<SocialHandlesManagerProps> = ({ profileId, onChange }) => {
   const [handles, setHandles] = useState<SocialHandle[]>([]);
   const [newPlatform, setNewPlatform] = useState('');
   const [newInput, setNewInput] = useState('');
@@ -140,6 +141,7 @@ export const SocialHandlesManager: React.FC<SocialHandlesManagerProps> = ({ prof
     setNewPlatform('');
     setNewInput('');
     fetchHandles();
+    onChange?.();
   };
 
   const deleteHandle = async (id: string) => {
@@ -163,6 +165,7 @@ export const SocialHandlesManager: React.FC<SocialHandlesManagerProps> = ({ prof
     });
 
     fetchHandles();
+    onChange?.();
   };
 
   const toggleVisibility = async (id: string, currentVisibility: boolean) => {
@@ -181,6 +184,7 @@ export const SocialHandlesManager: React.FC<SocialHandlesManagerProps> = ({ prof
     }
 
     fetchHandles();
+    onChange?.();
   };
 
   const handleDragStart = (index: number) => {
@@ -217,6 +221,7 @@ export const SocialHandlesManager: React.FC<SocialHandlesManagerProps> = ({ prof
     }
 
     setDraggedItem(null);
+    onChange?.();
   };
 
   return (
