@@ -762,26 +762,6 @@ const Editor = () => {
               </div>
             </div>
 
-            {/* Social Media Section */}
-            {currentProfileId && (
-              <>
-                <div className="bg-card border border-border rounded-2xl p-6">
-                  <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <Share2 className="h-5 w-5" />
-                    Social Media Icons
-                  </h2>
-                  <SocialHandlesManager profileId={currentProfileId} onChange={fetchIconData} />
-                </div>
-
-                <div className="bg-card border border-border rounded-2xl p-6">
-                  <SocialIconCustomizer 
-                    profileId={currentProfileId} 
-                    onSettingsChange={setLiveIconSettings}
-                  />
-                </div>
-              </>
-            )}
-
             {/* Theme Section */}
             <div className="bg-card border border-border rounded-2xl p-6">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -934,6 +914,26 @@ const Editor = () => {
                 )}
               </div>
             </div>
+
+            {/* Social Media Section */}
+            {currentProfileId && (
+              <>
+                <div className="bg-card border border-border rounded-2xl p-6">
+                  <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <Share2 className="h-5 w-5" />
+                    Social Media Icons
+                  </h2>
+                  <SocialHandlesManager profileId={currentProfileId} onChange={fetchIconData} />
+                </div>
+
+                <div className="bg-card border border-border rounded-2xl p-6">
+                  <SocialIconCustomizer 
+                    profileId={currentProfileId} 
+                    onSettingsChange={setLiveIconSettings}
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
 
