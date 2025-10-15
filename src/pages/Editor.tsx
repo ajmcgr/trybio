@@ -911,6 +911,14 @@ const Editor = () => {
                   );
                 })}
               </div>
+              {currentProfileId && (
+                <SocialIconsDisplay 
+                  profileId={currentProfileId} 
+                  displayPosition="below"
+                  isPreview={true}
+                  key={`below-${currentProfileId}`}
+                />
+              )}
             </div>
           </div>
         </div>
