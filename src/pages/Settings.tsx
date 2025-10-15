@@ -22,6 +22,8 @@ import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { STRIPE_PORTAL_URL } from "@/lib/billing";
+import { SocialHandlesManager } from "@/components/SocialHandlesManager";
+import { SocialIconCustomizer } from "@/components/SocialIconCustomizer";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -32,11 +34,22 @@ const Settings = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [profiles, setProfiles] = useState<any[]>([]);
 
   useEffect(() => {
     console.log('[Settings] Current subscription state:', { subscribed, plan, subscriptionEnd });
     refreshSubscription();
+    loadProfiles();
   }, [refreshSubscription]);
+
+  const loadProfiles = async () => {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('user_id', user.id);
+    if (data) setProfiles(data);
+  };
 
   const getCurrentPlan = () => {
     if (process.env.NODE_ENV === "development") {
@@ -337,6 +350,15 @@ const Settings = () => {
                 </Button>
               </CardContent>
             </Card>
+          </div>
+        )}
+
+        {/* Social Media Section */}
+        {user && profiles.length > 0 && (
+          <div className="space-y-4 mb-8">
+            <h2 className="text-xl font-bold">Social Media</h2>
+            <SocialHandlesManager profileId={profiles[0].id} />
+            <SocialIconCustomizer profileId={profiles[0].id} />
           </div>
         )}
 

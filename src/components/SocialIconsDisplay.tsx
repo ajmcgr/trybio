@@ -1,0 +1,129 @@
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+import { SocialIcon } from './SocialIcon';
+
+interface SocialHandle {
+  id: string;
+  platform: string;
+  url: string;
+  is_visible: boolean;
+  position: number;
+}
+
+interface IconSettings {
+  position: 'above' | 'below';
+  style: 'brand' | 'monochrome' | 'outline';
+  shape: 'circle' | 'rounded' | 'square';
+  size: number;
+  spacing: number;
+  alignment: 'left' | 'center' | 'right';
+  hover: 'scale' | 'underline' | 'none';
+  color: string;
+}
+
+interface SocialIconsDisplayProps {
+  profileId: string;
+  displayPosition: 'above' | 'below';
+  isPreview?: boolean;
+}
+
+export const SocialIconsDisplay: React.FC<SocialIconsDisplayProps> = ({ 
+  profileId, 
+  displayPosition,
+  isPreview = false
+}) => {
+  const [handles, setHandles] = useState<SocialHandle[]>([]);
+  const [settings, setSettings] = useState<IconSettings>({
+    position: 'below',
+    style: 'brand',
+    shape: 'circle',
+    size: 32,
+    spacing: 12,
+    alignment: 'center',
+    hover: 'scale',
+    color: '#000000',
+  });
+
+  useEffect(() => {
+    fetchData();
+  }, [profileId]);
+
+  const fetchData = async () => {
+    // Fetch handles
+    const { data: handlesData } = await supabase
+      .from('social_handles')
+      .select('*')
+      .eq('profile_id', profileId)
+      .eq('is_visible', true)
+      .order('position', { ascending: true });
+
+    if (handlesData) {
+      setHandles(handlesData);
+    }
+
+    // Fetch settings
+    const { data: profileData } = await supabase
+      .from('profiles')
+      .select('social_icon_position, social_icon_style, social_icon_shape, social_icon_size, social_icon_spacing, social_icon_alignment, social_icon_hover, social_icon_color')
+      .eq('id', profileId)
+      .single();
+
+    if (profileData) {
+      setSettings({
+        position: profileData.social_icon_position || 'below',
+        style: profileData.social_icon_style || 'brand',
+        shape: profileData.social_icon_shape || 'circle',
+        size: profileData.social_icon_size || 32,
+        spacing: profileData.social_icon_spacing || 12,
+        alignment: profileData.social_icon_alignment || 'center',
+        hover: profileData.social_icon_hover || 'scale',
+        color: profileData.social_icon_color || '#000000',
+      });
+    }
+  };
+
+  const handleIconClick = async (handle: SocialHandle) => {
+    // Track click
+    if (!isPreview) {
+      await supabase.from('social_handle_clicks').insert({
+        social_handle_id: handle.id,
+        profile_id: profileId,
+        platform: handle.platform,
+      });
+    }
+    
+    // Open link
+    window.open(handle.url, '_blank', 'noopener,noreferrer');
+  };
+
+  // Only render if position matches
+  if (settings.position !== displayPosition || handles.length === 0) {
+    return null;
+  }
+
+  const alignmentClass = {
+    left: 'justify-start',
+    center: 'justify-center',
+    right: 'justify-end',
+  }[settings.alignment];
+
+  return (
+    <div 
+      className={`flex flex-wrap ${alignmentClass} my-6`}
+      style={{ gap: `${settings.spacing}px` }}
+    >
+      {handles.map(handle => (
+        <SocialIcon
+          key={handle.id}
+          platform={handle.platform}
+          size={settings.size}
+          style={settings.style}
+          shape={settings.shape}
+          hover={settings.hover}
+          color={settings.color}
+          onClick={() => handleIconClick(handle)}
+        />
+      ))}
+    </div>
+  );
+};

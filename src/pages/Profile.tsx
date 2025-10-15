@@ -3,7 +3,7 @@ import { useSearchParams, useParams } from "react-router-dom";
 import { Link as LinkIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { supabase } from "@/lib/supabase";
-// Removed unused import
+import { SocialIconsDisplay } from "@/components/SocialIconsDisplay";
 
 const Profile = () => {
   const [searchParams] = useSearchParams();
@@ -185,6 +185,9 @@ const Profile = () => {
             )}
           </div>
 
+          {/* Social Icons - Above Links */}
+          {profileId && <SocialIconsDisplay profileId={profileId} displayPosition="above" isPreview={isPreview} />}
+
           {/* Links */}
           <div className="space-y-3">
             {links.map((link) => {
@@ -235,6 +238,9 @@ const Profile = () => {
               );
             })}
           </div>
+
+          {/* Social Icons - Below Links */}
+          {profileId && <SocialIconsDisplay profileId={profileId} displayPosition="below" isPreview={isPreview} />}
         </div>
 
         {/* Footer - only show for free users */}
