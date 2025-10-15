@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
-import alexBioPreview from "@/assets/alex-bio-preview.png";
+import phoneBioMockup from "@/assets/phone-bio-mockup.png";
 import { STRIPE_PORTAL_URL } from "@/lib/billing";
 import { SocialIcon } from "@/components/SocialIcon";
 
@@ -82,9 +82,9 @@ const Landing = () => {
             {/* Right side - Bio Preview (45%) */}
             <div className="lg:w-[45%] w-full flex justify-center p-0 m-0">
               <img 
-                src={alexBioPreview} 
-                alt="Bio page preview - Alex MacGregor's profile" 
-                className="w-full h-auto rounded-2xl m-0 p-0"
+                src={phoneBioMockup} 
+                alt="Bio page preview - Alex MacGregor's profile on iPhone" 
+                className="w-full h-auto m-0 p-0"
               />
             </div>
           </div>
