@@ -345,20 +345,72 @@ const Editor = () => {
     return () => clearTimeout(timeoutId);
   }, [isLoaded, profile, links, wallpaperUrl, textColor, buttonColor, buttonTextColor, backgroundColor, buttonStyle, buttonCorners]);
 
-  const handlePreview = () => {
-    localStorage.setItem('previewData', JSON.stringify({
-      profile,
-      links,
-      wallpaperUrl,
-      textColor,
-      buttonColor,
-      buttonTextColor,
-      backgroundColor,
-      buttonStyle,
-      buttonCorners,
-      profileId: currentProfileId,
-    }));
-    window.open('/profile?preview=true', '_blank');
+  const handlePreview = async () => {
+    try {
+      let previewHandles: any[] | null = null;
+      let previewSettings: any | null = null;
+
+      if (currentProfileId) {
+        const { data: handlesData } = await supabase
+          .from('social_handles')
+          .select('*')
+          .eq('profile_id', currentProfileId)
+          .eq('is_visible', true)
+          .order('position', { ascending: true });
+
+        previewHandles = handlesData || null;
+
+        const { data: settingsData } = await supabase
+          .from('profiles')
+          .select('social_icon_position, social_icon_style, social_icon_shape, social_icon_size, social_icon_spacing, social_icon_alignment, social_icon_hover, social_icon_color')
+          .eq('id', currentProfileId)
+          .single();
+
+        if (settingsData) {
+          previewSettings = {
+            position: settingsData.social_icon_position || 'below',
+            style: settingsData.social_icon_style || 'brand',
+            shape: settingsData.social_icon_shape || 'circle',
+            size: settingsData.social_icon_size || 32,
+            spacing: settingsData.social_icon_spacing || 12,
+            alignment: settingsData.social_icon_alignment || 'center',
+            hover: settingsData.social_icon_hover || 'scale',
+            color: settingsData.social_icon_color || '#000000',
+          };
+        }
+      }
+
+      localStorage.setItem('previewData', JSON.stringify({
+        profile,
+        links,
+        wallpaperUrl,
+        textColor,
+        buttonColor,
+        buttonTextColor,
+        backgroundColor,
+        buttonStyle,
+        buttonCorners,
+        profileId: currentProfileId,
+        previewHandles,
+        previewSettings,
+      }));
+      window.open('/profile?preview=true', '_blank');
+    } catch (e) {
+      console.error('Failed to prepare preview data', e);
+      localStorage.setItem('previewData', JSON.stringify({
+        profile,
+        links,
+        wallpaperUrl,
+        textColor,
+        buttonColor,
+        buttonTextColor,
+        backgroundColor,
+        buttonStyle,
+        buttonCorners,
+        profileId: currentProfileId,
+      }));
+      window.open('/profile?preview=true', '_blank');
+    }
   };
 
 

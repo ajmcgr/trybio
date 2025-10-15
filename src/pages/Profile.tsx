@@ -27,6 +27,8 @@ const Profile = () => {
   const [buttonStyle, setButtonStyle] = useState<"solid" | "glass" | "outline">("solid");
   const [buttonCorners, setButtonCorners] = useState<"square" | "round">("round");
   const [isPaidUser, setIsPaidUser] = useState(false);
+  const [iconPreviewHandles, setIconPreviewHandles] = useState<any[] | null>(null);
+  const [iconPreviewSettings, setIconPreviewSettings] = useState<any | null>(null);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -45,6 +47,8 @@ const Profile = () => {
           setButtonStyle(data.buttonStyle || 'solid');
           setButtonCorners(data.buttonCorners || 'round');
           setProfileId(data.profileId || null);
+          setIconPreviewHandles(data.previewHandles || null);
+          setIconPreviewSettings(data.previewSettings || null);
         }
       } else if (username) {
         // Load from Supabase by username for public profile
@@ -187,7 +191,15 @@ const Profile = () => {
           </div>
 
           {/* Social Icons - Above Links */}
-          {profileId && <SocialIconsDisplay profileId={profileId} displayPosition="above" isPreview={isPreview} />}
+          {(isPreview || profileId) && (
+            <SocialIconsDisplay
+              profileId={profileId || 'preview'}
+              displayPosition="above"
+              isPreview={isPreview}
+              previewHandles={iconPreviewHandles || undefined}
+              previewSettings={iconPreviewSettings || undefined}
+            />
+          )}
 
           {/* Links */}
           <div className="space-y-3">
@@ -241,7 +253,15 @@ const Profile = () => {
           </div>
 
           {/* Social Icons - Below Links */}
-          {profileId && <SocialIconsDisplay profileId={profileId} displayPosition="below" isPreview={isPreview} />}
+          {(isPreview || profileId) && (
+            <SocialIconsDisplay
+              profileId={profileId || 'preview'}
+              displayPosition="below"
+              isPreview={isPreview}
+              previewHandles={iconPreviewHandles || undefined}
+              previewSettings={iconPreviewSettings || undefined}
+            />
+          )}
         </div>
 
         {/* Footer - only show for free users */}
