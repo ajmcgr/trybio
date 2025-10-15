@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { CreditCard, Check } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import { useSubscription, PAYMENT_LINKS } from "@/contexts/SubscriptionContext";
 import { useEffect } from "react";
@@ -9,7 +9,16 @@ import { Badge } from "@/components/ui/badge";
 import { STRIPE_PORTAL_URL } from "@/lib/billing";
 
 const Upgrade = () => {
-  const { subscribed, plan, refreshSubscription, loading } = useSubscription();
+  const { subscribed, plan, refreshSubscription, loading, user } = useSubscription();
+  const navigate = useNavigate();
+
+  const handleUpgradeClick = (paymentLink: string) => {
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+    window.open(paymentLink, '_blank');
+  };
 
   useEffect(() => {
     refreshSubscription();
@@ -134,11 +143,9 @@ const Upgrade = () => {
               {getCurrentPlan() !== 'Pro' ? (
                 <Button 
                   className="w-full" 
-                  asChild
+                  onClick={() => handleUpgradeClick(PAYMENT_LINKS.pro_monthly)}
                 >
-                  <a href={PAYMENT_LINKS.pro_monthly} target="_blank" rel="noopener noreferrer">
-                    Upgrade to Pro
-                  </a>
+                  Upgrade to Pro
                 </Button>
               ) : (
                 <Button variant="outline" className="w-full" asChild>
@@ -195,11 +202,9 @@ const Upgrade = () => {
               {getCurrentPlan() !== 'Business' ? (
                 <Button 
                   className="w-full" 
-                  asChild
+                  onClick={() => handleUpgradeClick(PAYMENT_LINKS.business_monthly)}
                 >
-                  <a href={PAYMENT_LINKS.business_monthly} target="_blank" rel="noopener noreferrer">
-                    Upgrade to Business
-                  </a>
+                  Upgrade to Business
                 </Button>
               ) : (
                 <Button variant="outline" className="w-full" asChild>
