@@ -845,6 +845,7 @@ const Editor = () => {
                   profileId={currentProfileId} 
                   displayPosition="above"
                   isPreview={true}
+                  key={`above-${currentProfileId}`}
                 />
               )}
               <div className="text-center mb-6">
@@ -873,6 +874,7 @@ const Editor = () => {
                   profileId={currentProfileId} 
                   displayPosition="below"
                   isPreview={true}
+                  key={`below-${currentProfileId}`}
                 />
               )}
               <div className="space-y-3">
