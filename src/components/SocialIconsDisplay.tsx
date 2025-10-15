@@ -46,6 +46,39 @@ export const SocialIconsDisplay: React.FC<SocialIconsDisplayProps> = ({
 
   useEffect(() => {
     fetchData();
+    
+    // Set up real-time subscription for changes
+    const channel = supabase
+      .channel(`profile-${profileId}-social-changes`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'social_handles',
+          filter: `profile_id=eq.${profileId}`
+        },
+        () => {
+          fetchData();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles',
+          filter: `id=eq.${profileId}`
+        },
+        () => {
+          fetchData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [profileId]);
 
   const fetchData = async () => {

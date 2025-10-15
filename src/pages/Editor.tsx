@@ -840,14 +840,6 @@ const Editor = () => {
                 backgroundPosition: 'center'
               }}
             >
-              {currentProfileId && (
-                <SocialIconsDisplay 
-                  profileId={currentProfileId} 
-                  displayPosition="above"
-                  isPreview={true}
-                  key={`above-${currentProfileId}`}
-                />
-              )}
               <div className="text-center mb-6">
                 <Avatar className="h-20 w-20 mx-auto mb-3">
                   <AvatarImage src={profile.avatarUrl} />
@@ -872,9 +864,9 @@ const Editor = () => {
               {currentProfileId && (
                 <SocialIconsDisplay 
                   profileId={currentProfileId} 
-                  displayPosition="below"
+                  displayPosition="above"
                   isPreview={true}
-                  key={`below-${currentProfileId}`}
+                  key={`above-${currentProfileId}`}
                 />
               )}
               <div className="space-y-3">
