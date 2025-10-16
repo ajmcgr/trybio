@@ -302,7 +302,7 @@ const Profile = () => {
               href="/"
               className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
             >
-              Create your own with <span className="font-semibold">trybio.ai</span>
+              Create your own with <span className="font-semibold">trybio.ai →</span>
             </a>
           </div>
         )}
