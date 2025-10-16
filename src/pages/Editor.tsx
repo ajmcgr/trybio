@@ -999,7 +999,7 @@ const Editor = () => {
         </div>
 
         {/* Right Panel - Preview */}
-        <div className="w-96 bg-secondary/30 p-6 flex flex-col items-center">
+        <div className="w-96 bg-secondary/30 p-6 flex flex-col items-center sticky top-0 h-screen overflow-hidden">
           <div className="text-sm text-muted-foreground mb-4">Live Preview</div>
           <div 
             className="w-full max-w-sm rounded-[3rem] border-8 border-card shadow-2xl overflow-hidden" 
