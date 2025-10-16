@@ -44,6 +44,23 @@ const Auth = () => {
           },
         });
         if (error) throw error;
+
+        // Sync contact to HubSpot in the background
+        const nameParts = name.split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+        
+        supabase.functions.invoke('sync-hubspot-contact', {
+          body: { 
+            email, 
+            firstName,
+            lastName
+          }
+        }).catch(err => {
+          console.error('HubSpot sync failed:', err);
+          // Don't block user flow if HubSpot sync fails
+        });
+
         toast({
           title: "Account created!",
           description: "Redirecting to dashboard...",
