@@ -50,7 +50,7 @@ const Settings = () => {
   };
 
   const getCurrentPlan = () => {
-    if (process.env.NODE_ENV === "development") {
+    if (import.meta.env.DEV) {
       console.log('[Settings] Getting current plan. subscribed:', subscribed, 'plan:', plan);
     }
     if (!subscribed) return 'Free';
