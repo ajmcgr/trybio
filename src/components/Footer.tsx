@@ -10,7 +10,6 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/about" className="hover:text-foreground transition-colors">About</Link></li>
               <li><a href="https://blog.works.xyz/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Blog</a></li>
-              <li><a href="https://discord.gg/zH5GjPDT" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Community</a></li>
             </ul>
           </div>
           <div>
@@ -48,7 +47,6 @@ const Footer = () => {
           <div>
             <h4 className="font-sans font-semibold mb-4">Connect</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="https://discord.gg/jYyQHNS2" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Discord</a></li>
               <li><a href="http://x.com/trybioai" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">X</a></li>
             </ul>
           </div>
