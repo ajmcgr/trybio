@@ -39,7 +39,7 @@ export const SocialIconCustomizer: React.FC<SocialIconCustomizerProps> = ({
     color: '#000000',
   });
   const { toast } = useToast();
-  const saveTimeoutRef = useRef<NodeJS.Timeout>();
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     fetchSettings();
